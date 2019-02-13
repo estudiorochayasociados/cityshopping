@@ -198,3 +198,4 @@ END FOOTER AREA
 <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBeySPFGz7DIUTrReCRQT6HYaMM0ia0knA"></script>
 <script src="<?=URL?>/assets/js/map.js"></script>
 <!-- endinject -->
+<?php include 'assets/inc/login.inc.php'; ?>

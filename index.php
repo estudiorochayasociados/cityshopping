@@ -7,6 +7,9 @@ $banner = new Clases\Banner();
 $imagen = new Clases\Imagenes();
 $categoria = new Clases\Categorias();
 $slider = new Clases\Sliders();
+$producto = new Clases\Productos();
+$empresa = new Clases\Empresas();
+$funciones = new Clases\PublicFunction();
 //Datos
 ////Banners
 $categoria->set("area", "banners");
@@ -26,6 +29,8 @@ foreach ($categorias_sliders as $categorias) {
         $slider_data_principal = $slider->listForCategory('', '');
     }
 }
+////Productos
+$productos_data = $producto->list('', '', 6);
 ////
 //
 $template->set("title", TITULO . " | Inicio");
@@ -46,7 +51,9 @@ $template->themeInit();
                 $imagen->set("cod", $key['cod']);
                 $img = $imagen->view();
                 ?>
-                <div class="carousel-item <?php if ($sli==0){echo "active"; } ?>" style="height:550px;width:100%;background:url(<?= $img['ruta']; ?>) no-repeat center center/cover;">
+                <div class="carousel-item <?php if ($sli == 0) {
+                    echo "active";
+                } ?>" style="height:550px;width:100%;background:url(<?= $img['ruta']; ?>) no-repeat center center/cover;">
                 </div>
                 <?php
             }
@@ -85,34 +92,7 @@ $template->themeInit();
             <div class="col-md-12">
                 <div class="product-title-area">
                     <div class="product__title">
-                        <h2>Newest Release Products</h2>
-                    </div>
-
-                    <div class="filter__menu">
-                        <p>Filter by:</p>
-                        <div class="filter__menu_icon">
-                            <a href="#" id="drop1" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="svg" src="images/svg/menu.svg" alt="menu icon">
-                            </a>
-
-                            <ul class="filter_dropdown dropdown-menu" aria-labelledby="drop1">
-                                <li>
-                                    <a href="#">Trending items</a>
-                                </li>
-                                <li>
-                                    <a href="#">Best seller</a>
-                                </li>
-                                <li>
-                                    <a href="#">Best rating</a>
-                                </li>
-                                <li>
-                                    <a href="#">Low price</a>
-                                </li>
-                                <li>
-                                    <a href="#">High price</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <h2>Últimos productos</h2>
                     </div>
                 </div>
             </div>
@@ -122,330 +102,81 @@ $template->themeInit();
 
         <!-- start .row -->
         <div class="row">
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p1.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
+            <?php
+            foreach ($productos_data as $prod) {
+                //Empresa
+                $empresa->set("cod", $prod['cod_empresa']);
+                $empresa_data = $empresa->view();
+                //
+                ?>
+                <!-- start .col-md-4 -->
+                <div class="col-lg-4 col-md-6">
+                    <!-- start .single-product -->
+                    <div class="product product--card product--card3">
+                        <div class="product__thumbnail">
+                            <img src="images/p1.jpg" alt="Product Image">
+                            <div class="prod_btn">
+                                <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']).'/'.$funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
+                                    Ver más
+                                </a>
+                            </div>
+                            <!-- end /.prod_btn -->
                         </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
+                        <!-- end /.product__thumbnail -->
 
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>MartPlace Extension Bundle</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth.jpg" alt="author image">
+                        <div class="product-desc">
+                            <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
+                                <h4><?= ucfirst($prod['titulo']); ?></h4>
+                            </a>
+                            <ul class="titlebtm">
+                                <li>
+                                    <p>
+                                        <a href="<?= URL . '/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
+                                            <?= ucfirst($empresa_data['titulo']) ?>
+                                        </a>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- end /.product-desc -->
+
+                        <div class="product-purchase">
+                            <div class="price_love">
+                                <?php
+                                if (!empty($prod['precioDescuento'])) {
+                                    ?>
+                                    <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <span>$<?= $prod['precio'] ?></span>
+                                    <?php
+                                }
+                                ?>
                                 <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>$10 - $50</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 90</p>
-                        </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>16</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- end /.product-purchase -->
-                </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
-
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p2.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>Mccarther Coffee Shop</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth2.jpg" alt="author image">
+                            </div>
+                            <div class="sell">
                                 <p>
-                                    <a href="#">AazzTech</a>
+                                    <span class="lnr lnr-layers"></span>
+                                    <span><?= $prod['stock']; ?></span>
                                 </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>$10</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 48</p>
+                            </div>
                         </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>50</span>
-                            </p>
-                        </div>
+                        <!-- end /.product-purchase -->
                     </div>
-                    <!-- end /.product-purchase -->
+                    <!-- end /.single-product -->
                 </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
-
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p3.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>Visibility Manager Subscriptions</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth3.jpg" alt="author image">
-                                <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>Free</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 24</p>
-                        </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>27</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- end /.product-purchase -->
-                </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
-
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p4.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>Ajax Live Search</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth.jpg" alt="author image">
-                                <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>$10 - $50</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 90</p>
-                        </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>16</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- end /.product-purchase -->
-                </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
-
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p5.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>Mccarther Coffee Shop</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth2.jpg" alt="author image">
-                                <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>$10</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 48</p>
-                        </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>50</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- end /.product-purchase -->
-                </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
-
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card product--card3">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p6.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>Visibility Manager Subscriptions</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth3.jpg" alt="author image">
-                                <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>WordPress</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.product-desc -->
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>Free</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 24</p>
-                        </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>27</span>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- end /.product-purchase -->
-                </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
+                <!-- end /.col-md-4 -->
+                <?php
+            }
+            ?>
         </div>
 
         <!-- start .row -->
         <div class="row">
             <div class="col-md-12">
                 <div class="more-product">
-                    <a href="all-products.html" class="btn btn--lg btn--round">All New Products</a>
+                    <a href="<?=URL?>/productos" class="btn btn--lg btn--round">Todos los productos</a>
                 </div>
             </div>
             <!-- end ./col-md-12 -->
@@ -457,7 +188,64 @@ $template->themeInit();
 <!--================================
     END PRODUCTS AREA
 =================================-->
+<!--================================
+        START SPECIAL FEATURES AREA
+    =================================-->
+<section class="special-feature-area bgcolor2 special-feature--2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="special-feature feature--1">
+                    <img src="images/spf1.png" alt="Special Feature image">
+                    <h3 class="special__feature-title">30 Days Money Back
+                        <span class="highlight">Guarantee</span>
+                    </h3>
+                </div>
+            </div>
+            <!-- end /.col-md-6 -->
+            <div class="col-md-6">
+                <div class="special-feature feature--2">
+                    <img src="images/spf2.png" alt="Special Feature image">
+                    <h3 class="special__feature-title">Fast and Friendly
+                        <span class="highlight">Support</span>
+                    </h3>
+                </div>
+            </div>
+            <!-- end /.col-md-6 -->
+        </div>
+        <!-- end /.row -->
+    </div>
+    <!-- end /.container -->
+</section>
+<!--================================
+    END SPECIAL FEATURES AREA
+=================================-->
 
+<!--================================
+    START CALL TO ACTION AREA
+=================================-->
+<section class="call-to-action bgimage">
+    <div class="bg_image_holder">
+        <img src="images/calltobg.jpg" alt="">
+    </div>
+    <div class="container content_above">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="call-to-wrap">
+                    <h1 class="text--white">Quieres ser vendedor?</h1>
+                    <?php if (empty($_SESSION["usuarios"])): ?>
+                        <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                    <?php else: ?>
+                        <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================================
+    END CALL TO ACTION AREA
+=================================-->
 <?php
 $template->themeEnd();
 ?>

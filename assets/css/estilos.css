@@ -1,3 +1,10 @@
+.centro{
+    text-align: center;
+}
+.tachado{
+    text-decoration: line-through;
+}
+
 /*margin top*/
 
 .mt-0 {

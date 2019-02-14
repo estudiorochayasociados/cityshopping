@@ -5,7 +5,7 @@ $subpages = ["banners","sliders","novedades"];
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-30">
     <div class="col-md-12">
         <a class="navbar-brand" href="#">
-            NoCocino | Administrador Web
+            City Shopping | Administrador Web
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon">

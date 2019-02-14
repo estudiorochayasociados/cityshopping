@@ -116,7 +116,7 @@ $template->themeInit();
                         <div class="product__thumbnail">
                             <img src="images/p1.jpg" alt="Product Image">
                             <div class="prod_btn">
-                                <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']).'/'.$funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
+                                <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']).'/'.$funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
                                     Ver más
                                 </a>
                             </div>
@@ -125,13 +125,13 @@ $template->themeInit();
                         <!-- end /.product__thumbnail -->
 
                         <div class="product-desc">
-                            <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
+                            <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
                                 <h4><?= ucfirst($prod['titulo']); ?></h4>
                             </a>
                             <ul class="titlebtm">
                                 <li>
                                     <p>
-                                        <a href="<?= URL . '/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
+                                        <a href="<?= URL . '/producto/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
                                             <?= ucfirst($empresa_data['titulo']) ?>
                                         </a>
                                     </p>

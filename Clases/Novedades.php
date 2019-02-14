@@ -15,11 +15,15 @@ class Novedades
     public $description;
     public $fecha;
     private $con;
+    private $imagenes;
+    private $categorias;
 
     //Metodos
     public function __construct()
     {
         $this->con = new Conexion();
+        $this->imagenes = new Imagenes();
+        $this->categorias=new Categorias();
     }
 
     public function set($atributo, $valor)
@@ -34,34 +38,49 @@ class Novedades
 
     public function add()
     {
-        $sql   = "INSERT INTO `novedades`(`cod`, `titulo`, `desarrollo`, `categoria`, `keywords`, `description`, `fecha`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->desarrollo}', '{$this->categoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}')";
+        $sql = "INSERT INTO `novedades`(`cod`, `titulo`, `desarrollo`, `categoria`, `keywords`, `description`, `fecha`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->desarrollo}', '{$this->categoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}')";
         $query = $this->con->sql($sql);
-        return $query;
+        return true;
     }
 
     public function edit()
     {
-        $sql   = "UPDATE `novedades` SET cod = '{$this->cod}', titulo = '{$this->titulo}', desarrollo = '{$this->desarrollo}', categoria = '{$this->categoria}', keywords = '{$this->keywords}', description = '{$this->description}', fecha = '{$this->fecha}' WHERE `cod`='{$this->cod}'";
+        $sql = "UPDATE `novedades` SET cod = '{$this->cod}', titulo = '{$this->titulo}', desarrollo = '{$this->desarrollo}', categoria = '{$this->categoria}', keywords = '{$this->keywords}', description = '{$this->description}', fecha = '{$this->fecha}' WHERE `cod`='{$this->cod}'";
         $query = $this->con->sql($sql);
-        return $query;
+        return true;
     }
 
     public function delete()
     {
-        $sql   = "DELETE FROM `novedades` WHERE `cod`  = '{$this->cod}'";
+        $sql = "DELETE FROM `novedades` WHERE `cod`  = '{$this->cod}'";
         $query = $this->con->sql($sql);
         return $query;
     }
 
     public function view()
     {
-        $sql   = "SELECT * FROM `novedades` WHERE id = '{$this->id}' ORDER BY id DESC";
+        $sql = "SELECT * FROM `novedades` WHERE id = '{$this->id}' || cod= '{$this->cod}' ORDER BY id DESC";
         $notas = $this->con->sqlReturn($sql);
-        $row   = mysqli_fetch_assoc($notas);
+        $row = mysqli_fetch_assoc($notas);
         return $row;
     }
 
-    function list($filter) {
+    public function view_row($filter)
+    {
+        if (is_array($filter)) {
+            $filterSql = "WHERE ";
+            $filterSql .= implode(" AND ", $filter);
+        } else {
+            $filterSql = '';
+        }
+        $sql = "SELECT * FROM `novedades` $filterSql ORDER BY id DESC";
+        $notas = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($notas);
+        return $row;
+    }
+
+    function list($filter)
+    {
         $array = array();
         if (is_array($filter)) {
             $filterSql = "WHERE ";
@@ -71,7 +90,7 @@ class Novedades
         }
 
         $sql = "SELECT * FROM `novedades` $filterSql  ORDER BY id DESC";
-         $notas = $this->con->sqlReturn($sql);
+        $notas = $this->con->sqlReturn($sql);
 
         if ($notas) {
             while ($row = mysqli_fetch_assoc($notas)) {
@@ -112,7 +131,8 @@ class Novedades
         }
     }
 
-    function paginador($filter,$cantidad) {
+    function paginador($filter, $cantidad)
+    {
         $array = array();
         if (is_array($filter)) {
             $filterSql = "WHERE ";
@@ -125,5 +145,48 @@ class Novedades
         $total = mysqli_num_rows($contar);
         $totalPaginas = $total / $cantidad;
         return ceil($totalPaginas);
+    }
+
+    //App
+    function listWithOpsApp($filter, $order, $limit)
+    {
+        $array = array();
+        if (is_array($filter)) {
+            $filterSql = "WHERE ";
+            $filterSql .= implode(" AND ", $filter);
+        } else {
+            $filterSql = '';
+        }
+
+        if ($order != '') {
+            $orderSql = $order;
+        } else {
+            $orderSql = "id DESC";
+        }
+
+        if ($limit != '') {
+            $limitSql = "LIMIT " . $limit;
+        } else {
+            $limitSql = '';
+        }
+        $sql = "SELECT * FROM `novedades` $filterSql  ORDER BY $orderSql $limitSql";
+        $novedades = $this->con->sqlReturn($sql);
+        if ($novedades) {
+            while ($row = mysqli_fetch_assoc($novedades)) {
+                //Agregar url a las imagenes
+                $img = $this->imagenes->list(array("cod = '" . $row['cod'] . "'"));
+                $img_ = array();
+                foreach ($img as $i) {
+                    $i['ruta'] = URLSITE . '/' . $i['ruta'];
+                    array_push($img_, $i);
+                }
+                //Sacar etiquetas
+                $row['desarrollo'] = strip_tags($row['desarrollo']);
+                //
+                $cat = $this->categorias->view_row(array("cod = '" . $row['categoria'] . "'"));
+                $array[] = array("data" => $row, "categorias" => $cat, "imagenes" => $img_);
+            }
+            return $array;
+        }
     }
 }

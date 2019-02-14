@@ -30,7 +30,7 @@ START MENU AREA
                     <!-- start .author-area -->
                     <div class="author-area">
                         <?php
-                        if (isset($_SESSION['usuarios'])){
+                        if (!empty($_SESSION['usuarios'])){
                             ?>
                             <div class="author__notification_area">
                                 <ul>
@@ -499,7 +499,7 @@ START MENU AREA
                                     <a href="<?=URL?>/productos">Productos</a>
                                 </li>
                                 <li>
-                                    <a href="">contact</a>
+                                    <a href="<?=URL?>/blogs">Blogs</a>
                                 </li>
                                 <li>
                                     <a href="">contact</a>

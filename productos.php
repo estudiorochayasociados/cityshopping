@@ -11,24 +11,51 @@ $producto = new Clases\Productos();
 $empresa = new Clases\Empresas();
 $funciones = new Clases\PublicFunction();
 //Datos
+$get = $_GET;
+$get_input = '';
+foreach ($get as $key => $get_value) {
+    if ($key != 'titulo') {
+        $get_input .= "<input type='hidden' name='$key' value='$get_value' />";
+    }
+}
+
+$get_inputs = array();
+foreach ($get as $key => $get_value) {
+    array_push($get_inputs, array('id'=>$key,'hide'=> "<input type='hidden' name='$key' value='$get_value' />"));
+}
+$input_titulo='';
+$input_order='';
+$input_categoria='';
+foreach ($get_inputs as $d) {
+    switch ($d['id']){
+        case 'order':
+            $input_order=$d['hide'];
+            break;
+        case 'buscar':
+            $input_titulo=$d['hide'];
+            break;
+        case 'categoria':
+            $input_categoria=$d['hide'];
+            break;
+    }
+}
 ////Gets
 $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
 $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
-$titulo = isset($_GET["titulo"]) ? $_GET["titulo"] : '';
+$titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
 $orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
 ////Categorias
 $categoria->set("area", "productos");
 $categorias_data = $categoria->listForArea('');
 ////Productos
-$cantidad = 3;
+$cantidad = 6;
 if ($pagina > 0) {
     $pagina = $pagina - 1;
 }
-
 if (@count($filter) == 0) {
     $filter = '';
 }
-if (@count($_GET) > 1) {
+if (@count($_GET) >= 1) {
     $anidador = "&";
 } else {
     $anidador = "?";
@@ -40,14 +67,14 @@ else:
     $url = CANONICAL;
 endif;
 //
-$filter;
 if (!empty($categoria_get)) {
-    $categoria->set("id", $id);
+    $categoria->set("cod", $categoria_get);
     $categoria_data_filtro = $categoria->view();
     $cod = $categoria_data_filtro['cod'];
     $filter = array("categoria='$cod'");
 }
 if ($titulo != '') {
+    $filter = array();
     $titulo_espacios = strpos($titulo, " ");
     if ($titulo_espacios) {
         $filter_title = array();
@@ -104,8 +131,15 @@ $template->themeInit();
                             </div>
                             <div class="search__field">
                                 <form method="get" id="buscar">
+                                    <?php
+                                    if (!empty($input_titulo)) {
+                                        echo $input_titulo;
+                                    }else{
+                                        echo $input_titulo;
+                                    }
+                                    ?>
                                     <div class="field-wrapper">
-                                        <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un producto" name="titulo"
+                                        <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un producto" name="buscar"
                                                required>
                                         <button class="btn btn--round" type="submit">Buscar</button>
                                     </div>
@@ -146,46 +180,57 @@ $template->themeInit();
                 <div class="col-lg-3">
                     <!-- start aside -->
                     <aside class="sidebar product--sidebar">
-                        <div class="sidebar-card card--filter">
-                            <a class="card-title" href="#collapse2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse2">
+                        <div class="sidebar-card card--category">
+                            <a class="card-title" href="#collapse1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse1">
                                 <h4>Ordenamiento
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
-                            <div class="collapse show collapsible-content" id="collapse2">
-
-                                <div class="filter__option filter--select">
-                                    <div class="select-wrap">
-                                        <select name="order">
-                                            <option value="low">Precio : menor a mayor</option>
-                                            <option value="high">Precio : mayor a menor</option>
-                                        </select>
-                                        <span class="lnr lnr-chevron-down"></span>
-                                    </div>
-                                </div>
+                            <div class="collapse show collapsible-content" id="collapse1">
+                                <form method="get">
+                                    <?php
+                                    if (!empty($input_order)) {
+                                        echo $input_order;
+                                    }else{
+                                        echo $input_order;
+                                    }
+                                    ?>
+                                    <select name="order" class="form-control" onchange="this.form.submit()">
+                                        <option value="ultimos">Últimos</option>
+                                        <option value="menor">Menor a Mayor</option>
+                                        <option value="mayor">Mayor a Menor</option>
+                                    </select>
+                                </form>
                             </div>
+                            <!-- end /.collapsible_content -->
                         </div>
+
                         <!-- end /.sidebar-card -->
                         <div class="sidebar-card card--category">
-                            <a class="card-title" href="#collapse1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse1">
+                            <a class="card-title" href="#collapse2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse2">
                                 <h4>Categorias
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
-                            <div class="collapse show collapsible-content" id="collapse1">
-                                <ul class="card-content">
+                            <div class="collapse show collapsible-content" id="collapse2">
+                                <form method="get">
                                     <?php
+                                    if (!empty($input_categoria)) {
+                                        echo $input_categoria;
+                                    }else{
+                                        echo $input_categoria;
+                                    }
                                     foreach ($categorias_data as $cat) {
                                         ?>
-                                        <li>
-                                            <a href="<?= URL . '/productos?categoria=' . $cat['cod']; ?>">
-                                                <span class="lnr lnr-chevron-right"></span><?= ucfirst($cat['titulo']); ?>
-                                            </a>
-                                        </li>
+                                        <div class="custom-radio">
+                                            <label for="opt1" onclick="this.form.submit()">
+                                                <input type="radio" id="opt1" class="" name="categoria" value="<?= ucfirst($cat['cod']); ?>">
+                                                <span class="circle"></span><?= ucfirst($cat['titulo']); ?></label>
+                                        </div>
                                         <?php
                                     }
                                     ?>
-                                </ul>
+                                </form>
                             </div>
                             <!-- end /.collapsible_content -->
                         </div>
@@ -211,7 +256,7 @@ $template->themeInit();
                                     <div class="product__thumbnail">
                                         <img src="images/p1.jpg" alt="Product Image">
                                         <div class="prod_btn">
-                                            <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']).'/'.$funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
+                                            <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
                                                 Ver más
                                             </a>
                                         </div>
@@ -259,12 +304,12 @@ $template->themeInit();
                                     </div>
                                     <!-- end /.product-purchase -->
                                 </div>
-                                </div>
-                                <!-- end /.single-product -->
+                            </div>
+                            <!-- end /.single-product -->
                             <?php
                         }
                         ?>
-                            </div>
+                    </div>
                     <div class="col-md-12">
                         <div class="pagination-area categorised_item_pagination" style="text-align: center;">
                             <nav class="navigation pagination" role="navigation">
@@ -294,10 +339,10 @@ $template->themeInit();
                             </nav>
                         </div>
                     </div>
-                    </div>
                 </div>
-                <!-- end /.col-md-9 -->
             </div>
+            <!-- end /.col-md-9 -->
+        </div>
         </div>
         <!-- end /.container -->
     </section>

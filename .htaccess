@@ -10,6 +10,7 @@ RewriteRule ^inicio ./index.php
 RewriteRule ^restaurante/(.*)/(.*)$ ./restaurante.php?id=$2
 RewriteRule ^c/(.*)/(.*)$ ./contenidos.php?id=$2
 RewriteRule ^productos/(.*)/(.*)$ ./productos.php?categoria=$2
+RewriteRule ^blog/(.*)/(.*)$ ./blog.php?cod=$2
 
 SetOutputFilter DEFLATE
 

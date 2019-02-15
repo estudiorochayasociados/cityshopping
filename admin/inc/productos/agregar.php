@@ -4,7 +4,7 @@ $imagenes  = new Clases\Imagenes();
 $zebra     = new Clases\Zebra_Image();
 
 $categorias = new Clases\Categorias();
-$data = $categorias->list(array("area = 'productos'"));
+$data = $categorias->list(array("area = 'productos'"),'','');
 
 if (isset($_POST["agregar"])) {
     $count = 0;
@@ -14,7 +14,9 @@ if (isset($_POST["agregar"])) {
     $productos->set("titulo", $funciones->antihack_mysqli(isset($_POST["titulo"]) ? $_POST["titulo"] : ''));
     $productos->set("cod_producto", $funciones->antihack_mysqli(isset($_POST["cod_producto"]) ? $_POST["cod_producto"] : ''));
     $productos->set("precio", $funciones->antihack_mysqli(isset($_POST["precio"]) ? $_POST["precio"] : ''));
-    $productos->set("precioDescuento", $funciones->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : ''));
+    $productos->set("precio_mayorista", $funciones->antihack_mysqli(isset($_POST["precio_mayorista"]) ? $_POST["precio_mayorista"] : ''));
+    $productos->set("peso", $funciones->antihack_mysqli(isset($_POST["peso"]) ? $_POST["peso"] : 0));
+    $productos->set("precio_descuento", $funciones->antihack_mysqli(isset($_POST["precio_descuento"]) ? $_POST["precio_descuento"] : ''));
     $productos->set("stock", $funciones->antihack_mysqli(isset($_POST["stock"]) ? $_POST["stock"] : ''));
     $productos->set("desarrollo", $funciones->antihack_mysqli(isset($_POST["desarrollo"]) ? $_POST["desarrollo"] : ''));
     $productos->set("categoria", $funciones->antihack_mysqli(isset($_POST["categoria"]) ? $_POST["categoria"] : ''));
@@ -98,8 +100,16 @@ if (isset($_POST["agregar"])) {
             <input type="text" name="precio">
         </label>
         <label class="col-md-3">
+            Precio mayorista:<br/>
+            <input type="text" name="precio_mayorista">
+        </label>
+        <label class="col-md-3">
+            Peso:<br/>
+            <input type="text" name="peso">
+        </label>
+        <label class="col-md-3">
             Precio Descuento:<br/>
-            <input type="text" name="precioDescuento">
+            <input type="text" name="precio_descuento">
         </label>
         <label class="col-md-3">
             Url:<br/>

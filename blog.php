@@ -9,7 +9,7 @@ $categoria = new Clases\Categorias();
 $funciones = new Clases\PublicFunction();
 $novedad = new Clases\Novedades();
 //Datos
-$cod = isset($_GET["cod"]) ? $_GET["cod"] : '';
+$cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 $novedad->set("cod", $cod);
 $novedad_data = $novedad->view();
 $imagen->set("cod", $novedad_data['cod']);
@@ -17,9 +17,15 @@ $imagen_data = $imagen->listForProduct();
 $fechas_ = explode("-", $novedad_data['fecha']);
 $fecha_=$fechas_[2] . '/' . $fechas_[1] . '/' . $fechas_[0];
 //
+if (!empty($novedad_data['imagenes'][0]['ruta'])) {
+    $ruta_ = URL . "/" . $novedad_data['imagenes'][0]['ruta'];
+} else {
+    $ruta_ = '';
+}
 $template->set("title", TITULO . " | " . ucfirst(strip_tags($novedad_data['titulo'])));
 $template->set("description", ucfirst(substr(strip_tags($novedad_data['desarrollo']), 0, 160)));
 $template->set("keywords", ucfirst(strip_tags($novedad_data['titulo'])));
+$template->set("imagen", $ruta_);
 $template->set("favicon", FAVICON);
 $template->set("body", "single-blog-page");
 $template->themeInit();
@@ -35,6 +41,9 @@ $template->themeInit();
                     <ul>
                         <li>
                             <a href="<?= URL ?>/index">Inicio</a>
+                        </li>
+                        <li>
+                            <a href="<?= URL ?>/blogs">Blogs</a>
                         </li>
                         <li class="active">
                             <a href="#"><?= ucfirst($novedad_data['titulo']); ?></a>
@@ -59,7 +68,7 @@ $template->themeInit();
 <section class="blog_area section--padding2">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="single_blog blog--default">
                     <article>
                         <?php
@@ -112,33 +121,19 @@ $template->themeInit();
 
                         <div class="single_blog_content">
                             <?=ucfirst($novedad_data['desarrollo']);?>
-                            <div class="share_tags">
-                                <div class="share">
-                                    <div class="social_share active">
-                                        <ul class="social_icons">
-                                            <li>
-                                                <a href="#">
-                                                    <span class="fa fa-facebook"></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <span class="fa fa-twitter"></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <span class="fa fa-google-plus"></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <span class="fa fa-linkedin"></span>
-                                                </a>
-                                            </li>
-                                        </ul>
+                            <div class="share_tags" style="background: none">
+                                <div class="share" style="float:right;">
+                                    <!-- AddToAny BEGIN -->
+                                    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                                        <a class="a2a_button_facebook"></a>
+                                        <a class="a2a_button_twitter"></a>
+                                        <a class="a2a_button_google_plus"></a>
+                                        <a class="a2a_button_pinterest"></a>
+                                        <a class="a2a_button_google_gmail"></a>
+                                        <a class="a2a_button_whatsapp"></a>
                                     </div>
-                                    <!-- end social_share -->
+                                    <script async src="https://static.addtoany.com/menu/page.js"></script>
+                                    <!-- AddToAny END -->
                                 </div>
                                 <!-- end bog_share_ara  -->
                             </div>
@@ -148,8 +143,6 @@ $template->themeInit();
                 <!-- end /.single_blog -->
             </div>
             <!-- end /.col-md-8 -->
-
-            <?php include "assets/inc/blog/side.inc.php" ?>
         </div>
         <!-- end /.row -->
     </div>

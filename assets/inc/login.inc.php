@@ -1,29 +1,55 @@
 <?php
 $usuario = new Clases\Usuarios();
 $funcion = new Clases\PublicFunction();
+$correo = new Clases\Email();
 ?>
 <!-- Login modal -->
 <?php
-if (isset($_POST["login"])):
-    $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
-    $password = $funcion->antihack_mysqli(isset($_POST["password"]) ? $_POST["password"] : '');
+if (isset($_POST["login"])) {
+    if ($_POST["recuperarPass"]) {
+        $recuperarPass = $funcion->antihack_mysqli(isset($_POST["recuperarPass"]) ? $_POST["recuperarPass"] : '');
+        $cod = substr(md5(uniqid(rand())), 0, 10);
 
-    $usuario->set("email", $email);
-    $usuario->set("password", $password);
+        $usuarioData = $usuario->list(array("email = '".$recuperarPass."'"));
+        $usuario->set("cod",$usuarioData[0]["cod"]);
+        $usuario->editUnico("password",$cod);
 
-    if ($usuario->login() == 0):
+        $mensaje = "Su nueva contraseña es: <b>".$cod."</b><br><br>";
+
+        $correo->set("asunto", "Recuperar Contraseña");
+        $correo->set("receptor", $recuperarPass);
+        $correo->set("emisor", EMAIL);
+        $correo->set("mensaje", $mensaje);
+        $correo->emailEnviar();
         ?>
         <script>
             $(document).ready(function () {
-                $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">Email o contraseña incorrecta.</div>');
+                $("#errorLogin").html('<br/><div class="alert alert-success" role="alert">Revise su email para ver su nueva contraseña.</div>');
                 $('#login_2').modal("show");
             });
         </script>
-    <?php
-    else:
-        $funcion->headerMove(URL);
-    endif;
-endif;
+        <?php
+    } else {
+        $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
+        $password = $funcion->antihack_mysqli(isset($_POST["password"]) ? $_POST["password"] : '');
+
+        $usuario->set("email", $email);
+        $usuario->set("password", $password);
+
+        if ($usuario->login() == 0) {
+            ?>
+            <script>
+                $(document).ready(function () {
+                    $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">Email o contraseña incorrecta.</div>');
+                    $('#login_2').modal("show");
+                });
+            </script>
+            <?php
+        } else {
+            $funcion->headerMove(URL);
+        }
+    }
+}
 ?>
 <div class="modal fade" id="login_2" tabindex="-1" role="dialog" aria-labelledby="myLogin" aria-hidden="true">
     <div class="modal-dialog">
@@ -42,7 +68,8 @@ endif;
                         <input type="password" class="form-control form-white" name="password" placeholder="Contraseña">
                     </div>
                     <div class="col-md-12 mb-5">
-                        <a href="#">¿Olvidaste tu contraseña?</a>
+                        <a id="btnPass" href="#">¿Olvidaste tu contraseña?</a>
+                        <div id="recuperarPass" class="mb-5 mt-5 centro"></div>
                     </div>
                     <div class="col-md-12 mt-5 centro">
                         <button type="submit" name="login" class="btn btn--round btn-sm">Ingresar</button>
@@ -137,9 +164,10 @@ endif;
                                id="password2" required>
                     </div>
                     <div class="col-md-12">
-                        <div class="checkbox">
-                            <input type="checkbox" value="1" id="check_2" name="terminos" required>
-                            <label for="check_2"><span>He leído y acepto los <strong>Términos &amp; Condiciones</strong></span></label>
+                        <div class="custom-checkbox2">
+                            <input type="checkbox" id="opt1" value="1" class="" name="terminos">
+                            <label for="opt1">
+                                <span class="circle"></span>He leído y acepto los <strong>Términos &amp; Condiciones</strong></label>
                         </div>
                     </div>
                     <div class="col-md-12 centro">
@@ -183,26 +211,24 @@ endif;
             <div class="modal-body">
                 <p id="errorVendedor"></p>
                 <form class="popup-form" id="myVendedor" method="post">
-                    <div class="login_icon"><i class="icon_lock_alt"></i></div>
-                    <input type="text" class="form-control form-white" name="nombreVendedor"
-                           placeholder="Nombre de tu restaurtante / negocio" required>
-                    <div class="row">
-                        <label class="col-md-6 col-xs-6" style="visibility: hidden;">
-                            <input type="text" name="provinciaVendedor" value="Córdoba">
-                        </label>
-                        <label class="col-md-6 col-xs-6">
-                            <select class="form-control" name="localidadVendedor" id="localidad" required >
-                            <option value="" selected disabled>Localidad</option>
-                            <option value="San Francisco">San Francisco</option>
-                            <option value="Gran Buenos Aires Zona Sur">Gran Buenos Aires Zona Sur</option>
-                            </select>
-                        </label>
-                    </div>
-                    <?php if (empty($_SESSION["usuarios"]["telefono"])): ?>
-                        <input type="text" class="form-control form-white" name="telefonoUsuario"
-                               placeholder="Tu teléfono personal" required>
-                    <?php endif; ?>
-                    <button type="submit" name="vendedor" class="btn btn-submit">Solicitar</button>
+                        <div class="login_icon"><i class="icon_lock_alt"></i></div>
+                        <input type="text" class="form-control form-white" name="nombreVendedor"
+                               placeholder="Nombre de tu restaurtante / negocio" required>
+                        <div class="row mt-5">
+                            <label class="col-md-12">
+                                <select class="form-control" name="localidadVendedor" id="localidad" required >
+                                    <option value="" selected disabled>Localidad</option>
+                                    <option value="San Francisco">San Francisco</option>
+                                </select>
+                            </label>
+                        </div>
+                        <?php if (empty($_SESSION["usuarios"]["telefono"])): ?>
+                            <input type="text" class="form-control form-white" name="telefonoUsuario"
+                                   placeholder="Tu teléfono personal" required>
+                        <?php endif; ?>
+                        <div class="centro">
+                            <button type="submit" name="vendedor" class="btn btn--round mt-5 btn-sm">Solicitar</button>
+                        </div>
                 </form>
             </div>
         </div>
@@ -213,6 +239,7 @@ endif;
 <div class="modal fade" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="modalOK" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content modal-popup">
+            <div class="modal-body">
             <a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
             <br/>
             <div id="confirm">
@@ -224,6 +251,7 @@ endif;
                 avisar
                 por email o teléfono cuando te habilitemos.
             </div>
+            </div>
         </div>
     </div>
 </div>
@@ -234,4 +262,13 @@ endif;
             $("#senalVendedor").html('<input name="senalVendedor" value="1" type="hidden">');
         });
     }
+</script>
+<script>
+    $('#btnPass').click(
+        function () {
+            $('#recuperarPass').empty();
+            $('#recuperarPass').append('<input type="email" name="recuperarPass" class="form-control form-white" placeholder="Email">');
+            $('#recuperarPass').append('<button type="submit" name="login" class="btn btn--round btn-sm mt-5">Recuperar Contraseña</button>');
+        }
+    );
 </script>

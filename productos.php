@@ -21,21 +21,21 @@ foreach ($get as $key => $get_value) {
 
 $get_inputs = array();
 foreach ($get as $key => $get_value) {
-    array_push($get_inputs, array('id'=>$key,'hide'=> "<input type='hidden' name='$key' value='$get_value' />"));
+    array_push($get_inputs, array('id' => $key, 'hide' => "<input type='hidden' name='$key' value='$get_value' />"));
 }
-$input_titulo='';
-$input_order='';
-$input_categoria='';
+$input_titulo = '';
+$input_order = '';
+$input_categoria = '';
 foreach ($get_inputs as $d) {
-    switch ($d['id']){
+    switch ($d['id']) {
         case 'order':
-            $input_order=$d['hide'];
+            $input_order = $d['hide'];
             break;
         case 'buscar':
-            $input_titulo=$d['hide'];
+            $input_titulo = $d['hide'];
             break;
         case 'categoria':
-            $input_categoria=$d['hide'];
+            $input_categoria = $d['hide'];
             break;
     }
 }
@@ -134,7 +134,7 @@ $template->themeInit();
                                     <?php
                                     if (!empty($input_titulo)) {
                                         echo $input_titulo;
-                                    }else{
+                                    } else {
                                         echo $input_titulo;
                                     }
                                     ?>
@@ -191,7 +191,7 @@ $template->themeInit();
                                     <?php
                                     if (!empty($input_order)) {
                                         echo $input_order;
-                                    }else{
+                                    } else {
                                         echo $input_order;
                                     }
                                     ?>
@@ -217,7 +217,7 @@ $template->themeInit();
                                     <?php
                                     if (!empty($input_categoria)) {
                                         echo $input_categoria;
-                                    }else{
+                                    } else {
                                         echo $input_categoria;
                                     }
                                     foreach ($categorias_data as $cat) {
@@ -249,37 +249,32 @@ $template->themeInit();
                             $empresa->set("cod", $prod['cod_empresa']);
                             $empresa_data = $empresa->view();
                             //
+                            $imagen->set("cod", $prod['cod']);
+                            $img = $imagen->view();
                             ?>
-                            <div class="col-lg-4 col-md-6">
+                            <div class="col-md-4">
                                 <!-- start .single-product -->
                                 <div class="product product--card product--card-small">
-                                    <div class="product__thumbnail">
-                                        <img src="images/p1.jpg" alt="Product Image">
-                                        <div class="prod_btn">
-                                            <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
-                                                Ver más
-                                            </a>
+                                    <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
+                                        <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
                                         </div>
-                                        <!-- end /.prod_btn -->
-                                    </div>
+                                    </a>
                                     <!-- end /.product__thumbnail -->
-
                                     <div class="product-desc">
-                                        <a href="<?= URL . '/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
-                                            <h4><?= ucfirst($prod['titulo']); ?></h4>
+                                        <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
+                                            <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 50)); ?></h4>
                                         </a>
                                         <ul class="titlebtm">
                                             <li>
                                                 <p>
-                                                    <a href="<?= URL . '/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
-                                                        <?= ucfirst($empresa_data['titulo']) ?>
+                                                    <a href="<?= URL . '/producto/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
+                                                        <?= ucfirst(substr(strip_tags($empresa_data['titulo']), 0, 50)); ?>
                                                     </a>
                                                 </p>
                                             </li>
                                         </ul>
                                     </div>
                                     <!-- end /.product-desc -->
-
                                     <div class="product-purchase">
                                         <div class="price_love">
                                             <?php

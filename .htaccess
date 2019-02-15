@@ -6,10 +6,10 @@ RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteRule ^(.*)$ $1.php
 
 RewriteRule ^menu/(.*)/(.*)$ ./menu.php?id=$2
-RewriteRule ^inicio ./index.php
-RewriteRule ^restaurante/(.*)/(.*)$ ./restaurante.php?id=$2
 RewriteRule ^c/(.*)/(.*)$ ./contenidos.php?id=$2
 RewriteRule ^productos/(.*)/(.*)$ ./productos.php?categoria=$2
+RewriteRule ^producto/(.*)/(.*)$ ./producto.php?cod=$2
+RewriteRule ^comercio/(.*)/(.*)$ ./comercio.php?cod=$2
 RewriteRule ^blog/(.*)/(.*)$ ./blog.php?cod=$2
 
 SetOutputFilter DEFLATE

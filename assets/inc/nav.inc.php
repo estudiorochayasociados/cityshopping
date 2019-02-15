@@ -499,10 +499,13 @@ START MENU AREA
                                     <a href="<?=URL?>/productos">Productos</a>
                                 </li>
                                 <li>
-                                    <a href="<?=URL?>/blogs">Blogs</a>
+                                    <a href="<?=URL?>/comercios">Comercios</a>
                                 </li>
                                 <li>
-                                    <a href="">contact</a>
+                                    <a href="<?=URL?>/blogs">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="<?=URL?>/contacto">Contacto</a>
                                 </li>
                             </ul>
                         </div>

@@ -9,14 +9,14 @@ class autoload
         define('URL', "http://".$_SERVER['HTTP_HOST']."/CityShopping");
         define('CANONICAL', "http://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
         define('TITULO', "City Shopping");
-        define('TELEFONO', "5555555");
+        define('TELEFONO', "(03564) 420108");
         define('CIUDAD', "San Francisco");
         define('PROVINCIA', "Cordoba");
         define('PAIS', "Argentina");
         define('EMAIL', "web@estudiorochayasoc.com.ar");
         define('PASS_EMAIL', "weAr2010");
         define('SMTP_EMAIL', "mail.estudiorochayasoc.com.ar");
-        define('DIRECCION', "direccion");
+        define('DIRECCION', "Belgrano 1585");
         define('LOGO', URL . "/assets/images/logo.png");
         define('FAVICON', URL . "/assets/images/favicon.png");
         define('APP_ID_FB', "");

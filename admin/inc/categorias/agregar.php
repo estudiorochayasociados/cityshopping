@@ -60,6 +60,7 @@ if (isset($_POST["agregar"])) {
                 <option value="banners">Banners</option>
                 <option value="sliders">Sliders</option>
                 <option value="novedades">Novedades</option>
+                <option value="novedades">Novedades</option>
             </select>
         </label> 
         <div class="clearfix"></div>

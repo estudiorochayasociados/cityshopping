@@ -16,15 +16,15 @@ $template->set("favicon", FAVICON);
 $template->set("body", "blog-page2");
 $template->themeInit();
 ////Gets
-$pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
+$pagina = $funciones->antihack_mysqli(isset($_GET["pagina"]) ? $_GET["pagina"] : '0');
 
-$cantidad =1;
+$cantidad =3;
 
 if ($pagina > 0) {
     $pagina = $pagina - 1;
 }
 
-if (@count($_GET) >= 1) {
+if (@count($_GET) > 1) {
     $anidador = "&";
 } else {
     $anidador = "?";

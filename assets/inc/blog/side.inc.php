@@ -71,7 +71,7 @@ foreach ($categorias_banners as $categorias) {
                 $imagen->set("cod",$ban['cod']);
                 $img = $imagen->view();
                 ?>
-                <div class="banner mb-10" style="height:300px;background:url(<?= $img['ruta']; ?>) no-repeat center center/cover;">
+                <div class="mb-10" style="height:300px;background:url(<?= $img['ruta']; ?>) no-repeat center center/cover;">
                 </div>
                 <?php
             }

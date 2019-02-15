@@ -108,18 +108,18 @@ $template->themeInit();
                 $empresa->set("cod", $prod['cod_empresa']);
                 $empresa_data = $empresa->view();
                 //
+                $imagen->set("cod",$prod['cod']);
+                $img=$imagen->view();
                 ?>
                 <!-- start .col-md-4 -->
                 <div class="col-lg-4 col-md-6">
                     <!-- start .single-product -->
                     <div class="product product--card product--card3">
-                        <div class="product__thumbnail">
-                            <img src="images/p1.jpg" alt="Product Image">
-                            <div class="prod_btn">
-                                <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']).'/'.$funciones->normalizar_link($prod['cod']); ?>" class="transparent btn--sm btn--round">
-                                    Ver más
-                                </a>
-                            </div>
+                        <div class="">
+                            <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
+                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                </div>
+                            </a>
                             <!-- end /.prod_btn -->
                         </div>
                         <!-- end /.product__thumbnail -->

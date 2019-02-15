@@ -2,7 +2,7 @@
 $productos = new Clases\Productos();
 $imagenes  = new Clases\Imagenes();
 $filter    = array();
-$data      = $productos->list("","","");
+$data      = $productos->list("",'','');
 ?>
 <div class="mt-20">
     <div class="col-lg-12 col-md-12">

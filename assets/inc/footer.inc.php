@@ -198,4 +198,27 @@ END FOOTER AREA
 <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBeySPFGz7DIUTrReCRQT6HYaMM0ia0knA"></script>
 <script src="<?=URL?>/assets/js/map.js"></script>
 <!-- endinject -->
+<script>
+    $("#provincia").change(function () {
+        $("#provincia option:selected").each(function () {
+            elegido = $(this).val();
+            $.ajax({
+                type: "GET",
+                url: "<?=URL ?>/assets/inc/localidades.inc.php",
+                data: "elegido=" + elegido,
+                dataType: "html",
+                success: function (data) {
+                    $('#localidad option').remove();
+                    var substr = data.split(';');
+                    for (var i = 0; i < substr.length; i++) {
+                        var value = substr[i];
+                        $("#localidad").append(
+                            $("<option></option>").attr("value", value).text(value)
+                        );
+                    }
+                }
+            });
+        });
+    })
+</script>
 <?php include 'assets/inc/login.inc.php'; ?>

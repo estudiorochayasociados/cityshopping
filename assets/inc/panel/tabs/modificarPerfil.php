@@ -33,7 +33,6 @@ if (isset($_POST["modificarPerfil"])):
     $usuario->set("email", $email);
     $usuario->set("provincia", $provincia);
     $usuario->set("localidad", $localidad);
-    $usuario->set("barrio", $barrio);
     $usuario->set("direccion", $direccion);
     $usuario->set("telefono", $telefono);
     $usuario->set("postal", $postal);
@@ -46,128 +45,201 @@ if (isset($_POST["modificarPerfil"])):
     $funcion->headerMove(URL . '/panel');
 endif;
 ?>
-<div class="row">
-    <div class="col-md-6 col-sm-6 add_bottom_15">
-        <form method="post">
-            <div class="indent_title_in">
-                <i class="icon_mail_alt"></i>
-                <h3>Modificar Datos</h3>
-                <p>
-                    Completa los siguientes campos:
-                </p>
+<!--================================
+        START DASHBOARD AREA
+=================================-->
+<section class="">
+    <div class="dashboard_contents">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="dashboard_title_area">
+                        <div class="dashboard__title">
+                            <h3>Modificar perfil</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- end /.col-md-12 -->
             </div>
-            <div class="wrapper_indent">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Nombre</label>
-                            <input class="form-control"
-                                   value="<?php if (!empty($usuarioData['nombre'])) {
-                                       echo $usuarioData['nombre'];
-                                   } ?>" name="nombrePerfil" id="nombrePerfil" type="text"
-                                   placeholder="Ej. Jorge">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Apellido</label>
-                            <input class="form-control"
-                                   value="<?php if (!empty($usuarioData['apellido'])) {
-                                       echo $usuarioData['apellido'];
-                                   } ?>" name="apellidoPerfil" id="apellidoPerfil" type="text"
-                                   placeholder="Ej. Pérez">
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input class="form-control" value="<?php if (!empty($usuarioData['email'])) {
-                        echo $usuarioData['email'];
-                    } ?>" name="emailPerfil" id="emailPerfil" type="email"
-                           placeholder="Ej. jorge@tumail.com">
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-xs-6">
-                        <label>Provincia</label>
-                        <select class="form-control" name="provinciaPerfil" id="provincia" required>
-                            <option value="" selected disabled>Provincia</option>
-                            <?php $funcion->provincias() ?>
-                        </select>
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                        <label>Localidad</label>
-                        <select class="form-control" name="localidadPerfil" id="localidad" required>
-                            <option value="" selected disabled>Localidad</option>
-                        </select>
-                    </div>
-                </div>
-                <br/>
-                <div class="form-group">
-                    <label>Direccion</label>
-                    <input class="form-control" value="<?php if (!empty($usuarioData['direccion'])) {
-                        echo $usuarioData['direccion'];
-                    } ?>" name="direccionPerfil" id="direccionPerfil" type="text"
-                           placeholder="Ej. Av. Urquiza 369">
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-xs-6">
-                        <label>Teléfono</label>
-                        <div class="form-group">
-                            <input class="form-control"
-                                   value="<?php if (!empty($usuarioData['telefono'])) {
-                                       echo $usuarioData['telefono'];
-                                   } ?>" name="telefonoPerfil" id="telefonoPerfil" type="text"
-                                   placeholder="Ej. 3564555555">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xs-6">
-                        <label>Postal</label>
-                        <div class="form-group">
-                            <input class="form-control"
-                                   value="<?php if (!empty($usuarioData['postal'])) {
-                                       echo $usuarioData['postal'];
-                                   } ?>" name="postalPerfil" id="postalPerfil" type="text"
-                                   placeholder="Ej. 2400">
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" name="modificarPerfil" class="btn_1 green">Modificar Datos
-                </button>
-            </div><!-- End wrapper_indent -->
-        </form>
-    </div>
+            <!-- end /.row -->
 
-    <div class="col-md-6 col-sm-6 add_bottom_15">
-        <form method="post">
-            <div class="indent_title_in">
-                <i class="icon_lock_alt"></i>
-                <h3>Modificar contraseña</h3>
-                <p>
-                    Completa los siguientes campos:
-                </p>
+            <div class="row">
+                <div class="col-lg-6">
+                    <form method="post" class="setting_form">
+                        <div class="information_module">
+                            <div class="information_module">
+                                <a class="toggle_title" href="#collapse1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse1">
+                                    <h4>Modificar datos
+                                        <span class="lnr lnr-chevron-down"></span>
+                                    </h4>
+                                </a>
+
+                                <div class="information__set toggle_module collapse show" id="collapse1">
+                                    <div class="information_wrapper form--fields">
+                                        <p>
+                                            Completa los siguientes campos:
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label>Nombre</label>
+                                                        <input class="text_field"
+                                                               value="<?php if (!empty($usuarioData['nombre'])) {
+                                                                   echo $usuarioData['nombre'];
+                                                               } ?>" name="nombrePerfil" id="nombrePerfil" type="text"
+                                                               placeholder="Ej. Jorge" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Apellido</label>
+                                                    <input class="text_field"
+                                                           value="<?php if (!empty($usuarioData['apellido'])) {
+                                                               echo $usuarioData['apellido'];
+                                                           } ?>" name="apellidoPerfil" id="apellidoPerfil" type="text"
+                                                           placeholder="Ej. Pérez" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input class="text_field" value="<?php if (!empty($usuarioData['email'])) {
+                                                echo $usuarioData['email'];
+                                            } ?>" name="emailPerfil" id="emailPerfil" type="email"
+                                                   placeholder="Ej. jorge@tumail.com" required>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-xs-6">
+                                                <label>Provincia</label>
+                                                <select class="form-control" name="provinciaPerfil" id="provincia" required>
+                                                    <?php
+                                                    if (!empty($usuarioData['provincia'])){
+                                                        ?>
+                                                        <option value="<?=$usuarioData['provincia']?>" selected disabled><?=$usuarioData['provincia']?></option>
+                                                        <?php
+                                                    }else{
+                                                        ?>
+                                                        <option value="" selected disabled>Provincia</option>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                    <?php $funcion->provincias() ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 col-xs-6">
+                                                <label>Localidad</label>
+                                                <select class="form-control" name="localidadPerfil" id="localidad" required>
+                                                    <?php
+                                                    if (!empty($usuarioData['provincia'])){
+                                                        ?>
+                                                        <option value="<?=$usuarioData['localidad']?>" selected disabled><?=$usuarioData['localidad']?></option>
+                                                        <?php
+                                                    }else{
+                                                        ?>
+                                                        <option value="" selected disabled>Localidad</option>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Direccion</label>
+                                            <input class="text_field" value="<?php if (!empty($usuarioData['direccion'])) {
+                                                echo $usuarioData['direccion'];
+                                            } ?>" name="direccionPerfil" id="direccionPerfil" type="text"
+                                                   placeholder="Ej. Av. Urquiza 369" required>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-xs-6">
+                                                <label>Teléfono</label>
+                                                <div class="form-group">
+                                                    <input class="text_field"
+                                                           value="<?php if (!empty($usuarioData['telefono'])) {
+                                                               echo $usuarioData['telefono'];
+                                                           } ?>" name="telefonoPerfil" id="telefonoPerfil" type="text"
+                                                           placeholder="Ej. 3564555555" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-6">
+                                                <label>Postal</label>
+                                                <div class="form-group">
+                                                    <input class="text_field"
+                                                           value="<?php if (!empty($usuarioData['postal'])) {
+                                                               echo $usuarioData['postal'];
+                                                           } ?>" name="postalPerfil" id="postalPerfil" type="text"
+                                                           placeholder="Ej. 2400" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dashboard_setting_btn">
+                                            <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar Datos
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- end /.information_wrapper -->
+                                </div>
+                                <!-- end /.information__set -->
+                            </div>
+                            <!-- end /.information_module -->
+                        </div>
+                    </form>
+                </div>
+                <!-- end /.col-md-6 -->
+                <div class="col-lg-6">
+                    <form method="post" class="setting_form">
+                        <div class="information_module">
+                            <a class="toggle_title" href="#collapse2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse2">
+                                <h4>Modificar contraseña
+                                    <span class="lnr lnr-chevron-down"></span>
+                                </h4>
+                            </a>
+                            <div class="information__set toggle_module collapse show" id="collapse2">
+                                <div class="information_wrapper form--fields">
+                                <p>
+                                    Completa los siguientes campos:
+                                </p>
+                                    <div class="form-group">
+                                        <label>Contraseña actual<sup>*</sup></label>
+                                        <input class="text_field" name="old_passwordPerfil" id="old_passwordPerfil"
+                                               type="password" placeholder="********" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Nueva contraseña<sup>*</sup></label>
+                                        <input class="text_field" name="new_passwordPerfil" id="new_passwordPerfil"
+                                               type="password" placeholder="Ej. Azf45D3yU" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Confirmar nueva contraseña<sup>*</sup></label>
+                                        <input class="text_field" name="new_password2Perfil" id="new_password2Perfil"
+                                               type="password" placeholder="Ej. Azf45D3yU" required>
+                                    </div>
+                                <div class="dashboard_setting_btn ">
+                                    <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar contraseña
+                                </div>
+                                </div>
+                                <!-- end /.information_wrapper -->
+                            </div>
+                            <!-- end /.information__set -->
+                        </div>
+                        <!-- end /.information_module -->
+                    </form>
+                </div>
+                <!-- end /.col-md-6 -->
             </div>
-            <div class="wrapper_indent">
-                <div class="form-group">
-                    <label>Contraseña actual</label>
-                    <input class="form-control" name="old_passwordPerfil" id="old_passwordPerfil"
-                           type="password" placeholder="********">
-                </div>
-                <div class="form-group">
-                    <label>Nueva contraseña</label>
-                    <input class="form-control" name="new_passwordPerfil" id="new_passwordPerfil"
-                           type="password" placeholder="Ej. Azf45D3yU">
-                </div>
-                <div class="form-group">
-                    <label>Confirmar nueva contraseña</label>
-                    <input class="form-control" name="new_password2Perfil" id="new_password2Perfil"
-                           type="password" placeholder="Ej. Azf45D3yU">
-                </div>
-                <button type="submit" name="modificarPerfil" class="btn_1 green">Modificar contraseña
-                </button>
-            </div><!-- End wrapper_indent -->
-        </form>
+            <!-- end /.row -->
+        </div>
+        <!-- end /.container -->
     </div>
-
-</div><!-- End row -->
-
-<hr class="styled_2">
+    <!-- end /.dashboard_menu_area -->
+</section>
+<!--================================
+        END DASHBOARD AREA
+=================================-->

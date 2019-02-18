@@ -1,6 +1,6 @@
-<div id="tabs" class="tabs">
+<div id="tabs" class="dashboard_menu_area">
     <nav>
-        <ul>
+        <ul class="dashboard_menu">
             <li id="tab1" <?= $displayTab; ?>><a href="<?= URL ?>/panel#seccion-1" class="icon-profile"><span>Empresa</span></a>
             </li>
             <li class="hidden-plan1" id="tab2" <?= $displayTab; ?>><a href="<?= URL ?>/panel#seccion-2" class="icon-menut-items"><span>Menús</span></a>
@@ -12,10 +12,10 @@
     </nav>
     <div class="content">
         <section id="seccion-1" <?= $displaySeccion ?>>
-            <?php include("tabs/modificarEmpresa.php") ?>
+            <?php //include("tabs/modificarEmpresa.php") ?>
         </section><!-- seccion 1 -->
         <section class="hidden-plan1" id="seccion-2" <?= $displaySeccion ?>>
-            <?php include("tabs/verMenus.php") ?>
+            <?php //include("tabs/verMenus.php") ?>
         </section><!-- seccion 2 -->
         <section id="seccion-3" <?= $classSeccion ?>>
             <?php include("tabs/modificarPerfil.php") ?>

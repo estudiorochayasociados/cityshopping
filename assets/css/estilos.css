@@ -6,7 +6,10 @@
 }
 .contacto{
     padding: 14px 38px 14px !important;
-
+}
+.input-imagen{
+    line-height: unset;
+    height: 32px;
 }
 /*margin top*/
 

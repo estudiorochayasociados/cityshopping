@@ -158,48 +158,16 @@ START MENU AREA
                                 <div class="dropdown dropdown--author">
                                     <ul>
                                         <li>
-                                            <a href="author.html">
+                                            <a href="<?=URL?>/panel?op=perfil">
                                                 <span class="lnr lnr-user"></span>Perfil</a>
                                         </li>
                                         <li>
-                                            <a href="dashboard.html">
-                                                <span class="lnr lnr-home"></span> Dashboard</a>
+                                            <a href="<?=URL?>/panel?op=empresa">
+                                                <span class="lnr lnr-user"></span>Empresa</a>
                                         </li>
                                         <li>
-                                            <a href="dashboard-setting.html">
-                                                <span class="lnr lnr-cog"></span> Setting</a>
-                                        </li>
-                                        <li>
-                                            <a href="cart.html">
-                                                <span class="lnr lnr-cart"></span>Purchases</a>
-                                        </li>
-                                        <li>
-                                            <a href="favourites.html">
-                                                <span class="lnr lnr-heart"></span> Favourite</a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-add-credit.html">
-                                                <span class="lnr lnr-dice"></span>Add Credits</a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-statement.html">
-                                                <span class="lnr lnr-chart-bars"></span>Sale Statement</a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-upload.html">
-                                                <span class="lnr lnr-upload"></span>Upload Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-manage-item.html">
-                                                <span class="lnr lnr-book"></span>Manage Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-withdrawal.html">
-                                                <span class="lnr lnr-briefcase"></span>Withdrawals</a>
-                                        </li>
-                                        <li>
-                                            <a href="?logout=0">
-                                                <span class="lnr lnr-exit"></span>Salir</a>
+                                            <a href="<?=URL?>/?logout=0">
+                                                <span class="lnr lnr-user"></span>Salir</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -263,46 +231,7 @@ START MENU AREA
                                                 <a href="author.html">
                                                     <span class="lnr lnr-user"></span>Profile</a>
                                             </li>
-                                            <li>
-                                                <a href="dashboard.html">
-                                                    <span class="lnr lnr-home"></span> Dashboard</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-setting.html">
-                                                    <span class="lnr lnr-cog"></span> Setting</a>
-                                            </li>
-                                            <li>
-                                                <a href="cart.html">
-                                                    <span class="lnr lnr-cart"></span>Purchases</a>
-                                            </li>
-                                            <li>
-                                                <a href="favourites.html">
-                                                    <span class="lnr lnr-heart"></span> Favourite</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-add-credit.html">
-                                                    <span class="lnr lnr-dice"></span>Add Credits</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-statement.html">
-                                                    <span class="lnr lnr-chart-bars"></span>Sale Statement</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-upload.html">
-                                                    <span class="lnr lnr-upload"></span>Upload Item</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-manage-item.html">
-                                                    <span class="lnr lnr-book"></span>Manage Item</a>
-                                            </li>
-                                            <li>
-                                                <a href="dashboard-withdrawal.html">
-                                                    <span class="lnr lnr-briefcase"></span>Withdrawals</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <span class="lnr lnr-exit"></span>Logout</a>
-                                            </li>
+
                                         </ul>
                                     </div>
 

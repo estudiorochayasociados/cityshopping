@@ -29,7 +29,6 @@ $empresa->set("cod_usuario", $cod_usuario);
 $empresaData = $empresa->view();
 $filterEmpresa = array("cod = '$empresaData[cod]'");
 $imagenesArrayEmpresa = $imagenesEmpresa->list($filterEmpresa, "", "");
-
 $usuario->set("cod", $cod_usuario);
 $usuarioData = $usuario->view();
 
@@ -62,9 +61,6 @@ $filterMenu = array("cod_empresa = '" . $empresaData['cod'] . "'");
 $menuArray = $menu->list($filterMenu, "", $cantidad * $pagina . ',' . $cantidad);
 $numeroPaginas = $menu->paginador($filterMenu, $cantidad);
 
-if (isset($_GET['pagina'])):
-    $funcion->headerMove(CANONICAL . '#seccion-2');
-endif;
 ?>
 
 <?php if ($_SESSION["usuarios"]["vendedor"] == 0):
@@ -78,31 +74,83 @@ else:
     $classSeccion = "";
     $classTab = "";
 endif; ?>
-
-<!-- SubHeader =============================================== -->
-<section class="parallax-window" id="short" data-parallax="scroll" data-image-src="<?= URL ?>/assets/img/bkg.jpg" data-natural-width="1400">
-    <div id="subheader">
-        <div id="sub_content">
-            <h1>Panel de usuario</h1>
-            <p>Administra todas tus configuraciones desde acá</p>
-            <p></p>
-        </div><!-- End sub_content -->
-    </div><!-- End subheader -->
-</section><!-- End section -->
-<!-- End SubHeader ============================================ -->
-
-<div id="position">
+<!--================================
+    START BREADCRUMB AREA
+=================================-->
+<section class="breadcrumb-area">
     <div class="container">
-        <ul>
-            <li><a href="#0">Inicio</a>
-            </li>
-            <li>Panel de Usuario</li>
-        </ul>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb">
+                    <ul>
+                        <li>
+                            <a href="<?=URL?>/index">Inicio</a>
+                        </li>
+                        <li class="active">
+                            <a href="#">Panel de usuario</a>
+                        </li>
+                    </ul>
+                </div>
+                <h1 class="page-title">Administra todas tus configuraciones desde acá</h1>
+            </div>
+            <!-- end /.col-md-12 -->
+        </div>
+        <!-- end /.row -->
     </div>
-</div><!-- Position -->
-
+    <!-- end /.container -->
+</section>
+<!--================================
+    END BREADCRUMB AREA
+=================================-->
 <!-- Content ================================================== -->
-<div class="container margin_60">
+<section class="dashboard-area">
+    <div class="dashboard_menu_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="dashboard_menu">
+                        <li class="<?php if($_GET['op']=="perfil"){ echo "active"; } ?>">
+                            <a href="<?=URL?>/panel?op=perfil">
+                                <span class="lnr lnr-home"></span>Perfil</a>
+                        </li>
+                        <li class="<?php if($_GET['op']=="empresa"){ echo "active"; } ?>">
+                            <a href="<?=URL?>/panel?op=empresa">
+                                <span class="lnr lnr-cog"></span>Empresa</a>
+                        </li>
+                        <li class="<?php if($_GET['op']=="productos"){ echo "active"; } ?>">
+                            <a href="<?=URL?>/panel?op=productos">
+                                <span class="lnr lnr-cart"></span>Productos</a>
+                        </li>
+                        <li>
+                            <a href="dashboard-add-credit.html">
+                                <span class="lnr lnr-dice"></span>Add Credits</a>
+                        </li>
+                        <li>
+                            <a href="dashboard-statement.html">
+                                <span class="lnr lnr-chart-bars"></span>Statements</a>
+                        </li>
+                        <li>
+                            <a href="dashboard-upload.html">
+                                <span class="lnr lnr-upload"></span>Upload Items</a>
+                        </li>
+                        <li>
+                            <a href="dashboard-manage-item.html">
+                                <span class="lnr lnr-briefcase"></span>Manage Items</a>
+                        </li>
+                        <li>
+                            <a href="dashboard-withdrawal.html">
+                                <span class="lnr lnr-briefcase"></span>Withdrawals</a>
+                        </li>
+                    </ul>
+                    <!-- end /.dashboard_menu -->
+                </div>
+                <!-- end /.col-md-12 -->
+            </div>
+            <!-- end /.row -->
+        </div>
+        <!-- end /.container -->
+    </div>
+    <!-- end /.dashboard_menu_area -->
     <?php switch ($op) {
         case "crearEmpresaPaso1":
             include("assets/inc/panel/crearEmpresaPaso1.php");
@@ -140,11 +188,17 @@ endif; ?>
             $usuario->login();
             $funcion->headerMove(URL . '/panel#seccion-1');
             break;
-        default:
-            include("assets/inc/panel/tabs.php");
+        case"perfil":
+            include("assets/inc/panel/tabs/modificarPerfil.php");
+            break;
+        case "empresa":
+            include("assets/inc/panel/tabs/modificarEmpresa.php");
+            break;
+        case "productos":
+            include("assets/inc/panel/tabs/verMenus.php");
             break;
     } ?>
-</div><!-- End container  -->
+</section><!-- End container  -->
 <!-- End Content =============================================== -->
 
 <?php $template->themeEnd() ?>
@@ -264,7 +318,7 @@ endif; ?>
                 elem = $(this);
                 nombreCampo1 = elem.data("nombreCampo1");
                 nombreCampo2 = elem.data("nombreCampo2");
-                texto_insertar = '<div class="col-sm-6"><div class="form-group"><input type="text" name="' + nombreCampo1 + '" class="form-control" /></div></div><div class="col-sm-6"><div class="form-group"><input type="text" name="' + nombreCampo2 + '" class="form-control" /></div></div>';
+                texto_insertar = '<div class="col-sm-6"><div class="form-group"><input type="text" name="' + nombreCampo1 + '" class="text_field" /></div></div><div class="col-sm-6"><div class="form-group"><input type="text" name="' + nombreCampo2 + '" class="text_field" /></div></div>';
                 nuevo_campo = $(texto_insertar);
                 elem.before(nuevo_campo);
             });

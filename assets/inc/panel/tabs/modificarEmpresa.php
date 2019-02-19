@@ -51,8 +51,8 @@ if ($borrarImg != '') {
                             $empresa->set("email", $email);
                             $empresa->set("provincia", $provincia);
                             $empresa->set("ciudad", $ciudad);
-                            $empresa->set("barrio", $barrio);
-                            $empresa->set("direccion", $direccion);
+                            $empresa->set("barrio", strtoupper($barrio));
+                            $empresa->set("direccion", strtoupper($direccion));
                             $empresa->set("postal", $postal);
                             $empresa->set("delivery", $delivery);
                             $empresa->set("tiempoEntrega", $tiempoEntrega);
@@ -225,13 +225,10 @@ if ($borrarImg != '') {
 
                                                     <div class="form-group">
                                                         <label>Descripción de la empresa</label>
-                                                        <textarea class="wysihtml5 form-control" name="desarrolloEmpresa"
-                                                                  placeholder="Breve descripción ..."
-                                                                  style="height: 200px;">
-                                                             <?php if (!empty($empresaData['desarrollo'])) {
-                                                                 echo $empresaData['desarrollo'];
-                                                             } ?>
                                                          </textarea>
+                                                        <textarea name="desarrolloEmpresa"><?php if (!empty($empresaData['desarrollo'])) {
+                                                                echo $empresaData['desarrollo'];
+                                                            } ?></textarea>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6 col-xs-6">
@@ -391,18 +388,18 @@ if ($borrarImg != '') {
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
                                                                 <label>Barrio</label>
-                                                                <input type="text" value="<?php if (!empty($empresaData['barrio'])) {
+                                                                <input type="text" style="text-transform:uppercase"  value="<?php if (!empty($empresaData['barrio'])) {
                                                                     echo $empresaData['barrio'];
-                                                                } ?>" id="barrioEmpresa" name="barrioEmpresa" class="form-control"
+                                                                } ?>" id="barrioEmpresa" name="barrioEmpresa" class="text_field"
                                                                        placeholder="Ej. Las Rosas">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
                                                                 <label>Dirección</label>
-                                                                <input type="text" value="<?php if (!empty($empresaData['direccion'])) {
+                                                                <input type="text" style="text-transform:uppercase" value="<?php if (!empty($empresaData['direccion'])) {
                                                                     echo $empresaData['direccion'];
-                                                                } ?>" id="direccionEmpresa" name="direccionEmpresa" class="form-control"
+                                                                } ?>" id="direccionEmpresa" name="direccionEmpresa" class="text_field"
                                                                        placeholder="Ej. Urquiza 555">
                                                             </div>
                                                         </div>
@@ -413,7 +410,7 @@ if ($borrarImg != '') {
                                                                 <label>Código Postal</label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['postal'])) {
                                                                     echo $empresaData['postal'];
-                                                                } ?>" id="postalEmpresa" name="postalEmpresa" class="form-control"
+                                                                } ?>" id="postalEmpresa" name="postalEmpresa" class="text_field"
                                                                        placeholder="Ej. 2400">
                                                             </div>
                                                         </div>
@@ -496,7 +493,7 @@ if ($borrarImg != '') {
                                                                     foreach ($imagenesArrayEmpresa as $key => $value): ?>
                                                                         <?php
                                                                         echo "<div class='col-md-2 mb-20 mt-20'>";
-                                                                        echo "<div style='height: 200px; background: url('".URL . '/' . $value['ruta']."') no-repeat center center/cover;'></div>"
+                                                                        echo "<div style='height: 200px; background: url('".URL . '/' . $value['ruta']."') no-repeat center center/cover;'></div>";
                                                                         echo "<img src='".URL .'/'. $value["ruta"] . "' width='100%'  class='mb-20' />";
                                                                         echo "<a href='" . URL . "/panel?op=empresa&cod=" . $value["cod"] . "&borrarImg=" . $value["id"] . "' class='btn btn-primary'>BORRAR IMAGEN</a>";
                                                                         echo "<div class='clearfix'></div>";
@@ -536,16 +533,12 @@ if ($borrarImg != '') {
                 <?php
                 else:
                     ?>
-                    <div class="col-md-offset-3 col-md-6">
-                        <div class="box_style_2">
-                            <div id="confirm">
-                                <i class="icon-shop-1"></i>
-                                <h3>¡Completá los datos de tu empresa y empezá a vender!</h3>
-                            </div>
-                            <a href="<?= URL ?>/crear_empresa" class="btn_full">Crear Empresa</a>
+                    <div class="dashboard_title_area">
+                        <div class="dashboard__title">
+                            <h3>¡Completá los datos de tu empresa y empezá a vender!</h3>
+                            <a href="<?= URL ?>/panel?op=crear-empresa" class="btn_full">Crear Empresa</a>
                         </div>
                     </div>
-
                 <?php
                 endif; ?>
             </div>

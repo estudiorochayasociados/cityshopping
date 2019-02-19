@@ -153,7 +153,6 @@ $template->themeInit();
                                     <?php
                                 }
                                 ?>
-                                <p>
                             </div>
                             <div class="sell">
                                 <p>

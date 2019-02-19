@@ -45,7 +45,7 @@ $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
 $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
 $orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
 ////Categorias
-$categoria->set("area", "productos");
+$categoria->set("area", "rubros");
 $categorias_data = $categoria->listForArea('');
 ////Productos
 $cantidad = 6;

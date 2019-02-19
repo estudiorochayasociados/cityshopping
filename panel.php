@@ -7,6 +7,7 @@ $template->set("title", TITULO);
 $template->set("description", "");
 $template->set("keywords", "");
 $template->set("favicon", LOGO);
+$template->set("body","dashboard-edit");
 $template->themeInit();
 //Clases
 $usuario = new Clases\Usuarios();
@@ -15,7 +16,7 @@ $imagenesMenu = new Clases\Imagenes();
 $imagenes = new Clases\Imagenes();
 $zebra = new Clases\Zebra_Image();
 $empresa = new Clases\Empresas();
-$menu = new Clases\Productos();
+$producto = new Clases\Productos();
 $producto = new Clases\Productos();
 $categoria = new Clases\Categorias();
 $pedido = new Clases\Pedidos();
@@ -27,6 +28,7 @@ $op = isset($_GET["op"]) ? $_GET["op"] : '';
 $cod_usuario = $_SESSION['usuarios']['cod'];
 $empresa->set("cod_usuario", $cod_usuario);
 $empresaData = $empresa->view();
+
 $filterEmpresa = array("cod = '$empresaData[cod]'");
 $imagenesArrayEmpresa = $imagenesEmpresa->list($filterEmpresa, "", "");
 $usuario->set("cod", $cod_usuario);
@@ -34,46 +36,49 @@ $usuarioData = $usuario->view();
 
 $filterEnvios = array("cod_empresa = '" . $empresaData['cod'] . "'");
 $enviosArray = $envio->list($filterEnvios, "", "");
+//
 if (empty($enviosArray)) {
     $enviosArray = array(0 => array("titulo" => "", "precio" => ""));
 }
-
-$pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
-$cantidad = 10;
-
-if ($pagina > 0) {
-    $pagina = $pagina - 1;
-}
-
-if (@count($_GET) > 1) {
-    $anidador = "&";
-} else {
-    $anidador = "?";
-}
-
-if (isset($_GET['pagina'])):
-    $url = $funcion->eliminar_get(CANONICAL, 'pagina');
-else:
-    $url = CANONICAL;
-endif;
-
-$filterMenu = array("cod_empresa = '" . $empresaData['cod'] . "'");
-$menuArray = $menu->list($filterMenu, "", $cantidad * $pagina . ',' . $cantidad);
-$numeroPaginas = $menu->paginador($filterMenu, $cantidad);
-
 ?>
 
 <?php if ($_SESSION["usuarios"]["vendedor"] == 0):
-    $displaySeccion = "style=\"display: none\"";
-    $displayTab = "style=\"display: none\"";
-    $classSeccion = "class=\"content-current\"";
-    $classTab = "class=\"tab-current\"";
+    $displayTab = "style='display: none'";
 else:
-    $displaySeccion = "";
     $displayTab = "";
-    $classSeccion = "";
-    $classTab = "";
 endif; ?>
+<?php switch ($op) {
+        //Seccion de crear empresa
+        case "crear-empresa":
+            break;
+        case "crear-empresa-2":
+            break;
+        case "crear-empresa-3":
+            break;
+        //
+        case "crearMenu":
+            break;
+        case "modificarMenu":
+            break;
+        case "verSecciones":
+            break;
+        case "verPedidosEmpresa":
+            break;
+        case "verPedidosUsuario":
+            break;
+        case"perfil":
+            $mensaje="Perfil usuario";
+            break;
+        case "empresa":
+            $mensaje="Perfil empresa";
+            break;
+        case "productos":
+            $mensaje="Listado de productos";
+            break;
+        case "nuevo":
+            $mensaje="Nuevo producto";
+            break;
+    } ?>
 <!--================================
     START BREADCRUMB AREA
 =================================-->
@@ -84,14 +89,14 @@ endif; ?>
                 <div class="breadcrumb">
                     <ul>
                         <li>
-                            <a href="<?=URL?>/index">Inicio</a>
+                            <a href="<?= URL ?>/index">Inicio</a>
                         </li>
                         <li class="active">
                             <a href="#">Panel de usuario</a>
                         </li>
                     </ul>
                 </div>
-                <h1 class="page-title">Administra todas tus configuraciones desde acá</h1>
+                <h1 class="page-title"><?=$mensaje?></h1>
             </div>
             <!-- end /.col-md-12 -->
         </div>
@@ -109,37 +114,29 @@ endif; ?>
             <div class="row">
                 <div class="col-md-12">
                     <ul class="dashboard_menu">
-                        <li class="<?php if($_GET['op']=="perfil"){ echo "active"; } ?>">
-                            <a href="<?=URL?>/panel?op=perfil">
+                        <li class="<?php if ($_GET['op'] == "perfil") {
+                            echo "active";
+                        } ?>">
+                            <a href="<?= URL ?>/panel?op=perfil">
                                 <span class="lnr lnr-home"></span>Perfil</a>
                         </li>
-                        <li class="<?php if($_GET['op']=="empresa"){ echo "active"; } ?>">
-                            <a href="<?=URL?>/panel?op=empresa">
+                        <li class="<?php if ($_GET['op'] == "empresa") {
+                            echo "active";
+                        } ?>" <?= $displayTab; ?>>
+                            <a href="<?= URL ?>/panel?op=empresa">
                                 <span class="lnr lnr-cog"></span>Empresa</a>
                         </li>
-                        <li class="<?php if($_GET['op']=="productos"){ echo "active"; } ?>">
-                            <a href="<?=URL?>/panel?op=productos">
+                        <li class="<?php if ($_GET['op'] == "productos") {
+                            echo "active";
+                        } ?>" <?= $displayTab; ?>>
+                            <a href="<?= URL ?>/panel?op=productos">
                                 <span class="lnr lnr-cart"></span>Productos</a>
                         </li>
-                        <li>
-                            <a href="dashboard-add-credit.html">
-                                <span class="lnr lnr-dice"></span>Add Credits</a>
-                        </li>
-                        <li>
-                            <a href="dashboard-statement.html">
-                                <span class="lnr lnr-chart-bars"></span>Statements</a>
-                        </li>
-                        <li>
-                            <a href="dashboard-upload.html">
-                                <span class="lnr lnr-upload"></span>Upload Items</a>
-                        </li>
-                        <li>
-                            <a href="dashboard-manage-item.html">
-                                <span class="lnr lnr-briefcase"></span>Manage Items</a>
-                        </li>
-                        <li>
-                            <a href="dashboard-withdrawal.html">
-                                <span class="lnr lnr-briefcase"></span>Withdrawals</a>
+                        <li class="<?php if ($_GET['op'] == "nuevo") {
+                            echo "active";
+                        } ?>" <?= $displayTab; ?>>
+                            <a href="<?= URL ?>/panel?op=nuevo">
+                                <span class="lnr lnr-upload"></span>Nuevo producto</a>
                         </li>
                     </ul>
                     <!-- end /.dashboard_menu -->
@@ -152,15 +149,17 @@ endif; ?>
     </div>
     <!-- end /.dashboard_menu_area -->
     <?php switch ($op) {
-        case "crearEmpresaPaso1":
+        //Seccion de crear empresa
+        case "crear-empresa":
             include("assets/inc/panel/crearEmpresaPaso1.php");
             break;
-        case "crearEmpresaPaso2":
+        case "crear-empresa-2":
             include("assets/inc/panel/crearEmpresaPaso2.php");
             break;
-        case "crearEmpresaPaso3":
+        case "crear-empresa-3":
             include("assets/inc/panel/crearEmpresaPaso3.php");
             break;
+        //
         case "crearMenu":
             include("assets/inc/panel/crearMenu.php");
             break;
@@ -196,6 +195,9 @@ endif; ?>
             break;
         case "productos":
             include("assets/inc/panel/tabs/verMenus.php");
+            break;
+        case "nuevo":
+            include("assets/inc/panel/crearMenu.php");
             break;
     } ?>
 </section><!-- End container  -->

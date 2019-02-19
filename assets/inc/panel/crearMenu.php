@@ -1,5 +1,5 @@
 <?php
-$filter = array("area = 'productos'");
+$filter = array("area = 'rubros'");
 $order = "titulo ASC";
 $categoriasArray = $categoria->list($filter, $order, "");
 
@@ -72,306 +72,233 @@ if (isset($_POST["crear_menu"])):
     $fecha = getdate();
     $fecha = $fecha['year'] . '-' . $fecha['mon'] . '-' . $fecha['mday'];
 
-    $menu->set("cod", $cod);
-    $menu->set("cod_empresa", $cod_empresa);
-    $menu->set("categoria", $categoria);
-    $menu->set("seccion", $seccion);
-    $menu->set("titulo", $nombre);
-    $menu->set("precio", $precio);
-    $menu->set("desarrollo", $desarrollo);
-    $menu->set("stock", $stock);
-    $menu->set("variantes", $variantes);
-    $menu->set("adicionales", $adicionales);
-    $menu->set("fecha", $fecha);
+    $producto->set("cod", $cod);
+    $producto->set("cod_empresa", $cod_empresa);
+    $producto->set("categoria", $categoria);
+    $producto->set("seccion", $seccion);
+    $producto->set("titulo", $nombre);
+    $producto->set("precio", $precio);
+    $producto->set("desarrollo", $desarrollo);
+    $producto->set("stock", $stock);
+    $producto->set("variantes", $variantes);
+    $producto->set("adicionales", $adicionales);
+    $producto->set("fecha", $fecha);
 
-    //imagen
-    $imgInicio = $_FILES["files"]["tmp_name"];
-    $tucadena = $_FILES["files"]["name"];
-    $partes = explode(".", $tucadena);
-    $dom = (count($partes) - 1);
-    $dominio = $partes[$dom];
-    $prefijo = substr(md5(uniqid(rand())), 0, 10);
-    if ($dominio != '') {
-        $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
-        move_uploaded_file($imgInicio, $destinoFinal);
-        chmod($destinoFinal, 0777);
-        $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
+    if (!empty($_FILES["filesEmpresa"]["name"])):
+        //galeria
+        $count = 0;
+        foreach ($_FILES['filesEmpresa']['name'] as $f => $name) {
+            $imgInicio = $_FILES["filesEmpresa"]["tmp_name"][$f];
+            $tucadena = $_FILES["filesEmpresa"]["name"][$f];
+            $partes = explode(".", $tucadena);
+            $dom = (count($partes) - 1);
+            $dominio = $partes[$dom];
+            $prefijo = substr(md5(uniqid(rand())), 0, 10);
+            if ($dominio != '') {
+                $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
+                move_uploaded_file($imgInicio, $destinoFinal);
+                chmod($destinoFinal, 0777);
+                $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
 
-        $zebra->source_path = $destinoFinal;
-        $zebra->target_path = $destinoRecortado;
-        $zebra->jpeg_quality = 80;
-        $zebra->preserve_aspect_ratio = true;
-        $zebra->enlarge_smaller_images = true;
-        $zebra->preserve_time = true;
+                $zebra->source_path = $destinoFinal;
+                $zebra->target_path = $destinoRecortado;
+                $zebra->jpeg_quality = 80;
+                $zebra->preserve_aspect_ratio = true;
+                $zebra->enlarge_smaller_images = true;
+                $zebra->preserve_time = true;
 
-        if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
-            unlink($destinoFinal);
+                if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
+                    unlink($destinoFinal);
+                }
+
+                $imagenes->set("cod", $cod);
+                $imagenes->set("ruta", str_replace("../", "", $destinoRecortado));
+                $imagenes->add();
+            }
+
+            $count++;
         }
+    endif;
 
-        $imagenes->set("cod", $cod);
-        $imagenes->set("ruta", str_replace("../", "", $destinoRecortado));
-        $imagenes->add();
-    }
-    //imagen
-
-    $menu->add();
-    $funcion->headerMove(URL.'/panel#seccion-2');
+    $producto->add();
+    $funcion->headerMove(URL . '/panel?op=productos');
 endif;
 ?>
-
-<div class="row">
-    <div class="col-md-12">
-        <section id="section-2">
-            <form method="post" enctype="multipart/form-data">
-                <div class="indent_title_in">
-                    <i class="icon_document_alt"></i>
-                    <h3>Crear menú</h3>
-                    <p>Especifique a continuación los detalles del menú.</p>
-                </div>
-
-                <div class="wrapper_indent">
-                    <div class="form-group">
-                        <label>Categoría</label>
-                        <select class="form-control" name="categoriaMenu" id="categoriaMenu">
-                            <option value="" selected disabled>Categorías</option>
-                            <?php foreach ($categoriasArray as $key => $value): ?>
-                                <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Sección</label>
-                        <select class="form-control" name="seccionMenu" id="seccionMenu">
-                            <option value="" disabled selected>Seleccionar Sección</option>
-                            <?php foreach ($seccionesArray as $key => $value): ?>
-                                <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <a class="MasCampos col-md-12" href="#position" id="btnSecciones"><i
-                                class="icon_plus_alt"></i> Agregar</a>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <input class="form-control" id="val1" style="display: none;"
-                                   placeholder="Ej. Platos Vegetarianos"/>
-                            <a class="btn_full col-md-12" href="#position" id="masSecciones" style="display: none;">
-                                Agregar</a>
+<!--================================
+            START DASHBOARD AREA
+    =================================-->
+<div class="dashboard_contents">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dashboard_title_area">
+                    <div class="pull-left">
+                        <div class="dashboard__title">
+                            <h3>Nuevo producto</h3>
                         </div>
                     </div>
-                    <br/>
-                    <hr/>
+                </div>
+            </div>
+            <!-- end /.col-md-12 -->
+        </div>
+        <!-- end /.row -->
 
-                    <div class="strip_menu_items">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <label>Subir foto del menú</label><br/>
-                                <div id="dropContainer" class="drop_file">
-                                    <span id="spanDrop">Arrastrar aquí</span>
-                                    <img id="imgSalida" width="100%" src=""/>
-                                </div>
-                                <label class="btn_full btn btn-primary">
-                                    Seleccionar foto<i class="icon-camera"></i>
-                                    <input type="file" id="fileInput" name="files" class="form-control">
-                                </label>
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="upload_modules">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="modules__content">
+                            <div class="form-group">
+                                <label>Categoría</label>
+                                <select class="form-control" name="categoriaMenu" id="categoriaMenu">
+                                    <option value="" selected disabled>Categorías</option>
+                                    <?php foreach ($categoriasArray as $key => $value): ?>
+                                        <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
-                            <div class="col-sm-9">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label>Nombre del menú</label>
-                                            <input type="text" name="nombreMenu" class="form-control"
-                                                   placeholder="Ej. Pizza Napolitana">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Precio</label>
-                                            <input type="text" name="precioMenu" class="form-control"
-                                                   placeholder="Ej. 180">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Breve descripción</label>
-                                    <input type="text" name="desarrolloMenu" class="form-control"
-                                           placeholder="Ej. Pizza cocinada a la piedra de masa casera">
-                                </div>
-                                <div class="row">
-                                    <label class="col-md-12">Variantes</label>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="variante1[]" class="form-control"
-                                                   placeholder="20.00">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="text" name="variante2[]" class="form-control"
-                                                   placeholder="Extra queso">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="variante1[]" class="form-control"
-                                                   placeholder="00.00">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="text" name="variante2[]" class="form-control"
-                                                   placeholder="Sin aceitunas">
-                                        </div>
-                                    </div>
-                                    <a class="MasCampos col-md-12" href="#" id="mascamposVariante"><i
-                                                class="icon_plus_alt"></i> Agregar más campos</a>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <label class="col-md-12">Adicionales</label>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="adicional1[]" class="form-control"
-                                                   placeholder="40.00">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="text" name="adicional2[]" class="form-control"
-                                                   placeholder="x1 Coca-cola 500cc">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" name="adicional1[]" class="form-control"
-                                                   placeholder="20.00">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="text" name="adicional2[]" class="form-control"
-                                                   placeholder="x1 Bolsa de Hielo 5kg">
-                                        </div>
-                                    </div>
-                                    <a class="MasCampos col-md-12" href="#" id="mascamposAdicional"><i
-                                                class="icon_plus_alt"></i> Agregar más campos</a>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label>Stock</label>
-                                        <input type="text" name="stockMenu" class="form-control"
-                                               placeholder="Ej. 24">
-                                    </div>
+
+                            <div class="form-group">
+                                <label>Sección</label>
+                                <select class="form-control" name="seccionMenu" id="seccionMenu">
+                                    <option value="" disabled selected>Seleccionar Sección</option>
+                                    <?php foreach ($seccionesArray as $key => $value): ?>
+                                        <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <a class="MasCampos col-md-12" href="#position" id="btnSecciones"><i
+                                        class="icon_plus_alt"></i> Agregar</a>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input class="text_field" id="val1" style="display: none;"
+                                           placeholder="Ej. Platos Vegetarianos"/>
+                                    <a class="btn_full col-md-12" href="#position" id="masSecciones" style="display: none;">
+                                        Agregar</a>
                                 </div>
                             </div>
-                        </div><!-- End row -->
-                    </div><!-- End strip_menu_items -->
-                </div><!-- End wrapper_indent -->
+                            <br/>
+                            <hr/>
 
-                <hr class="styled_2">
+                            <div class="strip_menu_items">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label>Nombre del menú</label>
+                                                    <input type="text" name="nombreMenu" class="text_field"
+                                                           placeholder="Ej. Pizza Napolitana">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Precio</label>
+                                                    <input type="text" name="precioMenu" class="text_field"
+                                                           placeholder="Ej. 180">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Descripción</label>
+                                            <textarea name="desarrolloMenu"></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-md-12">Variantes</label>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" name="variante1[]" class="text_field"
+                                                           placeholder="20.00">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <input type="text" name="variante2[]" class="text_field"
+                                                           placeholder="Extra queso">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" name="variante1[]" class="text_field"
+                                                           placeholder="00.00">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <input type="text" name="variante2[]" class="text_field"
+                                                           placeholder="Sin aceitunas">
+                                                </div>
+                                            </div>
+                                            <a class="MasCampos col-md-12" href="#" id="mascamposVariante"><i
+                                                        class="icon_plus_alt"></i> Agregar más campos</a>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <label class="col-md-12">Adicionales</label>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" name="adicional1[]" class="text_field"
+                                                           placeholder="40.00">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <input type="text" name="adicional2[]" class="text_field"
+                                                           placeholder="x1 Coca-cola 500cc">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <input type="text" name="adicional1[]" class="text_field"
+                                                           placeholder="20.00">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <input type="text" name="adicional2[]" class="text_field"
+                                                           placeholder="x1 Bolsa de Hielo 5kg">
+                                                </div>
+                                            </div>
+                                            <a class="MasCampos col-md-12" href="#" id="mascamposAdicional"><i
+                                                        class="icon_plus_alt"></i> Agregar más campos</a>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-4 form-group">
+                                                <label>Stock</label>
+                                                <input type="text" name="stockMenu" class="text_field"
+                                                       placeholder="Ej. 24">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label>Fotos del producto</label><br/>
+                                        <div id="dropContainer" class="drop_file">
+                                        </div>
+                                        <label class="btn_full btn btn-primary">
+                                            Seleccionar foto<i class="icon-camera"></i>
+                                            <input type="file" id="filesEmpresa" name="filesEmpresa[]"  multiple="multiple" class="form-control">
+                                        </label>
+                                    </div>
+                                </div><!-- End row -->
+                            </div><!-- End strip_menu_items -->
+                        </div><!-- End wrapper_indent -->
 
-                <div class="wrapper_indent">
-                    <div class="add_more_cat text_align_right">
-                        <button type="submit" name="crear_menu" class="btn_1">Crear</button>
-                    </div>
-                </div><!-- End wrapper_indent -->
+                        <div class="centro">
+                            <div class="add_more_cat text_align_right">
+                                <button type="submit" name="crear_menu" class="btn btn--round btn--md">Crear</button>
+                            </div>
+                        </div><!-- End wrapper_indent -->
 
-            </form>
-        </section><!-- End section 2 -->
-    </div><!-- End col-md-6 -->
-</div><!-- End row -->
-
-<!-- SPECIFIC SCRIPTS -->
-<script src="<?= URL ?>/assets/js/theia-sticky-sidebar.js"></script>
-<script>
-    jQuery('#sidebar').theiaStickySidebar({
-        additionalMarginTop: 80
-    });
-</script>
-
-<script>//Script para arrastrar imagenes
-    dropContainer.ondragover = dropContainer.ondragenter = function (evt) {
-        evt.preventDefault();
-    };
-
-    dropContainer.ondrop = function (evt) {
-        fileInput.files = evt.dataTransfer.files;
-        evt.preventDefault();
-    };
-</script>
-
-<script>//Script para mostrar vista previa de la imagen cargada
-    $(window).load(function () {
-
-        $(function () {
-            $('#fileInput').change(function (e) {
-                addImage(e);
-            });
-
-            function addImage(e) {
-                var file = e.target.files[0],
-                    imageType = /image.*/;
-
-                if (!file.type.match(imageType))
-                    return;
-
-                var reader = new FileReader();
-                reader.onload = fileOnload;
-                reader.readAsDataURL(file);
-            }
-
-            function fileOnload(e) {
-                var result = e.target.result;
-                $('#imgSalida').attr("src", result);
-                document.getElementById('spanDrop').style.display = "none";
-            }
-        });
-    });
-</script>
-
-<script>//Script para que el usuario genere nuevos campos
-    jQuery.fn.generaNuevosCampos = function (nombreCampo1, nombreCampo2) {
-        $(this).each(function () {
-            elem = $(this);
-            elem.data("nombreCampo1", nombreCampo1);
-            elem.data("nombreCampo2", nombreCampo2);
-
-            elem.click(function (e) {
-                e.preventDefault();
-                elem = $(this);
-                nombreCampo1 = elem.data("nombreCampo1");
-                nombreCampo2 = elem.data("nombreCampo2");
-                texto_insertar = '<div class="col-md-4"><div class="form-group"><input type="text" name="' + nombreCampo1 + '" class="form-control" /></div></div><div class="col-md-8"><div class="form-group"><input type="text" name="' + nombreCampo2 + '" class="form-control" /></div></div>';
-                nuevo_campo = $(texto_insertar);
-                elem.before(nuevo_campo);
-            });
-        });
-        return this;
-    }
-
-    $(document).ready(function () {
-        $("#mascamposVariante").generaNuevosCampos("variante1[]", "variante2[]");
-    });
-
-    $(document).ready(function () {
-        $("#mascamposAdicional").generaNuevosCampos("adicional1[]", "adicional2[]");
-    });
-</script>
-
-<script>//agregar seccion
-    document.getElementById('btnSecciones').addEventListener('click', function () {
-        document.getElementById('val1').style.display = 'block';
-        document.getElementById('masSecciones').style.display = 'block';
-    }, false);
-
-    $(document).ready(function () {
-        $("#masSecciones").click(function () {
-            var resultado = $("#val1").val();
-            var option = "<option value='" + resultado + "' selected>" + resultado + "</option>";
-            $("#seccionMenu").append(option);
-            $("#val1").val("");
-        });
-    });
-</script>
+                    </form>
+            </div>
+            <!-- end /.col-md-8 -->
+        </div>
+        <!-- end /.row -->
+    </div>
+    <!-- end /.container -->
+</div>
+<!--================================
+        END DASHBOARD AREA
+=================================-->

@@ -1,6 +1,6 @@
 <?php
 $usuario = new Clases\Usuarios();
-if (isset($_GET['logout'])){
+if (isset($_GET['logout'])) {
     $usuario->logout();
 }
 ?>
@@ -19,7 +19,7 @@ START MENU AREA
                 <div class="col-lg-3 col-md-3 col-6 v_middle">
                     <div class="logo">
                         <a href="index.html">
-                            <img src="<?=LOGO?>" alt="<?=TITULO?>" class="img-fluid">
+                            <img src="<?= LOGO ?>" alt="<?= TITULO ?>" class="img-fluid">
                         </a>
                     </div>
                 </div>
@@ -30,7 +30,7 @@ START MENU AREA
                     <!-- start .author-area -->
                     <div class="author-area">
                         <?php
-                        if (!empty($_SESSION['usuarios'])){
+                        if (!empty($_SESSION['usuarios'])) {
                             ?>
                             <div class="author__notification_area">
                                 <ul>
@@ -51,7 +51,7 @@ START MENU AREA
                                                 <div class="notification">
                                                     <div class="notification__info">
                                                         <div class="info_avatar">
-                                                            <img src="<?=URL?>/assets/images/notification_head.png" alt="">
+                                                            <img src="<?= URL ?>/assets/images/notification_head.png" alt="">
                                                         </div>
                                                         <div class="info">
                                                             <p>
@@ -73,7 +73,7 @@ START MENU AREA
                                                 <div class="notification">
                                                     <div class="notification__info">
                                                         <div class="info_avatar">
-                                                            <img src="<?=URL?>/assets/images/notification_head2.png" alt="">
+                                                            <img src="<?= URL ?>/assets/images/notification_head2.png" alt="">
                                                         </div>
                                                         <div class="info">
                                                             <p>
@@ -95,7 +95,7 @@ START MENU AREA
                                                 <div class="notification">
                                                     <div class="notification__info">
                                                         <div class="info_avatar">
-                                                            <img src="<?=URL?>/assets/images/notification_head3.png" alt="">
+                                                            <img src="<?= URL ?>/assets/images/notification_head3.png" alt="">
                                                         </div>
                                                         <div class="info">
                                                             <p>
@@ -117,7 +117,7 @@ START MENU AREA
                                                 <div class="notification">
                                                     <div class="notification__info">
                                                         <div class="info_avatar">
-                                                            <img src="<?=URL?>/assets/images/notification_head4.png" alt="">
+                                                            <img src="<?= URL ?>/assets/images/notification_head4.png" alt="">
                                                         </div>
                                                         <div class="info">
                                                             <p>
@@ -146,27 +146,33 @@ START MENU AREA
                             <!--start .author-author__info-->
                             <div class="author-author__info inline has_dropdown">
                                 <div class="author__avatar">
-                                    <img src="<?=URL?>/assets/images/usr_avatar.png" alt="user avatar">
+                                    <img src="<?= URL ?>/assets/images/usr_avatar.png" alt="user avatar">
 
                                 </div>
                                 <div class="autor__info">
                                     <p class="name">
-                                        <?=$_SESSION['usuarios']['nombre']?>
+                                        <?= $_SESSION['usuarios']['nombre'] ?>
                                     </p>
                                 </div>
 
                                 <div class="dropdown dropdown--author">
                                     <ul>
                                         <li>
-                                            <a href="<?=URL?>/panel?op=perfil">
+                                            <a href="<?= URL ?>/panel?op=perfil">
                                                 <span class="lnr lnr-user"></span>Perfil</a>
                                         </li>
+                                        <?php
+                                        if ($_SESSION['usuarios']['vendedor'] == 1) {
+                                            ?>
+                                            <li>
+                                                <a href="<?= URL ?>/panel?op=empresa">
+                                                    <span class="lnr lnr-user"></span>Empresa</a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
                                         <li>
-                                            <a href="<?=URL?>/panel?op=empresa">
-                                                <span class="lnr lnr-user"></span>Empresa</a>
-                                        </li>
-                                        <li>
-                                            <a href="<?=URL?>/?logout=0">
+                                            <a href="<?= URL ?>/?logout=0">
                                                 <span class="lnr lnr-user"></span>Salir</a>
                                         </li>
                                     </ul>
@@ -183,7 +189,7 @@ START MENU AREA
                                     <span class="lnr lnr-cross close_menu"></span>
                                     <div class="author-author__info">
                                         <div class="author__avatar v_middle">
-                                            <img src="<?=URL?>/assets/images/usr_avatar.png" alt="user avatar">
+                                            <img src="<?= URL ?>/assets/images/usr_avatar.png" alt="user avatar">
                                         </div>
                                         <div class="autor__info v_middle">
                                             <p class="name">
@@ -242,12 +248,12 @@ START MENU AREA
                             </div>
                             <!-- end /.mobile_content -->
                             <?php
-                        }else{
+                        } else {
                             ?>
                             <!--start .author-author__info-->
                             <div class="author-author__info inline has_dropdown">
                                 <div class="author__avatar">
-                                    <img src="<?=URL?>/assets/images/usr_avatar.png" alt="user avatar">
+                                    <img src="<?= URL ?>/assets/images/usr_avatar.png" alt="user avatar">
 
                                 </div>
                                 <div class="dropdown dropdown--author">
@@ -274,7 +280,7 @@ START MENU AREA
                                     <span class="lnr lnr-cross close_menu"></span>
                                     <div class="author-author__info">
                                         <div class="author__avatar v_middle">
-                                            <img src="<?=URL?>/assets/images/usr_avatar.png" alt="user avatar">
+                                            <img src="<?= URL ?>/assets/images/usr_avatar.png" alt="user avatar">
                                         </div>
                                         <div class="autor__info v_middle">
                                             <p class="name">
@@ -372,7 +378,7 @@ START MENU AREA
                                 </div>
                             </div>
                             <!-- end /.mobile_content -->
-                        <?php
+                            <?php
                         }
                         ?>
 
@@ -422,19 +428,19 @@ START MENU AREA
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li>
-                                    <a href="<?=URL?>/index.php">Inicio</a>
+                                    <a href="<?= URL ?>/index.php">Inicio</a>
                                 </li>
                                 <li>
-                                    <a href="<?=URL?>/productos">Productos</a>
+                                    <a href="<?= URL ?>/productos">Productos</a>
                                 </li>
                                 <li>
-                                    <a href="<?=URL?>/comercios">Comercios</a>
+                                    <a href="<?= URL ?>/comercios">Comercios</a>
                                 </li>
                                 <li>
-                                    <a href="<?=URL?>/blogs">Blog</a>
+                                    <a href="<?= URL ?>/blogs">Blog</a>
                                 </li>
                                 <li>
-                                    <a href="<?=URL?>/contacto">Contacto</a>
+                                    <a href="<?= URL ?>/contacto">Contacto</a>
                                 </li>
                             </ul>
                         </div>

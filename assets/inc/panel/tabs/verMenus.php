@@ -1,32 +1,161 @@
-<?php $filterCrearMenu = array("cod_empresa = '" . $empresaData['cod'] . "'");
-$existeMenu = $menu->list($filterCrearMenu, "", "");
-if (!empty($existeMenu)):
-    $mostrardivMenu = 'style = "display: none;"';
-    $mostrardivMenu2 = '';
+<?php
+$pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
+$cantidad = 10;
+
+if ($pagina > 0) {
+    $pagina = $pagina - 1;
+}
+
+if (@count($_GET) > 1) {
+    $anidador = "&";
+} else {
+    $anidador = "?";
+}
+
+if (isset($_GET['pagina'])):
+    $url = $funcion->eliminar_get(CANONICAL, 'pagina');
 else:
-    $mostrardivMenu = '';
-    $mostrardivMenu2 = 'style = "display: none;"';
-endif; ?>
+    $url = CANONICAL;
+endif;
 
-<div class="col-md-offset-3 col-md-6" <?= $mostrardivEmpresa ?>>
-    <div class="box_style_2">
-        <div id="confirm">
-            <i class="icon-shop-1"></i>
-            <h3>¡Antes de crear un menú, necesitamos que crees tu empresa!</h3>
+$filterMenu = array("cod_empresa = '" . $empresaData['cod'] . "'");
+$productoArray = $producto->list($filterMenu, "", $cantidad * $pagina . ',' . $cantidad);
+$numeroPaginas = $producto->paginador($filterMenu, $cantidad);
+?>
+<div class="dashboard-edit">
+    <div class="dashboard-area">
+        <div class="dashboard_contents">
+            <div class="container">
+                <?php
+                if (!empty($empresaData)) {
+                    if (!empty($productoArray)) {
+                        ?>
+                        <div class="row">
+                            <!-- start .col-md-4 -->
+                            <div class="col-lg-4 col-md-6">
+                                <!-- start .single-product -->
+                                <div class="product product--card product--card3">
+                                    <div class="product__thumbnail">
+                                        <img src="images/p1.jpg" alt="Product Image">
+
+                                        <div class="prod_option">
+                                            <a href="#" id="drop2" class="dropdown-trigger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                <span class="lnr lnr-cog setting-icon"></span>
+                                            </a>
+
+                                            <div class="options dropdown-menu" aria-labelledby="drop2">
+                                                <ul>
+                                                    <li>
+                                                        <a href="edit-item.html">
+                                                            <span class="lnr lnr-pencil"></span>Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="lnr lnr-eye"></span>Hide</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" data-toggle="modal" data-target="#myModal2" class="delete">
+                                                            <span class="lnr lnr-trash"></span>Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end /.product__thumbnail -->
+
+                                    <div class="product-desc">
+                                        <a  class="product_title">
+                                            <h4></h4>
+                                        </a>
+                                        <ul class="titlebtm">
+                                            <li>
+                                                <p>
+                                                    <a href="">
+
+                                                    </a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- end /.product-desc -->
+
+                                    <div class="product-purchase">
+                                        <!--
+                                        <div class="price_love">
+                                            <?php
+                                            if (!empty($prod['precioDescuento'])) {
+                                                ?>
+                                                <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <span>$<?= $prod['precio'] ?></span>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>-->
+                                        <div class="sell">
+                                            <p>
+                                                <span class="lnr lnr-layers"></span>
+                                                <span></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <!-- end /.product-purchase -->
+                                </div>
+                                <!-- end /.single-product -->
+                            </div>
+                            <!-- end /.col-md-4 -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pagination-area">
+                                    <nav class="navigation pagination" role="navigation">
+                                        <div class="nav-links">
+                                            <a class="prev page-numbers" href="#">
+                                                <span class="lnr lnr-arrow-left"></span>
+                                            </a>
+                                            <a class="page-numbers current" href="#">1</a>
+                                            <a class="page-numbers" href="#">2</a>
+                                            <a class="page-numbers" href="#">3</a>
+                                            <a class="next page-numbers" href="#">
+                                                <span class="lnr lnr-arrow-right"></span>
+                                            </a>
+                                        </div>
+                                    </nav>
+                                </div>
+                                <!-- end /.pagination-area -->
+                            </div>
+                            <!-- end /.col-md-12 -->
+                        </div>
+                        <!-- end /.row -->
+                        <?php
+                    } else {
+                        ?>
+                        <div class="dashboard_title_area">
+                            <div class="dashboard__title">
+                                <h3>¡Añadí los productos que ofrece tu empresa y empezá a vender!</h3>
+                                <a href="<?= URL ?>/panel?op=nuevo" class="btn_full">Nuevo producto</a>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <div class="dashboard_title_area">
+                        <div class="dashboard__title">
+                            <h3>¡Antes de crear un producto, necesitamos que crees tu empresa!</h3>
+                            <a href="<?= URL ?>/panel?op=crear-empresa" class="btn_full">Crear Empresa</a>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <!-- end /.container -->
         </div>
-        <a href="<?= URL ?>/crear_empresa" class="btn_full">Crear Empresa</a>
     </div>
 </div>
 
-<div class="col-md-offset-3 col-md-6" <?= $mostrardivEmpresa2 ?> <?= $mostrardivMenu ?>>
-    <div class="box_style_2">
-        <div id="confirm">
-            <i class="icon-food"></i>
-            <h3>¡Añadí los menús que ofrece tu restaurante / negocio y empezá a vender!</h3>
-        </div>
-        <a href="<?= URL ?>/crear-menu" class="btn_full">Crear Menú</a>
-    </div>
-</div>
 
 <div <?= $mostrardivMenu2 ?>>
     <div class="indent_title_in">
@@ -51,7 +180,7 @@ endif; ?>
                         <div class="desc">
                             <div class="thumb_strip">
                                 <a href="<?= URL; ?>/modificar-menu/<?= $value['cod'] ?>"><img
-                                        src="<?= URL; ?>/<?= $imagenMenuData['ruta'] ?>" alt=""></a>
+                                            src="<?= URL; ?>/<?= $imagenMenuData['ruta'] ?>" alt=""></a>
                             </div>
                             <h3><?= $value['titulo'] ?></h3>
                             <div class="type">
@@ -79,7 +208,7 @@ endif; ?>
                 <?php if (($pagina + 1) > 1): ?>
                     <li class="page-item"><a class="page-link"
                                              href="<?= $url ?><?= $anidador ?>pagina=<?= $pagina ?>"><span
-                                aria-hidden="true">&laquo;</span>
+                                    aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Anterior</span></a></li>
                 <?php endif; ?>
 
@@ -92,7 +221,7 @@ endif; ?>
                 <?php if (($pagina + 2) <= $numeroPaginas): ?>
                     <li class="page-item"><a class="page-link"
                                              href="<?= $url ?><?= $anidador ?>pagina=<?= ($pagina + 2) ?>"><span
-                                aria-hidden="true">&raquo;</span>
+                                    aria-hidden="true">&raquo;</span>
                             <span class="sr-only">Next</span></a></li>
                 <?php endif; ?>
             </ul>

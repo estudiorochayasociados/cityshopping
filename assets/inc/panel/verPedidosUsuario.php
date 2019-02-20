@@ -1,9 +1,5 @@
 <?php
 
-if ($_SESSION['usuarios']['vendedor'] == 1) {
-    $funcion->headerMove(URL . '/panel?op=verPedidosEmpresa');
-}
-
 $estado = isset($_GET["estado"]) ? $_GET["estado"] : '';
 $cod = isset($_GET["cod"]) ? $_GET["cod"] : '';
 

@@ -1,4 +1,40 @@
-
+<?php
+require_once "Config/Autoload.php";
+Config\Autoload::runSitio();
+//Clases
+$template = new Clases\TemplateSite();
+$banner = new Clases\Banner();
+$imagen = new Clases\Imagenes();
+$categoria = new Clases\Categorias();
+$funciones = new Clases\PublicFunction();
+$producto = new Clases\Productos();
+$empresa = new Clases\Empresas();
+//Datos
+$cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
+//
+$producto->set("cod", $cod);
+$producto_data = $producto->view();
+$imagen->set("cod", $producto_data['cod']);
+$imagen_data = $imagen->listForProduct();
+$empresa->set('cod', $producto_data['cod_empresa']);
+$empresa_data = $empresa->view();
+////Productos relacionados
+$filter = array("categoria='" . $producto_data['categoria'] . "'");
+$productos_relacionados = $producto->list($filter, "RAND()", 3);
+//
+if (!empty($producto_data['imagenes'][0]['ruta'])) {
+    $ruta_ = URL . "/" . $producto_data['imagenes'][0]['ruta'];
+} else {
+    $ruta_ = '';
+}
+$template->set("title", TITULO . " | " . ucfirst(strip_tags($producto_data['titulo'])));
+$template->set("description", ucfirst(substr(strip_tags($producto_data['desarrollo']), 0, 160)));
+$template->set("keywords", ucfirst(strip_tags($producto_data['titulo'])));
+$template->set("imagen", $ruta_);
+$template->set("favicon", FAVICON);
+$template->set("body", "single_prduct2");
+$template->themeInit();
+?>
 <!--================================
     START BREADCRUMB AREA
 =================================-->
@@ -589,3 +625,6 @@
 <!--================================
     END AUTHOR AREA
 =================================-->
+<?php
+$template->themeEnd();
+?>

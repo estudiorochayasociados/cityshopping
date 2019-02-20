@@ -3,25 +3,21 @@ require_once "Config/Autoload.php";
 Config\Autoload::runSitio();
 $template = new Clases\TemplateSite();
 $funcion = new Clases\PublicFunction();
-$template->set("title", TITULO);
+$template->set("title", TITULO . " | Panel");
 $template->set("description", "");
 $template->set("keywords", "");
 $template->set("favicon", LOGO);
-$template->set("body","dashboard-edit");
+$template->set("body", "dashboard-edit");
 $template->themeInit();
 //Clases
 $usuario = new Clases\Usuarios();
-$imagenesEmpresa = new Clases\Imagenes();
-$imagenesMenu = new Clases\Imagenes();
 $imagenes = new Clases\Imagenes();
-$zebra = new Clases\Zebra_Image();
 $empresa = new Clases\Empresas();
 $producto = new Clases\Productos();
-$producto = new Clases\Productos();
-$categoria = new Clases\Categorias();
-$pedido = new Clases\Pedidos();
-$seccion = new Clases\Secciones();
 $envio = new Clases\Envios();
+$categoria = new Clases\Categorias();
+$zebra = new Clases\Zebra_Image();
+$pedido = new Clases\Pedidos();
 
 $op = isset($_GET["op"]) ? $_GET["op"] : '';
 
@@ -30,7 +26,7 @@ $empresa->set("cod_usuario", $cod_usuario);
 $empresaData = $empresa->view();
 
 $filterEmpresa = array("cod = '$empresaData[cod]'");
-$imagenesArrayEmpresa = $imagenesEmpresa->list($filterEmpresa, "", "");
+$imagenesArrayEmpresa = $imagenes->list($filterEmpresa, "", "");
 $usuario->set("cod", $cod_usuario);
 $usuarioData = $usuario->view();
 
@@ -48,37 +44,36 @@ else:
     $displayTab = "";
 endif; ?>
 <?php switch ($op) {
-        //Seccion de crear empresa
-        case "crear-empresa":
-            break;
-        case "crear-empresa-2":
-            break;
-        case "crear-empresa-3":
-            break;
-        //
-        case "crearMenu":
-            break;
-        case "modificarMenu":
-            break;
-        case "verSecciones":
-            break;
-        case "verPedidosEmpresa":
-            break;
-        case "verPedidosUsuario":
-            break;
-        case"perfil":
-            $mensaje="Perfil usuario";
-            break;
-        case "empresa":
-            $mensaje="Perfil empresa";
-            break;
-        case "productos":
-            $mensaje="Listado de productos";
-            break;
-        case "nuevo":
-            $mensaje="Nuevo producto";
-            break;
-    } ?>
+    //Seccion de crear empresa
+    case "crear-empresa":
+        break;
+    case "crear-empresa-2":
+        break;
+    case "crear-empresa-3":
+        break;
+    //
+    case"perfil":
+        $mensaje = "Perfil usuario";
+        break;
+    case "empresa":
+        $mensaje = "Perfil empresa";
+        break;
+    case "productos":
+        $mensaje = "Listado de productos";
+        break;
+    case "nuevo":
+        $mensaje = "Nuevo producto";
+        break;
+    case "editar":
+        $mensaje = "Editar producto";
+        break;
+    case "venta":
+        $mensaje = "Listado de ventas";
+        break;
+    case "compra":
+        $mensaje = "Listado de compra";
+        break;
+} ?>
 <!--================================
     START BREADCRUMB AREA
 =================================-->
@@ -96,7 +91,7 @@ endif; ?>
                         </li>
                     </ul>
                 </div>
-                <h1 class="page-title"><?=$mensaje?></h1>
+                <h1 class="page-title"><?= $mensaje ?></h1>
             </div>
             <!-- end /.col-md-12 -->
         </div>
@@ -137,6 +132,18 @@ endif; ?>
                         } ?>" <?= $displayTab; ?>>
                             <a href="<?= URL ?>/panel?op=nuevo">
                                 <span class="lnr lnr-upload"></span>Nuevo producto</a>
+                        </li>
+                        <li class="<?php if ($_GET['op'] == "compra") {
+                            echo "active";
+                        } ?>">
+                            <a href="<?= URL ?>/panel?op=compra">
+                                <span class="lnr lnr-briefcase"></span>Compra</a>
+                        </li>
+                        <li class="<?php if ($_GET['op'] == "venta") {
+                            echo "active";
+                        } ?>" <?= $displayTab; ?>>
+                            <a href="<?= URL ?>/panel?op=venta">
+                                <span class="lnr lnr-briefcase"></span>Venta</a>
                         </li>
                     </ul>
                     <!-- end /.dashboard_menu -->
@@ -199,56 +206,27 @@ endif; ?>
         case "nuevo":
             include("assets/inc/panel/crearMenu.php");
             break;
+        case "editar":
+            include("assets/inc/panel/modificarMenu.php");
+            break;
+        case "compra":
+            include("assets/inc/panel/verPedidosUsuario.php");
+            break;
+        case "venta":
+            include("assets/inc/panel/verPedidosEmpresa.php");
+            break;
     } ?>
 </section><!-- End container  -->
 <!-- End Content =============================================== -->
 
 <?php $template->themeEnd() ?>
-
-<!-- Specific scripts -->
 <script src="<?= URL ?>/assets/js/tabs.js"></script>
-<script>
-    new CBPFWTabs(document.getElementById('tabs'));
-
-    var str = window.location.href;
-    var n2 = str.search('#seccion-2');
-    var n3 = str.search('#seccion-3');
-    if (n2 > -1) {
-        $("#seccion-2").addClass("content-current");
-        $("#seccion-1").removeClass("content-current");
-        $("#tab2").addClass("tab-current");
-        $("#tab1").removeClass("tab-current");
-    }
-    if (n3 > -1) {
-        $("#seccion-3").addClass("content-current");
-        $("#seccion-1").removeClass("content-current");
-        $("#tab3").addClass("tab-current");
-        $("#tab1").removeClass("tab-current");
-    }
-
-    document.getElementById('tab1').addEventListener('click', function () {
-        $("#tab2").removeClass("tab-current");
-        $("#seccion-2").removeClass("content-current");
-        $("#tab3").removeClass("tab-current");
-        $("#seccion-3").removeClass("content-current");
-    }, false);
-
-    document.getElementById('tab2').addEventListener('click', function () {
-        $("#tab1").removeClass("tab-current");
-        $("#seccion-1").removeClass("content-current");
-        $("#tab3").removeClass("tab-current");
-        $("#seccion-3").removeClass("content-current");
-    }, false);
-
-    document.getElementById('tab3').addEventListener('click', function () {
-        $("#tab1").removeClass("tab-current");
-        $("#seccion-1").removeClass("content-current");
-        $("#tab2").removeClass("tab-current");
-        $("#seccion-2").removeClass("content-current");
-    }, false);
-</script>
 
 <script>
+    document.getElementById('link0').addEventListener('click', function () {
+        document.getElementById('horariosEmpresa').style.display = 'block';
+        document.getElementById('link0').style.display = 'none';
+    }, false);
     document.getElementById('link1').addEventListener('click', function () {
         document.getElementById('enviosEmpresa').style.display = 'block';
         document.getElementById('link1').style.display = 'none';
@@ -261,51 +239,6 @@ endif; ?>
         document.getElementById('imagenesEmpresa').style.display = 'block';
         document.getElementById('link3').style.display = 'none';
     }, false);
-</script>
-
-<script src="<?= URL ?>/assets/js/bootstrap3-wysihtml5.min.js"></script>
-<script type="text/javascript">
-    $('.wysihtml5').wysihtml5({});
-</script>
-
-<script>//Script para arrastrar imagenes
-    dropContainer.ondragover = dropContainer.ondragenter = function (evt) {
-        evt.preventDefault();
-    };
-
-    dropContainer.ondrop = function (evt) {
-        fileInput.files = evt.dataTransfer.files;
-        evt.preventDefault();
-    };
-</script>
-
-<script>//Script para mostrar vista previa de la imagen cargada
-    $(window).load(function () {
-
-        $(function () {
-            $('#fileInput').change(function (e) {
-                addImage(e);
-            });
-
-            function addImage(e) {
-                var file = e.target.files[0],
-                    imageType = /image.*/;
-
-                if (!file.type.match(imageType))
-                    return;
-
-                var reader = new FileReader();
-                reader.onload = fileOnload;
-                reader.readAsDataURL(file);
-            }
-
-            function fileOnload(e) {
-                var result = e.target.result;
-                $('#imgSalida').attr("src", result);
-                document.getElementById('spanDrop').style.display = "none";
-            }
-        });
-    });
 </script>
 
 <script>//Script para que el usuario genere nuevos campos
@@ -329,14 +262,43 @@ endif; ?>
     }
 
     $(document).ready(function () {
-        $("#mascamposVariante").generaNuevosCampos("variante1[]", "variante2[]");
-    });
-
-    $(document).ready(function () {
-        $("#mascamposAdicional").generaNuevosCampos("adicional1[]", "adicional2[]");
-    });
-
-    $(document).ready(function () {
         $("#mascamposEnvios").generaNuevosCampos("enviosEmpresa1[]", "enviosEmpresa2[]");
+    });
+</script>
+
+<!-- SPECIFIC SCRIPTS -->
+<script src="<?= URL ?>/assets/js/theia-sticky-sidebar.js"></script>
+<script>
+    jQuery('#sidebar').theiaStickySidebar({
+        additionalMarginTop: 80
+    });
+</script>
+
+<script>//Script para que el usuario genere nuevos campos """VarianteAdicional"""
+    jQuery.fn.generaNuevosCamposVarianteAdicional = function (nombreCampo1, nombreCampo2) {
+        $(this).each(function () {
+            elem = $(this);
+            elem.data("nombreCampo1", nombreCampo1);
+            elem.data("nombreCampo2", nombreCampo2);
+
+            elem.click(function (e) {
+                e.preventDefault();
+                elem = $(this);
+                nombreCampo1 = elem.data("nombreCampo1");
+                nombreCampo2 = elem.data("nombreCampo2");
+                texto_insertar = '<div class="col-md-4"><div class="input-group mb-3"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="\' + nombreCampo1 + \'"></div></div><div class="col-md-8"><div class="form-group"><input type="text" name="' + nombreCampo2 + '" class="text_field" /></div></div>';
+                nuevo_campo = $(texto_insertar);
+                elem.before(nuevo_campo);
+            });
+        });
+        return this;
+    }
+
+    $(document).ready(function () {
+        $("#mascamposVariante").generaNuevosCamposVarianteAdicional("variante1[]", "variante2[]");
+    });
+
+    $(document).ready(function () {
+        $("#mascamposAdicional").generaNuevosCamposVarianteAdicional("adicional1[]", "adicional2[]");
     });
 </script>

@@ -222,6 +222,4 @@ END FOOTER AREA
     })
 </script>
 <script src="<?= URL ?>/assets/js/theia-sticky-sidebar.js"></script>
-<script src="<?= URL ?>/assets/js/panel.js"></script>
-
 <?php include 'assets/inc/login.inc.php'; ?>

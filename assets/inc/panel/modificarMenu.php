@@ -1,41 +1,40 @@
 <?php
-$filterCategoria = array("area = 'productos'");
-$order = "titulo ASC";
-$categoriasArray = $categoria->list($filterCategoria, $order, "");
 $cod = isset($_GET["cod"]) ? $_GET["cod"] : '';
-$menu->set("cod", $cod);
-$menuData = $menu->view();
-
-$filterSeccion = array("cod_empresa = '$menuData[cod_empresa]'");
-$seccionesArray = $seccion->list($filterSeccion, $order, "");
-
-$seccion->set("cod", $menuData['seccion']);
-$seccionData = $seccion->view();
-
-$imagenes->set("cod", $menuData['cod']);
-$imagenData = $imagenes->view();
-
-if (!empty($menuData['variantes'])) {
-    $variantesMostrar = unserialize($menuData['variantes']);
+$borrarImg = $funcion->antihack_mysqli(isset($_GET["borrarImg"]) ? $_GET["borrarImg"] : '');
+//
+$producto->set("cod", $cod);
+$producto_data = $producto->view();
+$categoria->set("cod", $producto_data['categoria']);
+$categoria_data = $categoria->view();
+$imagenes->set("cod", $producto_data['cod']);
+$imagenes_data = $imagenes->listForProduct();
+if (!empty($producto_data['variantes'])) {
+    $variantesMostrar = unserialize($producto_data['variantes']);
 } else {
     $variantesMostrar = array(",", ",");
 }
-if (!empty($menuData['adicionales'])) {
-    $adicionalesMostrar = unserialize($menuData['adicionales']);
-} else {
-    $adicionalesMostrar = array(",", ",");
+if ($borrarImg != '') {
+    $imagenes->set("id", $borrarImg);
+    $imagenes->delete();
+    $funcion->headerMove(URL . "/panel?op=editar&cod=" . $cod);
 }
-?>
+//
+$filter = array("area = 'rubros'");
+$order = "titulo ASC";
+$categoriasArray = $categoria->list($filter, $order, "");
 
-<?php
+$cod_usuario = $_SESSION['usuarios']['cod'];
+$empresa->set("cod_usuario", $cod_usuario);
+$empresaData = $empresa->view();
+$cod_empresa = $empresaData['cod'];
+
 if (isset($_POST["modificar_menu"])):
-    $categoria = $funcion->antihack_mysqli(!empty($_POST["categoriaMenu"]) ? $_POST["categoriaMenu"] : '');
-    $seccion = $funcion->antihack_mysqli(!empty($_POST["seccionMenu"]) ? $_POST["seccionMenu"] : '');
-    $titulo = $funcion->antihack_mysqli(!empty($_POST["tituloMenu"]) ? $_POST["tituloMenu"] : '');
-    $precio = $funcion->antihack_mysqli(!empty($_POST["precioMenu"]) ? $_POST["precioMenu"] : '');
-    $desarrollo = $funcion->antihack_mysqli(!empty($_POST["desarrolloMenu"]) ? $_POST["desarrolloMenu"] : '');
-    $stock = $funcion->antihack_mysqli(!empty($_POST["stockMenu"]) ? $_POST["stockMenu"] : '');
-
+    $categoria_post = $funcion->antihack_mysqli(isset($_POST["categoriaMenu"]) ? $_POST["categoriaMenu"] : $producto_data['categoria']);
+    $nombre = $funcion->antihack_mysqli(isset($_POST["nombreMenu"]) ? $_POST["nombreMenu"] : $producto_data['titulo']);
+    $precio = $funcion->antihack_mysqli(isset($_POST["precioMenu"]) ? $_POST["precioMenu"] : $producto_data['precio']);
+    $precioDescuento = $funcion->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : $producto_data['precioDescuento']);
+    $desarrollo = $funcion->antihack_mysqli(isset($_POST["desarrolloMenu"]) ? $_POST["desarrolloMenu"] : $producto_data['desarrollo']);
+    $stock = $funcion->antihack_mysqli(isset($_POST["stockMenu"]) ? $_POST["stockMenu"] : $producto_data['stock']);
 
     //variantes
     for ($i = 0; $i < count($_POST["variante1"]); $i++) {
@@ -49,334 +48,205 @@ if (isset($_POST["modificar_menu"])):
         $variantes = '';
     }
 
-    //adicionales
-    for ($i = 0; $i < count($_POST["adicional1"]); $i++) {
-        if ($_POST["adicional1"][$i] != '') {
-            $adicionales_temp[] = $_POST["adicional1"][$i] . ',' . $_POST["adicional2"][$i];
-        }
-    }
-    if (isset($adicionales_temp)) {
-        $adicionales = serialize($adicionales_temp);
-    } else {
-        $adicionales = '';
-    }
+    $producto->set("cod", $producto_data['cod']);
+    $producto->set("cod_empresa", $producto_data['cod_empresa']);
+    $producto->set("categoria", $categoria_post);
+    $producto->set("titulo", $nombre);
+    $producto->set("precio", $precio);
+    $producto->set("precioDescuento", $precioDescuento);
+    $producto->set("desarrollo", $desarrollo);
+    $producto->set("stock", $stock);
+    $producto->set("variantes", $variantes);
+    $producto->set("fecha", $producto_data['fecha']);
 
-    if (!$seccionesArray) {
-        $seccionesArray = array(0 => array("cod" => "vacio"));
-    }
-    foreach ($seccionesArray as $key => $value):
-        $seccionValores[] = $value['cod'];
-    endforeach;
-    if (array_search($seccion, $seccionValores) === false):
-        $seccionNueva = new Clases\Secciones();
-        $cod_seccion = substr(md5(uniqid(rand())), 0, 10);
-        $seccionNueva->set("cod", $cod_seccion);
-        $seccionNueva->set("titulo", $seccion);
-        $seccionNueva->set("cod_empresa", $menuData['cod_empresa']);
-        $seccionNueva->add();
-        $seccion = $cod_seccion;
-    endif;
+    if (!empty($_FILES["filesEmpresa"]["name"])):
+        //galeria
+        $count = 0;
+        foreach ($_FILES['filesEmpresa']['name'] as $f => $name) {
+            $imgInicio = $_FILES["filesEmpresa"]["tmp_name"][$f];
+            $tucadena = $_FILES["filesEmpresa"]["name"][$f];
+            $partes = explode(".", $tucadena);
+            $dom = (count($partes) - 1);
+            $dominio = $partes[$dom];
+            $prefijo = substr(md5(uniqid(rand())), 0, 10);
+            if ($dominio != '') {
+                $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
+                move_uploaded_file($imgInicio, $destinoFinal);
+                chmod($destinoFinal, 0777);
+                $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
 
-    $menu->set("cod", $menuData['cod']);
-    $menu->set("cod_empresa", $menuData['cod_empresa']);
-    $menu->set("categoria", $categoria);
-    $menu->set("seccion", $seccion);
-    $menu->set("titulo", $titulo);
-    $menu->set("precio", $precio);
-    $menu->set("desarrollo", $desarrollo);
-    $menu->set("stock", $stock);
-    $menu->set("variantes", $variantes);
-    $menu->set("adicionales", $adicionales);
-    $menu->set("fecha", $menuData['fecha']);
+                $zebra->source_path = $destinoFinal;
+                $zebra->target_path = $destinoRecortado;
+                $zebra->jpeg_quality = 80;
+                $zebra->preserve_aspect_ratio = true;
+                $zebra->enlarge_smaller_images = true;
+                $zebra->preserve_time = true;
 
-    if (isset($_FILES["files"]["name"])):
-        //imagen
-        $imgInicio = $_FILES["files"]["tmp_name"];
-        $tucadena = $_FILES["files"]["name"];
-        $partes = explode(".", $tucadena);
-        $dom = (count($partes) - 1);
-        $dominio = $partes[$dom];
-        $prefijo = substr(md5(uniqid(rand())), 0, 10);
-        if ($dominio != '') {
-            $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
-            move_uploaded_file($imgInicio, $destinoFinal);
-            chmod($destinoFinal, 0777);
-            $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
+                if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
+                    unlink($destinoFinal);
+                }
 
-            $zebra->source_path = $destinoFinal;
-            $zebra->target_path = $destinoRecortado;
-            $zebra->jpeg_quality = 80;
-            $zebra->preserve_aspect_ratio = true;
-            $zebra->enlarge_smaller_images = true;
-            $zebra->preserve_time = true;
+                $imagenes->set("cod", $cod);
 
-            if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
-                unlink($destinoFinal);
+                $imagenes->set("ruta", str_replace("../", "", $destinoRecortado));
+                $imagenes->add();
             }
 
-            $imagenes->set("cod", $cod);
-            $imagenes->deleteAll();
-            $imagenes->set("ruta", str_replace("../", "", $destinoRecortado));
-            $imagenes->add();
+            $count++;
         }
-        //imagen
     endif;
 
-    $menu->edit();
-    $funcion->headerMove(URL . '/panel?op=modificarMenu&cod=' . $cod);
+    $producto->edit();
+    $funcion->headerMove(URL . '/panel?op=productos');
 endif;
 ?>
-
-<div class="row">
-    <div class="col-md-2">
-        <a href="<?= URL ?>/panel#seccion-2" class="btn_full"><i class="icon-reply"></i> Ir al panel</a>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <section id="section-2">
-            <div class="indent_title_in">
-                <i class="icon_document_alt"></i>
-                <h3>Modificar Menú</h3>
-                <p>Especifique a continuación los detalles del menú.</p>
-            </div>
-
-            <form method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select class="form-control" name="categoriaMenu" id="categoriaMenu">
-                        <option value="" disabled selected>Seleccionar Categoría</option>
-                        <?php foreach ($categoriasArray as $key => $value):
-                            if ($menuData['categoria'] == $value['cod']): ?>
-                                <option value="<?= $value['cod'] ?>" selected><?= $value['titulo'] ?></option>
-                            <?php else: ?>
-                                <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
-                            <?php endif;
-                        endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Sección</label>
-                    <select class="form-control" name="seccionMenu" id="seccionMenu">
-                        <option value="" disabled selected>Seleccionar Sección</option>
-                        <?php foreach ($seccionesArray as $key => $value):
-                            if ($menuData['seccion'] == $value['cod']): ?>
-                                <option value="<?= $value['cod'] ?>" selected><?= $value['titulo'] ?></option>
-                            <?php else: ?>
-                                <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
-                            <?php endif;
-                        endforeach; ?>
-                    </select>
-                </div>
-                <a class="MasCampos col-md-12" href="#position" id="btnSecciones"><i
-                            class="icon_plus_alt"></i> Agregar</a>
-                <div class="row">
-                    <div class="col-md-3">
-                        <input class="form-control" id="val1" style="display: none;"
-                               placeholder="Ej. Platos Vegetarianos"/>
-                        <a class="btn_full col-md-12" href="#position" id="masSecciones" style="display: none;">
-                            Agregar</a>
+<!--================================
+            START DASHBOARD AREA
+    =================================-->
+<div class="dashboard_contents">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dashboard_title_area">
+                    <div class="pull-left">
+                        <div class="dashboard__title">
+                            <h3>Editar producto</h3>
+                            <p>Completar campos requeridos <label><sup>*</sup></label></p>
+                        </div>
                     </div>
                 </div>
-                <br/>
-                <hr/>
+            </div>
+            <!-- end /.col-md-12 -->
+        </div>
+        <!-- end /.row -->
 
-                <div class="strip_menu_items">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Subir foto del menú</label><br/>
-                            <div id="dropContainer" class="drop_file">
-                                <span id="spanDrop" style="display: none;">Arrastrar aquí</span>
-                                <img id="imgSalida" src="<?= URL; ?>/<?= $imagenData['ruta'] ?>" width="100%"
-                                     src=""/>
-                            </div>
-                            <label class="btn_full btn btn-primary">
-                                Seleccionar foto<i class="icon-camera"></i>
-                                <input type="file" id="fileInput" name="files" class="form-control">
-                            </label>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label>Nombre del menú</label>
-                                        <input type="text" value="<?= $menuData['titulo'] ?>" name="tituloMenu"
-                                               class="form-control"
-                                               placeholder="Ej. Pizza Napolitana">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Precio</label>
-                                        <input type="text" value="<?= $menuData['precio'] ?>" name="precioMenu"
-                                               class="form-control"
-                                               placeholder="Ej. 180">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Breve descripción</label>
-                                <input type="text" value="<?= $menuData['desarrollo'] ?>" name="desarrolloMenu"
-                                       class="form-control"
-                                       placeholder="Ej. Pizza cocinada a la piedra de masa casera">
-                            </div>
-                            <div class="row">
-                                <label class="col-md-12">Variantes</label>
-                                <?php foreach ($variantesMostrar as $key => $value):
-                                    $valor = explode(",", $value); ?>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" value="<?= $valor[0]; ?>"
-                                                   name="variante1[]" class="form-control"
-                                                   placeholder="20.00">
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="upload_modules">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="modules__content">
+                            <div class="strip_menu_items">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Nombre del producto<sup>*</sup></label>
+                                                    <input type="text" name="nombreMenu" class="text_field"
+                                                           placeholder="Ej. Taladro" value="<?= $producto_data['titulo']; ?>" required>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="text" value="<?= $valor[1]; ?>"
-                                                   name="variante2[]" class="form-control"
-                                                   placeholder="Extra queso">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label>Precio<sup>*</sup></label>
+                                                <div class="input-group mb-3" style="height: 50px">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" name="precioMenu" value="<?= $producto_data['precio']; ?>" style="height: 50px;" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Precio descuento</label>
+                                                <div class="input-group mb-3" style="height: 50px">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" value="<?= $producto_data['precioDescuento'] ?>" class="form-control" name="precioDescueto" style="height: 50px;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Stock<sup>*</sup></label>
+                                                <input type="text" name="stockMenu" class="text_field"
+                                                       placeholder="Ej. 24" value="<?= $producto_data['stock']; ?>" style="height: 50px;" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
-                                <a class="MasCampos col-md-12" href="#" id="mascamposVariante"><i
-                                            class="icon_plus_alt"></i> Agregar más campos</a>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <label class="col-md-12">Adicionales</label>
-                                <?php foreach ($adicionalesMostrar as $key => $value):
-                                    $valor = explode(",", $value); ?>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <input type="text" value="<?= $valor[0]; ?>"
-                                                   name="adicional1[]" class="form-control"
-                                                   placeholder="40.00">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Categoría<sup>*</sup></label>
+                                                    <div class="select-wrap select-wrap2">
+                                                        <select name="categoriaMenu" id="categoriaMenu" class="text_field" required>
+                                                            <option value="<?= $categoria_data['cod'] ?>" selected><?= $categoria_data['titulo']; ?></option>
+                                                            <?php foreach ($categoriasArray as $key => $value): ?>
+                                                                <option value="<?= $value['cod'] ?>"><?= $value['titulo'] ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                        <span class="lnr lnr-chevron-down"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-8">
                                         <div class="form-group">
-                                            <input type="text" value="<?= $valor[1]; ?>"
-                                                   name="adicional2[]" class="form-control"
-                                                   placeholder="x1 Coca-cola 500cc">
+                                            <label>Descripción<sup>*</sup></label>
+                                            <textarea rows="12" class="text_field" name="desarrolloMenu" required><?= $producto_data['desarrollo']; ?></textarea>
                                         </div>
+                                        <div class="row">
+                                            <label class="col-md-12">Variantes</label>
+                                            <?php
+                                            foreach ($variantesMostrar as $key => $value) {
+                                                $valor = explode(",", $value);
+                                                ?>
+                                                <div class="col-md-4">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" value="<?= $valor[0]; ?>" class="form-control" name="variante1[]">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <input type="text" name="variante2[]" value="<?= $valor[1]; ?>" class="text_field"
+                                                               placeholder="Set de mechas chicas">
+                                                    </div>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                            <a class="MasCampos col-md-12" href="#" id="mascamposVariante">
+                                                <span class="lnr lnr-plus-circle"></span> Agregar más campos</a>
+                                        </div>
+                                        <hr/>
                                     </div>
-                                <?php endforeach; ?>
-                                <a class="MasCampos col-md-12" href="#" id="mascamposAdicional"><i
-                                            class="icon_plus_alt"></i> Agregar más campos</a>
+                                    <div class="col-md-12">
+                                        <?php
+                                        foreach ($imagenes_data as $img) {
+                                            echo "<div class='col-md-4 mb-20 mt-20'>";
+                                                echo "<div style=\"height: 150px;width:140px;background: url('". URL . "/" . $img['ruta'] . "') no-repeat center center/cover;\"></div>";
+                                                echo "<a href='" . URL . "/panel?op=editar&cod=" . $producto_data["cod"] . "&borrarImg=" . $img["id"] . "' class='btn btn-primary' style='width: 140px'>BORRAR IMAGEN</a>";
+                                            echo "</div>";
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label>Fotos del producto</label><br/>
+                                        <div id="dropContainer" class="drop_file">
+                                        </div>
+                                        <label class="btn_full btn btn-primary">
+                                            Seleccionar foto<i class="icon-camera"></i>
+                                            <input type="file" id="filesEmpresa" name="filesEmpresa[]" multiple="multiple" class="form-control">
+                                        </label>
+                                    </div>
+                                </div><!-- End row -->
+                            </div><!-- End strip_menu_items -->
+                        </div><!-- End wrapper_indent -->
+
+                        <div class="centro">
+                            <div class="add_more_cat text_align_right">
+                                <button type="submit" name="modificar_menu" class="btn btn--round btn--md mb-10">Guardar</button>
                             </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label>Stock</label>
-                                    <input type="text" value="<?= $menuData['stock'] ?>" name="stockMenu"
-                                           class="form-control" placeholder="Ej. 24">
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- End row -->
-                </div><!-- End strip_menu_items -->
-    </div><!-- End wrapper_indent -->
-    <hr class="styled_2">
-    <div class="col-md-2">
-        <button type="submit" name="modificar_menu" class="btn_1">Modificar</button>
+                        </div><!-- End wrapper_indent -->
+
+                    </form>
+                </div>
+                <!-- end /.col-md-8 -->
+            </div>
+            <!-- end /.row -->
+        </div>
+        <!-- end /.container -->
     </div>
-    </form>
-    </section><!-- End section 2 -->
-</div><!-- End col-md-6 -->
-</div><!-- End row -->
-
-<!-- SPECIFIC SCRIPTS -->
-<script src="<?= URL ?>/assets/js/theia-sticky-sidebar.js"></script>
-<script>
-    jQuery('#sidebar').theiaStickySidebar({
-        additionalMarginTop: 80
-    });
-</script>
-
-<script>//Script para arrastrar imagenes
-    dropContainer.ondragover = dropContainer.ondragenter = function (evt) {
-        evt.preventDefault();
-    };
-
-    dropContainer.ondrop = function (evt) {
-        fileInput.files = evt.dataTransfer.files;
-        evt.preventDefault();
-    };
-</script>
-
-<script>//Script para mostrar vista previa de la imagen cargada
-    $(window).load(function () {
-
-        $(function () {
-            $('#fileInput').change(function (e) {
-                addImage(e);
-            });
-
-            function addImage(e) {
-                var file = e.target.files[0],
-                    imageType = /image.*/;
-
-                if (!file.type.match(imageType))
-                    return;
-
-                var reader = new FileReader();
-                reader.onload = fileOnload;
-                reader.readAsDataURL(file);
-            }
-
-            function fileOnload(e) {
-                var result = e.target.result;
-                $('#imgSalida').attr("src", result);
-                document.getElementById('spanDrop').style.display = "none";
-            }
-        });
-    });
-</script>
-
-<script>//Script para que el usuario genere nuevos campos
-    jQuery.fn.generaNuevosCampos = function (nombreCampo1, nombreCampo2) {
-        $(this).each(function () {
-            elem = $(this);
-            elem.data("nombreCampo1", nombreCampo1);
-            elem.data("nombreCampo2", nombreCampo2);
-
-            elem.click(function (e) {
-                e.preventDefault();
-                elem = $(this);
-                nombreCampo1 = elem.data("nombreCampo1");
-                nombreCampo2 = elem.data("nombreCampo2");
-                texto_insertar = '<div class="col-md-4"><div class="form-group"><input type="text" name="' + nombreCampo1 + '" class="form-control" /></div></div><div class="col-md-8"><div class="form-group"><input type="text" name="' + nombreCampo2 + '" class="form-control" /></div></div>';
-                nuevo_campo = $(texto_insertar);
-                elem.before(nuevo_campo);
-            });
-        });
-        return this;
-    }
-
-    $(document).ready(function () {
-        $("#mascamposVariante").generaNuevosCampos("variante1[]", "variante2[]");
-    });
-
-    $(document).ready(function () {
-        $("#mascamposAdicional").generaNuevosCampos("adicional1[]", "adicional2[]");
-    });
-</script>
-
-
-<script>//agregar option a seccion
-    document.getElementById('btnSecciones').addEventListener('click', function () {
-        document.getElementById('val1').style.display = 'block';
-        document.getElementById('masSecciones').style.display = 'block';
-    }, false);
-
-    $(document).ready(function () {
-        $("#masSecciones").click(function () {
-            var resultado = $("#val1").val();
-            var option = "<option value='" + resultado + "' selected>" + resultado + "</option>";
-            $("#seccionMenu").append(option);
-            $("#val1").val("");
-        });
-    });
-</script>
+    <!--================================
+            END DASHBOARD AREA
+    =================================-->

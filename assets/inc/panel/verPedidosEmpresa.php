@@ -1,7 +1,7 @@
 <?php
 
 if ($_SESSION['usuarios']['vendedor'] != 1) {
-    $funcion->headerMove(URL . '/panel?op=verPedidosUsuario');
+    $funcion->headerMove(URL . '/panel?op=compra');
 }
 
 $estado = isset($_GET["estado"]) ? $_GET["estado"] : '';
@@ -11,7 +11,7 @@ if ($estado != '' && $cod != '') {
     $pedido->set("estado", $estado);
     $pedido->set("cod", $cod);
     $pedido->cambiar_estado();
-    $funcion->headerMove(URL . '/panel?op=verPedidosEmpresa');
+    $funcion->headerMove(URL . '/panel?op=venta');
 }
 
 $cod_usuario = $_SESSION['usuarios']['cod'];

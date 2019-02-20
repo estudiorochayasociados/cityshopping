@@ -4,7 +4,7 @@ $borrarImg = $funcion->antihack_mysqli(isset($_GET["borrarImg"]) ? $_GET["borrar
 if ($borrarImg != '') {
     $imagenes->set("id", $borrarImg);
     $imagenes->delete();
-    $funcion->headerMove(URL . "/panel?op=empresa#collapse4");
+    $funcion->headerMove(URL . "/panel?op=empresa");
 }
 ?>
 <div class="dashboard-area">
@@ -493,9 +493,8 @@ if ($borrarImg != '') {
                                                                     foreach ($imagenesArrayEmpresa as $key => $value): ?>
                                                                         <?php
                                                                         echo "<div class='col-md-2 mb-20 mt-20'>";
-                                                                        echo "<div style='height: 200px; background: url('".URL . '/' . $value['ruta']."') no-repeat center center/cover;'></div>";
                                                                         echo "<img src='".URL .'/'. $value["ruta"] . "' width='100%'  class='mb-20' />";
-                                                                        echo "<a href='" . URL . "/panel?op=empresa&cod=" . $value["cod"] . "&borrarImg=" . $value["id"] . "' class='btn btn-primary'>BORRAR IMAGEN</a>";
+                                                                        echo "<a href='" . URL . "/panel?op=empresa&borrarImg=" . $value["id"] . "' class='btn btn-primary'>BORRAR IMAGEN</a>";
                                                                         echo "<div class='clearfix'></div>";
                                                                         echo "</div>";
                                                                         ?>

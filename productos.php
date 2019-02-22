@@ -262,7 +262,7 @@ $template->themeInit();
                                     <!-- end /.product__thumbnail -->
                                     <div class="product-desc">
                                         <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
-                                            <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 50)); ?></h4>
+                                            <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 20)); ?></h4>
                                         </a>
                                         <ul class="titlebtm">
                                             <li>

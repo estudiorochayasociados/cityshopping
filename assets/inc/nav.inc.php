@@ -1,5 +1,8 @@
 <?php
 $usuario = new Clases\Usuarios();
+$carrito = new Clases\Carrito();
+$countCarrito = count($carrito->return());
+$carro = $carrito->return();
 if (isset($_GET['logout'])) {
     $usuario->logout();
 }
@@ -139,6 +142,74 @@ START MENU AREA
                                             <!-- end /.dropdown -->
                                         </div>
                                     </li>
+                                    <?php
+                                    if ($countCarrito != 0) {
+                                        ?>
+                                        <li class="has_dropdown">
+                                            <div class="icon_wrap">
+                                                <span class="lnr lnr-cart"></span>
+                                                <?php
+                                                if (!empty($carro)) {
+                                                    ?>
+                                                    <span class="notification_count purch"><?= @count($carro) ?></span>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+
+                                            <div class="dropdown dropdown--cart">
+                                                <div class="cart_area">
+                                                    <?php
+                                                    if (!empty($carro)) {
+                                                        foreach ($carro as $car) {
+                                                            ?>
+                                                            <div class="cart_product">
+                                                                <div class="product__info">
+                                                                    <div class="thumbn">
+                                                                        <img src="<?= URL ?>/assets/images/capro1.jpg" alt="cart product thumbnail">
+                                                                    </div>
+
+                                                                    <div class="info">
+                                                                        <a class="title" href="single-product.html"><?=ucfirst($car['titulo'])?></a>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="product__action">
+                                                                    <a href="#">
+                                                                        <span class="lnr lnr-trash"></span>
+                                                                    </a>
+                                                                    <p>$60</p>
+                                                                </div>
+                                                            </div>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                        <div class="total">
+                                                            <p>
+                                                                <span>Total :</span>$80</p>
+                                                        </div>
+                                                        <div class="cart_action">
+                                                            <a class="go_cart" href="<?= URL ?>/carrito">Ver</a>
+                                                            <a class="go_checkout" href="checkout.html">Pagar</a>
+                                                        </div>
+                                                        <?php
+                                                    } else {
+                                                        ?>
+                                                        <div class="cart_product">
+                                                            <div class="product__info" style="text-align: center;">
+                                                                <p>El carrito se encuentra vacio.</p>
+                                                            </div>
+                                                        </div>
+                                                        <?php
+                                                    }
+                                                    ?>
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
                                 </ul>
                             </div>
                             <!--start .author__notification_area -->
@@ -166,14 +237,14 @@ START MENU AREA
                                             ?>
                                             <li>
                                                 <a href="<?= URL ?>/panel?op=empresa">
-                                                    <span class="lnr lnr-user"></span>Empresa</a>
+                                                    <span class="lnr lnr-users"></span>Empresa</a>
                                             </li>
                                             <?php
                                         }
                                         ?>
                                         <li>
                                             <a href="<?= URL ?>/?logout=0">
-                                                <span class="lnr lnr-user"></span>Salir</a>
+                                                <span class="lnr lnr-exit"></span>Salir</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -407,9 +478,9 @@ START MENU AREA
                     <div class="navbar-header">
                         <!-- start mainmenu__search -->
                         <div class="mainmenu__search">
-                            <form action="#">
+                            <form method="get" action="<?= URL . '/productos' ?>">
                                 <div class="searc-wrap">
-                                    <input type="text" placeholder="Search product">
+                                    <input type="text" name="titulo" placeholder="Buscar un producto">
                                     <button type="submit" class="search-wrap__btn">
                                         <span class="lnr lnr-magnifier"></span>
                                     </button>

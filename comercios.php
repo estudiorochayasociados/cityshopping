@@ -6,44 +6,12 @@ $template = new Clases\TemplateSite();
 $banner = new Clases\Banner();
 $imagen = new Clases\Imagenes();
 $categoria = new Clases\Categorias();
-$slider = new Clases\Sliders();
-$producto = new Clases\Productos();
 $empresa = new Clases\Empresas();
 $funciones = new Clases\PublicFunction();
 //Datos
-$get = $_GET;
-$get_input = '';
-foreach ($get as $key => $get_value) {
-    if ($key != 'titulo') {
-        $get_input .= "<input type='hidden' name='$key' value='$get_value' />";
-    }
-}
-
-$get_inputs = array();
-foreach ($get as $key => $get_value) {
-    array_push($get_inputs, array('id' => $key, 'hide' => "<input type='hidden' name='$key' value='$get_value' />"));
-}
-$input_titulo = '';
-$input_order = '';
-$input_categoria = '';
-foreach ($get_inputs as $d) {
-    switch ($d['id']) {
-        case 'order':
-            $input_order = $d['hide'];
-            break;
-        case 'buscar':
-            $input_titulo = $d['hide'];
-            break;
-        case 'categoria':
-            $input_categoria = $d['hide'];
-            break;
-    }
-}
 ////Gets
 $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
 $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
-$titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
-$orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
 ////Categorias
 $categoria->set("area", "rubros");
 $categorias_data = $categoria->listForArea('');
@@ -60,7 +28,6 @@ if (@count($_GET) > 1) {
 } else {
     $anidador = "?";
 }
-
 if (isset($_GET['pagina'])):
     $url = $funciones->eliminar_get(CANONICAL, 'pagina');
 else:
@@ -73,26 +40,11 @@ if (!empty($categoria_get)) {
     $cod = $categoria_data_filtro['cod'];
     $filter = array("categoria='$cod'");
 }
-if ($titulo != '') {
-    $filter = array();
-    $titulo_espacios = strpos($titulo, " ");
-    if ($titulo_espacios) {
-        $filter_title = array();
-        $titulo_explode = explode(" ", $titulo);
-        foreach ($titulo_explode as $titulo_) {
-            array_push($filter_title, "(titulo LIKE '%$titulo_%'  || desarrollo LIKE '%$titulo_%')");
-        }
-        $filter_title_implode = implode(" OR ", $filter_title);
-        array_push($filter, "(" . $filter_title_implode . ")");
-    } else {
-        $filter = array("(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
-    }
-}
-$productos_data = $producto->list($filter, '', ($cantidad * $pagina) . ',' . $cantidad);
-$numeroPaginas = $producto->paginador($filter, $cantidad);
+$empresa_data = $empresa->list($filter, '', ($cantidad * $pagina) . ',' . $cantidad);
+$numeroPaginas = $empresa->paginador($filter, $cantidad);
 ////
 //
-$template->set("title", TITULO . " | Inicio");
+$template->set("title", TITULO . " | Comercios");
 $template->set("description", "");
 $template->set("keywords", "");
 $template->set("favicon", FAVICON);
@@ -214,61 +166,35 @@ $template->themeInit();
 
         <!-- start .row -->
         <div class="row">
-            <!-- start .col-md-4 -->
-            <div class="col-lg-4 col-md-6">
-                <!-- start .single-product -->
-                <div class="product product--card">
-
-                    <div class="product__thumbnail">
-                        <img src="images/p1.jpg" alt="Product Image">
-                        <div class="prod_btn">
-                            <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                        </div>
-                        <!-- end /.prod_btn -->
-                    </div>
-                    <!-- end /.product__thumbnail -->
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>MartPlace Extension Bundle</h4>
+            <?php
+            foreach ($empresa_data as $emp){
+                ?>
+                <!-- start .col-md-4 -->
+                <div class="col-lg-4 col-md-6">
+                    <!-- start .single-product -->
+                    <div class="product product--card">
+                        <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>">
+                            <div style=" height: 200px; background: url(<?= URL . '/' . $emp['portada'] ?>) no-repeat center center/cover;">
+                            </div>
                         </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="images/auth.jpg" alt="author image">
-                                <p>
-                                    <a href="#">AazzTech</a>
-                                </p>
-                            </li>
-                            <li class="product_cat">
-                                <a href="#">
-                                    <span class="lnr lnr-book"></span>Plugin</a>
-                            </li>
-                        </ul>
+                        <!-- end /.product__thumbnail -->
 
-                        <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the mattis,
-                            leo quam aliquet congue.</p>
-                    </div>
-                    <!-- end /.product-desc -->
+                        <div class="product-desc">
+                            <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>" class="product_title">
+                                <h4><?= ucfirst(substr(strip_tags($emp['titulo']), 0, 25)); ?></h4>
+                            </a>
 
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>$10 - $50</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 90</p>
+                            <p><?= ucfirst(substr(strip_tags($emp['desarrollo']), 0, 150)); ?></p>
                         </div>
-                        <div class="sell">
-                            <p>
-                                <span class="lnr lnr-cart"></span>
-                                <span>16</span>
-                            </p>
-                        </div>
+                        <!-- end /.product-desc -->
                     </div>
-                    <!-- end /.product-purchase -->
+                    <!-- end /.single-product -->
                 </div>
-                <!-- end /.single-product -->
-            </div>
-            <!-- end /.col-md-4 -->
+                <!-- end /.col-md-4 -->
+            <?php
+            }
+            ?>
+
         </div>
         <!-- end /.row -->
 
@@ -298,3 +224,6 @@ $template->themeInit();
 <!--================================
     END PRODUCTS AREA
 =================================-->
+<?php
+$template->themeEnd();
+?>

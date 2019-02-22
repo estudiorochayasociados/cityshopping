@@ -29,6 +29,10 @@ if ($borrarImg != '') {
                             $delivery = $funcion->antihack_mysqli(isset($_POST["deliveryEmpresa"]) ? $_POST["deliveryEmpresa"] : $empresaData['delivery']);
                             $tiempoEntrega = $funcion->antihack_mysqli(isset($_POST["tiempoEntregaEmpresa"]) ? $_POST["tiempoEntregaEmpresa"] : $empresaData['tiempoEntrega']);
 
+                            $facebook = $funcion->antihack_mysqli(isset($_POST["facebook"]) ? $_POST["facebook"] : $empresaData['facebook']);
+                            $twitter = $funcion->antihack_mysqli(isset($_POST["twitter"]) ? $_POST["twitter"] : $empresaData['twitter']);
+                            $instagram = $funcion->antihack_mysqli(isset($_POST["instagram"]) ? $_POST["instagram"] : $empresaData['instagram']);
+
                             if ($direccion != $empresaData['direccion'] || $ciudad != $empresaData['ciudad'] || $provincia != $empresaData['provincia']):
                                 $ubicacionEmpresa = $direccion . '+' . $ciudad . '+' . $provincia;
                                 $ubicacionEmpresa = str_replace("-", "+", $funcion->normalizar_link($ubicacionEmpresa));
@@ -41,6 +45,7 @@ if ($borrarImg != '') {
                                 $coordenadas = $empresaData['coordenadas'];
                             endif;
 
+                            $redes=$facebook.'|||'.$twitter.'|||'.$instagram;
                             $empresa->set("id", $empresaData['id']);
                             $empresa->set("cod", $empresaData['cod']);
                             $empresa->set("fecha", $empresaData['fecha']);
@@ -57,6 +62,7 @@ if ($borrarImg != '') {
                             $empresa->set("delivery", $delivery);
                             $empresa->set("tiempoEntrega", $tiempoEntrega);
                             $empresa->set("coordenadas", $coordenadas);
+                            $empresa->set("redes",$redes);
 
                             if (isset($_POST["enviosEmpresa1"])) {
                                 $envio->set("cod_empresa", $empresaData['cod']);
@@ -179,9 +185,9 @@ if ($borrarImg != '') {
                                             unlink($destinoFinal);
                                         }
 
-                                        $imagenesEmpresa->set("cod", $empresaData['cod']);
-                                        $imagenesEmpresa->set("ruta", str_replace("../", "", $destinoRecortado));
-                                        $imagenesEmpresa->add();
+                                        $imagenes->set("cod", $empresaData['cod']);
+                                        $imagenes->set("ruta", str_replace("../", "", $destinoRecortado));
+                                        $imagenes->add();
                                     }
 
                                     $count++;
@@ -220,13 +226,12 @@ if ($borrarImg != '') {
                                                         <input class="text_field" value="<?php if (!empty($empresaData['titulo'])) {
                                                             echo $empresaData['titulo'];
                                                         } ?>" name="tituloEmpresa" id="tituloEmpresa" type="text"
-                                                               placeholder="Ej. Restaurante Argentino">
+                                                               placeholder="Ej. Restaurante Argentino" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>Descripción de la empresa</label>
-                                                         </textarea>
-                                                        <textarea name="desarrolloEmpresa"><?php if (!empty($empresaData['desarrollo'])) {
+                                                        <textarea name="desarrolloEmpresa" required><?php if (!empty($empresaData['desarrollo'])) {
                                                                 echo $empresaData['desarrollo'];
                                                             } ?></textarea>
                                                     </div>
@@ -237,7 +242,7 @@ if ($borrarImg != '') {
                                                                 <input type="text" value="<?php if (!empty($empresaData['telefono'])) {
                                                                     echo $empresaData['telefono'];
                                                                 } ?>" id="telefonoEmpresa" name="telefonoEmpresa" class="text_field"
-                                                                       placeholder="Ej. 111 123456">
+                                                                       placeholder="Ej. 111 123456" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-xs-6">
@@ -246,7 +251,38 @@ if ($borrarImg != '') {
                                                                 <input type="email" value="<?php if (!empty($empresaData['email'])) {
                                                                     echo $empresaData['email'];
                                                                 } ?>" id="emailEmpresa" name="emailEmpresa" class="text_field"
-                                                                       placeholder="Ej. ventas@mirestaurante.com">
+                                                                       placeholder="Ej. ventas@mirestaurante.com" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                    if (!empty($empresaData['redes'])){
+                                                        $redes_=explode("|||",$empresaData['redes']);
+                                                    }
+                                                    ?>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label>Facebook <small>(Opcional)</small></label>
+                                                                <input type="text" value="<?php if (!empty($empresaData['redes'])) {
+                                                                    echo $redes_[0];
+                                                                } ?>" name="facebook" class="text_field">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label>Twitter <small>(Opcional)</small></label>
+                                                                <input type="text" value="<?php if (!empty($empresaData['redes'])) {
+                                                                    echo $redes_[1];
+                                                                } ?>" name="twitter" class="text_field">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label>Instagram <small>(Opcional)</small></label>
+                                                                <input type="text" value="<?php if (!empty($empresaData['redes'])) {
+                                                                    echo $redes_[2];
+                                                                } ?>" name="instagram" class="text_field">
                                                             </div>
                                                         </div>
                                                     </div>

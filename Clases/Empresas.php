@@ -144,5 +144,4 @@ class Empresas
         $totalPaginas = $total / $cantidad;
         return ceil($totalPaginas);
     }
-
 }

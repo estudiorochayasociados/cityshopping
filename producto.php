@@ -9,8 +9,14 @@ $categoria = new Clases\Categorias();
 $funciones = new Clases\PublicFunction();
 $producto = new Clases\Productos();
 $empresa = new Clases\Empresas();
+$carrito = new Clases\Carrito();
+$envio = new Clases\Envios();
 //Datos
 $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
+//Carrito
+$url_limpia = CANONICAL;
+$url_limpia = str_replace("?success", "", $url_limpia);
+$url_limpia = str_replace("?error", "", $url_limpia);
 //
 $producto->set("cod", $cod);
 $producto_data = $producto->view();
@@ -18,6 +24,8 @@ $imagen->set("cod", $producto_data['cod']);
 $imagen_data = $imagen->listForProduct();
 $empresa->set('cod', $producto_data['cod_empresa']);
 $empresa_data = $empresa->view();
+$filterEnvios = array("cod_empresa = '" . $empresa_data['cod'] . "'");
+$enviosArray = $envio->list($filterEnvios, "", "");
 ////Productos relacionados
 $filter = array("categoria='" . $producto_data['categoria'] . "'");
 $productos_relacionados = $producto->list($filter, "RAND()", 3);
@@ -159,134 +167,6 @@ $template->themeInit();
                                 </div>
                             </div>
                             <!-- end /.tab-content -->
-
-                            <div class="tab-pane product-tab fade" id="product-comment">
-                                <div class="thread">
-                                    <ul class="media-list thread-list">
-                                        <li class="single-thread">
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <a href="#">
-                                                        <img class="media-object" src="<?= URL ?>/assets/images/m1.png" alt="Commentator Avatar">
-                                                    </a>
-                                                </div>
-                                                <div class="media-body">
-                                                    <div>
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Themexylum</h4>
-                                                            </a>
-                                                            <span>9 Hours Ago</span>
-                                                        </div>
-                                                        <span class="comment-tag buyer">Purchased</span>
-                                                        <a href="#" class="reply-link">Reply</a>
-                                                    </div>
-                                                    <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo
-                                                        ut sceleris que the mattis, leo quam aliquet congue placerat
-                                                        mi id nisi interdum mollis. </p>
-                                                </div>
-                                            </div>
-
-                                            <!-- nested comment markup -->
-                                            <ul class="children">
-                                                <li class="single-thread depth-2">
-                                                    <div class="media">
-                                                        <div class="media-left">
-                                                            <a href="#">
-                                                                <img class="media-object" src="images/m2.png" alt="Commentator Avatar">
-                                                            </a>
-                                                        </div>
-                                                        <div class="media-body">
-                                                            <div class="media-heading">
-                                                                <h4>AazzTech</h4>
-                                                                <span>6 Hours Ago</span>
-                                                            </div>
-                                                            <span class="comment-tag author">Author</span>
-                                                            <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra,
-                                                                justo ut sceleris que the mattis, leo quam aliquet congue
-                                                                placerat mi id nisi interdum mollis. </p>
-                                                        </div>
-                                                    </div>
-
-                                                </li>
-                                                <li class="single-thread depth-2">
-                                                    <div class="media">
-                                                        <div class="media-left">
-                                                            <a href="#">
-                                                                <img class="media-object" src="images/m1.png" alt="Commentator Avatar">
-                                                            </a>
-                                                        </div>
-                                                        <div class="media-body">
-                                                            <div class="media-heading">
-                                                                <h4>Themexylum</h4>
-                                                                <span>9 Hours Ago</span>
-                                                            </div>
-                                                            <span class="comment-tag buyer">Purchased</span>
-                                                            <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra,
-                                                                justo ut sceleris que the mattis, leo quam aliquet congue
-                                                                placerat mi id nisi interdum mollis. </p>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-
-                                            <!-- comment reply -->
-                                            <div class="media depth-2 reply-comment">
-                                                <div class="media-left">
-                                                    <a href="#">
-                                                        <img class="media-object" src="images/m2.png" alt="Commentator Avatar">
-                                                    </a>
-                                                </div>
-                                                <div class="media-body">
-                                                    <form action="#" class="comment-reply-form">
-                                                        <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                        <button class="btn btn--md btn--round">Post Comment</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <!-- comment reply -->
-                                        </li>
-                                        <!-- end single comment thread /.comment-->
-                                    </ul>
-                                    <!-- end /.media-list -->
-
-                                    <div class="pagination-area pagination-area2 text-right">
-                                        <nav class="navigation pagination " role="navigation">
-                                            <div class="nav-links">
-                                                <a class="page-numbers current" href="#">1</a>
-                                                <a class="page-numbers" href="#">2</a>
-                                                <a class="page-numbers" href="#">3</a>
-                                                <a class="next page-numbers" href="#">
-                                                    <span class="lnr lnr-arrow-right"></span>
-                                                </a>
-                                            </div>
-                                        </nav>
-                                    </div>
-                                    <!-- end /.comment pagination area -->
-
-                                    <div class="comment-form-area">
-                                        <h4>Leave a comment</h4>
-                                        <!-- comment reply -->
-                                        <div class="media comment-form">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="images/m7.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--sm btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <!-- comment reply -->
-                                    </div>
-                                    <!-- end /.comment-form-area -->
-                                </div>
-                                <!-- end /.comments -->
-                            </div>
-                            <!-- end /.product-comment -->
                         </div>
                         <!-- end /.tab-content -->
                     </div>
@@ -314,10 +194,126 @@ $template->themeInit();
                                 ?>
                             </h1>
                         </div>
-                        <div class="purchase-button">
-                            <button type="submit" href="#" class="btn btn--lg btn--round">Comprar</button>
-                        </div>
+                        <?php
+                        @$variantesMostrar = unserialize($producto_data['variantes']);
+                        ?>
                         <!-- end /.purchase-button -->
+                        <?php
+                        var_dump($_SESSION['carrito']);
+                        //Proceso de compra
+                        if (isset($_POST["enviarCarrito"])) {
+                            $id = $funciones->antihack_mysqli($producto_data['cod']);
+                            $cantidad = $funciones->antihack_mysqli(isset($_POST['cantidad']) ? $_POST['cantidad'] : '');
+                            $precio = $funciones->antihack_mysqli(isset($_POST['precio']) ? $_POST['precio'] : '');
+                            $tipoEnvio= $funciones->antihack_mysqli(isset($_POST['tipoEnvio']) ? $_POST['tipoEnvio'] : '');
+                            $producto_ = explode("---", $precio);
+                            $envio_=explode("---",$tipoEnvio);
+
+                            $carrito->set("id", $id);
+                            $carrito->set("cantidad", $cantidad);
+                            $carrito->set("titulo", $producto_[1]);
+                            $carrito->set("precio", $producto_[0]);
+                            $carrito->set("stock", $producto_data['stock']);
+                            $carrito->add();
+
+                            //Envio
+                            $carrito->set("id","Envio-Seleccion");
+                            $carrito->set("cantidad",1);
+                            $carrito->set("titulo",$envio_[0]);
+                            $carrito->set("precio",$envio_[1]);
+                            $carrito->add();
+
+                            //Metodo
+                            $carrito->set("id","Metodo-Pago");
+                            $carrito->set("cantidad",1);
+                            $carrito->set("titulo","Método de pago: Efectivo");
+                            $carrito->set("precio",0);
+                            $carrito->add();
+
+                            $funciones->headerMove(URL.'/carrito');
+                        }
+                        //
+                        ?>
+                        <form method="post" onsubmit="return confirm('Do you really want to submit the form?');">
+                            <div class="sidebar-card card-pricing card--pricing2">
+                                <ul class="pricing-options">
+                                    <?php
+                                    if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
+                                        ?>
+                                        <li>
+                                            <div class="custom-radio">
+                                                <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?=$producto_data['titulo']?>" name="precio" checked>
+                                                <label for="opt1" data-price="<?= $producto_data['precioDescuento'] ?>">
+                                                    <span class="circle"></span>Producto con descuento</label>
+                                            </div>
+                                        </li>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <li>
+                                            <div class="custom-radio">
+                                                <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>" name="precio" checked>
+                                                <label for="opt1" data-price="<?= $producto_data['precio'] ?>">
+                                                    <span class="circle"></span>Producto</label>
+                                            </div>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                    <?php
+                                    if (!empty($variantesMostrar)) {
+                                        $opt = 2;
+                                        foreach ($variantesMostrar as $key => $value) {
+                                            $valor = explode(",", $value);
+                                            ?>
+                                            <li>
+                                                <div class="custom-radio">
+                                                    <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $producto_data['titulo'].' + '.$valor[1] ?>" name="precio">
+                                                    <label for="opt<?= $opt; ?>" data-price="<?= $valor[0]; ?>">
+                                                        <span class="circle"></span><?= ucfirst($valor[1]); ?></label>
+                                                </div>
+                                                <p>
+                                                    <?=ucfirst($producto_data['titulo'])?> + <?= ucfirst($valor[1]); ?>.
+                                                </p>
+                                            </li>
+                                            <?php
+                                            $opt++;
+                                        }
+                                    }
+                                    ?>
+                                    <li>
+                                        <h6>Cantidad:</h6>
+                                        <input max="<?= $producto_data['stock'] ?>" min="1" type="number" name="cantidad" id="sst" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
+                                    </li>
+                                    <li>
+                                        <h6>Envío:</h6>
+                                        <select name="tipoEnvio" class="form-control" required>
+                                            <?php
+                                            foreach ($enviosArray as $env){
+                                                ?>
+                                                <option value="<?='Envío: '.$env['titulo']?>---<?=$env['precio']?>">
+                                                    <?php
+                                                    if ($env['precio']==0){
+                                                        echo ucfirst($env['titulo']).' | Gratis';
+                                                    }else{
+                                                        echo ucfirst($env['titulo']).' | $'.$env['precio'];
+                                                    }
+                                                    ?>
+                                                </option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </li>
+                                </ul>
+                                <!-- end /.pricing-options -->
+                                <div class="purchase-button">
+                                    <button type="submit" name="enviarCarrito" class="btn btn--lg btn--round">Comprar</button>
+                                </div>
+                                <!-- end /.purchase-button -->
+                            </div>
+                        </form>
+                        <!-- end /.sidebar--card -->
                     </div>
                     <!-- end /.sidebar--card -->
                     <div class="author-card sidebar-card ">

@@ -195,8 +195,6 @@ END FOOTER AREA
 <script src="<?=URL?>/assets/js/vendor/waypoints.min.js"></script>
 <script src="<?=URL?>/assets/js/dashboard.js"></script>
 <script src="<?=URL?>/assets/js/main.js"></script>
-<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBeySPFGz7DIUTrReCRQT6HYaMM0ia0knA"></script>
-<script src="<?=URL?>/assets/js/map.js"></script>
 <!-- endinject -->
 <script>
     $("#provincia").change(function () {

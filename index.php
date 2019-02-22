@@ -126,13 +126,13 @@ $template->themeInit();
 
                         <div class="product-desc">
                             <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
-                                <h4><?= ucfirst($prod['titulo']); ?></h4>
+                                <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 25)); ?></h4>
                             </a>
                             <ul class="titlebtm">
                                 <li>
                                     <p>
                                         <a href="<?= URL . '/producto/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
-                                            <?= ucfirst($empresa_data['titulo']) ?>
+                                            <?= ucfirst(substr(strip_tags($empresa_data['titulo']), 0, 25)); ?>
                                         </a>
                                     </p>
                                 </li>

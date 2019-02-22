@@ -12,24 +12,21 @@ $empresa = new Clases\Empresas();
 //Datos
 $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 //
-$producto->set("cod", $cod);
-$producto_data = $producto->view();
-$imagen->set("cod", $producto_data['cod']);
-$imagen_data = $imagen->listForProduct();
-$empresa->set('cod', $producto_data['cod_empresa']);
+$empresa->set("cod", $cod);
 $empresa_data = $empresa->view();
-////Productos relacionados
-$filter = array("categoria='" . $producto_data['categoria'] . "'");
-$productos_relacionados = $producto->list($filter, "RAND()", 3);
+$imagen->set("cod", $empresa_data['cod']);
+$imagen_data = $imagen->listForProduct();
+$filter = array("cod_empresa='" . $empresa_data['cod'] . "'");
+$producto_data = $producto->list($filter, '', 2);
 //
-if (!empty($producto_data['imagenes'][0]['ruta'])) {
-    $ruta_ = URL . "/" . $producto_data['imagenes'][0]['ruta'];
+if (!empty($empresa_data['portada'])) {
+    $ruta_ = URL . "/" . $empresa_data['portada'];
 } else {
     $ruta_ = '';
 }
-$template->set("title", TITULO . " | " . ucfirst(strip_tags($producto_data['titulo'])));
-$template->set("description", ucfirst(substr(strip_tags($producto_data['desarrollo']), 0, 160)));
-$template->set("keywords", ucfirst(strip_tags($producto_data['titulo'])));
+$template->set("title", TITULO . " | " . ucfirst(strip_tags($empresa_data['titulo'])));
+$template->set("description", ucfirst(substr(strip_tags($empresa_data['desarrollo']), 0, 160)));
+$template->set("keywords", ucfirst(strip_tags($empresa_data['titulo'])));
 $template->set("imagen", $ruta_);
 $template->set("favicon", FAVICON);
 $template->set("body", "single_prduct2");
@@ -45,14 +42,14 @@ $template->themeInit();
                 <div class="breadcrumb">
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a href="<?= URL ?>/index">Inicio</a>
                         </li>
                         <li class="active">
-                            <a href="#">Author Profile</a>
+                            <a href="#"><?= ucfirst($empresa_data['titulo']); ?></a>
                         </li>
                     </ul>
                 </div>
-                <h1 class="page-title">Author's Profile</h1>
+                <h1 class="page-title"><?= ucfirst($empresa_data['titulo']); ?></h1>
             </div>
             <!-- end /.col-md-12 -->
         </div>
@@ -75,549 +72,213 @@ $template->themeInit();
                     <div class="author-card sidebar-card">
                         <div class="author-infos">
                             <div class="author_avatar">
-                                <img src="images/author-avatar.jpg" alt="Presenting the broken author avatar :D">
+                                <img src="<?= URL . '/' . $empresa_data['logo']; ?>" alt="">
                             </div>
 
                             <div class="author">
-                                <h4>AazzTech</h4>
-                                <p>Signed Up: 08 April 2016</p>
+                                <h4><?= ucfirst($empresa_data['titulo']); ?></h4>
                             </div>
                             <!-- end /.author -->
+                            <?php
+                            if (!empty($empresa_data['redes'])) {
+                                $redes_ = explode("|||", $empresa_data['redes']);
+                                ?>
+                                <div class="social social--color--filled">
+                                    <ul>
+                                        <?php
+                                        if (!empty($redes_[0])) {
+                                            ?>
+                                            <li>
+                                                <a href="<?= $redes_[0] ?>">
+                                                    <span class="fa fa-facebook"></span>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
+                                        <?php
+                                        if (!empty($redes_[1])) {
+                                            ?>
+                                            <li>
+                                                <a href="<?= $redes_[1] ?>">
+                                                    <span class="fa fa-twitter"></span>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
 
-                            <div class="author-badges">
-                                <ul class="list-unstyled">
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Diamnond Author">
-                                                <img src="images/svg/author_rank_diamond.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Has sold more than $10k">
-                                                <img src="images/svg/author_level_3.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Referred 10+ members">
-                                                <img src="images/svg/affiliate_level_1.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Has Collected 2+ Items">
-                                                <img src="images/svg/collection_level_1.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Exclusive Author">
-                                                <img src="images/svg/exclusive_author.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Weekly Featured Author">
-                                                <img src="images/svg/featured_author.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Member for 2 Year">
-                                                <img src="images/svg/members_years.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="The seller is recommended by authority">
-                                                <img src="images/svg/recommended.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Won a contest">
-                                                <img src="images/svg/contest_winner.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                    <li>
-                                            <span data-toggle="tooltip" data-placement="bottom" title="Helped to resolve copyright issues">
-                                                <img src="images/svg/copyright.svg" alt="" class="svg">
-                                            </span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- end /.author-badges -->
-
-                            <div class="social social--color--filled">
-                                <ul>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-twitter"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-dribbble"></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                        <?php
+                                        if (!empty($redes_[2])) {
+                                            ?>
+                                            <li>
+                                                <a href="<?= $redes_[2] ?>">
+                                                    <span class="fa fa-instagram"></span>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                                <?php
+                            }
+                            ?>
                             <!-- end /.social -->
-
-                            <div class="author-btn">
-                                <a href="#" class="btn btn--md btn--round">Follow</a>
-                            </div>
                             <!-- end /.author-btn -->
                         </div>
                         <!-- end /.author-infos -->
-
-
                     </div>
                     <!-- end /.author-card -->
 
-                    <div class="sidebar-card author-menu">
-                        <ul>
+                    <div class="sidebar-card freelance-status">
+                        <h2>Contacto</h2>
+                        <ul class="mt-10">
                             <li>
-                                <a href="#" class="active">Profile</a>
+                                <p><span class="lnr lnr-phone-handset"></span> Teléfono: <br><?=$empresa_data['telefono'];?></p>
                             </li>
                             <li>
-                                <a href="author-items.html">Author Items</a>
-                            </li>
-                            <li>
-                                <a href="author-reviews.html">Customer Reviews</a>
-                            </li>
-                            <li>
-                                <a href="author-followers.html">Followers (67)</a>
-                            </li>
-                            <li>
-                                <a href="author-following.html">Following (39)</a>
+                                <p><span class="lnr lnr-envelope"></span> Email: <br> <?=$empresa_data['email'];?></p>
                             </li>
                         </ul>
                     </div>
-                    <!-- end /.author-menu -->
-
-                    <div class="sidebar-card freelance-status">
-                        <div class="custom-radio">
-                            <input type="radio" id="opt1" class="" name="filter_opt" checked>
-                            <label for="opt1">
-                                <span class="circle"></span>Available for Freelance work</label>
-                        </div>
-                    </div>
                     <!-- end /.author-card -->
-
-                    <div class="sidebar-card message-card">
-                        <div class="card-title">
-                            <h4>Product Information</h4>
-                        </div>
-
-                        <div class="message-form">
-                            <form action="#">
-                                <div class="form-group">
-                                    <textarea name="message" class="text_field" id="author-message" placeholder="Your message..."></textarea>
-                                </div>
-
-                                <div class="msg_submit">
-                                    <button type="submit" class="btn btn--md btn--round">send message</button>
-                                </div>
-                            </form>
-                            <p> Please
-                                <a href="#">sign in</a> to contact this author.</p>
-                        </div>
-                        <!-- end /.message-form -->
-                    </div>
-                    <!-- end /.freelance-status -->
                 </aside>
             </div>
             <!-- end /.sidebar -->
 
             <div class="col-lg-8 col-md-12">
                 <div class="row">
-                    <div class="col-md-4 col-sm-4">
-                        <div class="author-info mcolorbg4">
-                            <p>Total Items</p>
-                            <h3>4,369</h3>
-                        </div>
-                    </div>
-                    <!-- end /.col-md-4 -->
-
-                    <div class="col-md-4 col-sm-4">
-                        <div class="author-info pcolorbg">
-                            <p>Total sales</p>
-                            <h3>36,957</h3>
-                        </div>
-                    </div>
-                    <!-- end /.col-md-4 -->
-
-                    <div class="col-md-4 col-sm-4">
-                        <div class="author-info scolorbg">
-                            <p>Total Ratings</p>
-                            <div class="rating product--rating">
-                                <ul>
-                                    <li>
-                                        <span class="fa fa-star"></span>
-                                    </li>
-                                    <li>
-                                        <span class="fa fa-star"></span>
-                                    </li>
-                                    <li>
-                                        <span class="fa fa-star"></span>
-                                    </li>
-                                    <li>
-                                        <span class="fa fa-star"></span>
-                                    </li>
-                                    <li>
-                                        <span class="fa fa-star-half-o"></span>
-                                    </li>
-                                </ul>
-                                <span class="rating__count">(26)</span>
+                    <?php
+                    if (!empty($empresa_data)) {
+                        ?>
+                        <div class="col-md-12">
+                            <div id="carousel" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    <?php
+                                    $activo = 0;
+                                    foreach ($imagen_data as $img) {
+                                        ?>
+                                        <div class="carousel-item <?php if ($activo == 0) {
+                                            echo "active";
+                                            $activo++;
+                                        } ?>" style=" height: 400px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                                <?php
+                                if (@count($imagen_data) > 1) {
+                                    ?>
+                                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Anterior</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Siguiente</span>
+                                    </a>
+                                    <?php
+                                }
+                                ?>
                             </div>
                         </div>
-                    </div>
-                    <!-- end /.col-md-4 -->
-
+                        <?php
+                    }
+                    ?>
                     <div class="col-md-12 col-sm-12">
-                        <div class="author_module">
-                            <img src="images/authcvr.jpg" alt="author image">
-                        </div>
 
                         <div class="author_module about_author">
-                            <h2>About
-                                <span>AazzTech</span>
-                            </h2>
-                            <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the mattisleo
-                                quam aliquet congue. Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo
-                                ut scelerisque the mattisleo quam aliquet congue. Nunc placerat mi id nisi interdum mollis.
-                                Prae sent pharetra, justo ut scelerisque the mattisleo quam aliquet congue.</p>
-                            <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the mattisleo
-                                quam aliquet congue. Nunc placerat mi id nisi interdum mollis. Praesent pharetra.</p>
+                            <h2>Descripción</h2>
+                            <p><?= ucfirst(strip_tags($empresa_data['desarrollo'])); ?></p>
                         </div>
                     </div>
                 </div>
                 <!-- end /.row -->
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="product-title-area">
-                            <div class="product__title">
-                                <h2>Newest Products</h2>
-                            </div>
-
-                            <a href="#" class="btn btn--sm">See all Items</a>
-                        </div>
-                        <!-- end /.product-title-area -->
-                    </div>
-                    <!-- end /.col-md-12 -->
-
-                    <!-- start .col-md-4 -->
-                    <div class="col-lg-6 col-md-6">
-                        <!-- start .single-product -->
-                        <div class="product product--card">
-
-                            <div class="product__thumbnail">
-                                <img src="images/p4.jpg" alt="Product Image">
-                                <div class="prod_btn">
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                                </div>
-                                <!-- end /.prod_btn -->
-                            </div>
-                            <!-- end /.product__thumbnail -->
-
-                            <div class="product-desc">
-                                <a href="#" class="product_title">
-                                    <h4>Yannan Na nakka muka</h4>
-                                </a>
-                                <ul class="titlebtm">
-                                    <li>
-                                        <img class="auth-img" src="images/auth3.jpg" alt="author image">
-                                        <p>
-                                            <a href="#">AazzTech</a>
-                                        </p>
-                                    </li>
-                                    <li class="product_cat">
-                                        <a href="#">
-                                            <img src="images/cathtm.png" alt="category image">Plugin</a>
-                                    </li>
-                                </ul>
-
-                                <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the
-                                    mattis, leo quam aliquet congue.</p>
-                            </div>
-                            <!-- end /.product-desc -->
-
-                            <div class="product-purchase">
-                                <div class="price_love">
-                                    <span>$10</span>
-                                    <p>
-                                        <span class="lnr lnr-heart"></span> 48</p>
-                                </div>
-
-                                <div class="rating product--rating">
-                                    <ul>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star-half-o"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="sell">
-                                    <p>
-                                        <span class="lnr lnr-cart"></span>
-                                        <span>50</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- end /.product-purchase -->
-                        </div>
-                        <!-- end /.single-product -->
-                    </div>
-                    <!-- end /.col-md-4 -->
-
-                    <!-- start .col-md-4 -->
-                    <div class="col-lg-6 col-md-6">
-                        <!-- start .single-product -->
-                        <div class="product product--card">
-
-                            <div class="product__thumbnail">
-                                <img src="images/p2.jpg" alt="Product Image">
-                                <div class="prod_btn">
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                                </div>
-                                <!-- end /.prod_btn -->
-                            </div>
-                            <!-- end /.product__thumbnail -->
-
-                            <div class="product-desc">
-                                <a href="#" class="product_title">
-                                    <h4>Mccarther Coffee Shop</h4>
-                                </a>
-                                <ul class="titlebtm">
-                                    <li>
-                                        <img class="auth-img" src="images/auth2.jpg" alt="author image">
-                                        <p>
-                                            <a href="#">AazzTech</a>
-                                        </p>
-                                    </li>
-                                    <li class="product_cat">
-                                        <a href="#">
-                                            <img src="images/catword.png" alt="category image">wordpress</a>
-                                    </li>
-                                </ul>
-
-                                <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the
-                                    mattis, leo quam aliquet congue.</p>
-                            </div>
-                            <!-- end /.product-desc -->
-
-                            <div class="product-purchase">
-                                <div class="price_love">
-                                    <span>$10</span>
-                                    <p>
-                                        <span class="lnr lnr-heart"></span> 48</p>
-                                </div>
-
-                                <div class="rating product--rating">
-                                    <ul>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star-half-o"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="sell">
-                                    <p>
-                                        <span class="lnr lnr-cart"></span>
-                                        <span>50</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- end /.product-purchase -->
-                        </div>
-                        <!-- end /.single-product -->
-                    </div>
-                    <!-- end /.col-md-4 -->
-
-                    <!-- start .col-md-4 -->
-                    <div class="col-lg-6 col-md-6">
-                        <!-- start .single-product -->
-                        <div class="product product--card">
-
-                            <div class="product__thumbnail">
-                                <img src="images/p2.jpg" alt="Product Image">
-                                <div class="prod_btn">
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                                </div>
-                                <!-- end /.prod_btn -->
-                            </div>
-                            <!-- end /.product__thumbnail -->
-
-                            <div class="product-desc">
-                                <a href="#" class="product_title">
-                                    <h4>Mccarther Coffee Shop</h4>
-                                </a>
-                                <ul class="titlebtm">
-                                    <li>
-                                        <img class="auth-img" src="images/auth2.jpg" alt="author image">
-                                        <p>
-                                            <a href="#">AazzTech</a>
-                                        </p>
-                                    </li>
-                                    <li class="product_cat">
-                                        <a href="#">
-                                            <img src="images/catword.png" alt="category image">wordpress</a>
-                                    </li>
-                                </ul>
-
-                                <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the
-                                    mattis, leo quam aliquet congue.</p>
-                            </div>
-                            <!-- end /.product-desc -->
-
-                            <div class="product-purchase">
-                                <div class="price_love">
-                                    <span>$10</span>
-                                    <p>
-                                        <span class="lnr lnr-heart"></span> 48</p>
-                                </div>
-
-                                <div class="rating product--rating">
-                                    <ul>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star-half-o"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="sell">
-                                    <p>
-                                        <span class="lnr lnr-cart"></span>
-                                        <span>50</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- end /.product-purchase -->
-                        </div>
-                        <!-- end /.single-product -->
-                    </div>
-                    <!-- end /.col-md-4 -->
-
-                    <!-- start .col-md-4 -->
-                    <div class="col-lg-6 col-md-6">
-                        <!-- start .single-product -->
-                        <div class="product product--card">
-
-                            <div class="product__thumbnail">
-                                <img src="images/p6.jpg" alt="Product Image">
-                                <div class="prod_btn">
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">More Info</a>
-                                    <a href="single-product.html" class="transparent btn--sm btn--round">Live Demo</a>
-                                </div>
-                                <!-- end /.prod_btn -->
-                            </div>
-                            <!-- end /.product__thumbnail -->
-
-                            <div class="product-desc">
-                                <a href="#" class="product_title">
-                                    <h4>The of the century</h4>
-                                </a>
-                                <ul class="titlebtm">
-                                    <li>
-                                        <img class="auth-img" src="images/auth.jpg" alt="author image">
-                                        <p>
-                                            <a href="#">AazzTech</a>
-                                        </p>
-                                    </li>
-                                    <li class="product_cat">
-                                        <a href="#">
-                                            <img src="images/catph.png" alt="Category Image">PSD</a>
-                                    </li>
-                                </ul>
-
-                                <p>Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut scelerisque the
-                                    mattis, leo quam aliquet congue.</p>
-                            </div>
-                            <!-- end /.product-desc -->
-
-                            <div class="product-purchase">
-                                <div class="price_love">
-                                    <span>$10</span>
-                                    <p>
-                                        <span class="lnr lnr-heart"></span> 48</p>
-                                </div>
-
-                                <div class="rating product--rating">
-                                    <ul>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star"></span>
-                                        </li>
-                                        <li>
-                                            <span class="fa fa-star-half-o"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="sell">
-                                    <p>
-                                        <span class="lnr lnr-cart"></span>
-                                        <span>50</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- end /.product-purchase -->
-                        </div>
-                        <!-- end /.single-product -->
-                    </div>
-                    <!-- end /.col-md-4 -->
-                </div>
-                <!-- end /.row -->
             </div>
             <!-- end /.col-md-8 -->
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-title-area">
+                    <div class="product__title">
+                        <h2>Productos recientes</h2>
+                    </div>
+
+                    <a href="#" class="btn btn--sm">Ver todos</a>
+                </div>
+                <!-- end /.product-title-area -->
+            </div>
+            <!-- end /.col-md-12 -->
+            <?php
+            if (!empty($producto_data)) {
+                foreach ($producto_data as $prod) {
+                    $imagen->set("cod", $prod['cod']);
+                    $img = $imagen->view();
+                    ?>
+                    <!-- start .col-md-4 -->
+                    <div class="col-lg-4 col-md-4">
+                        <!-- start .single-product -->
+                        <div class="product product--card">
+                            <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
+                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                </div>
+                            </a>
+                            <!-- end /.product__thumbnail -->
+                            <div class="product-desc">
+                                <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
+                                    <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 20)); ?></h4>
+                                </a>
+                                <p><?= ucfirst(substr(strip_tags($prod['desarrollo']), 0, 150)); ?></p>
+                            </div>
+                            <!-- end /.product-desc -->
+                            <div class="product-purchase">
+                                <div class="price_love">
+                                    <?php
+                                    if (!empty($prod['precioDescuento'])) {
+                                        ?>
+                                        <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <span>$<?= $prod['precio'] ?></span>
+                                        <?php
+                                    }
+                                    ?>
+                                    <p>
+                                </div>
+                                <div class="sell">
+                                    <p>
+                                        <span class="lnr lnr-layers"></span>
+                                        <span><?= $prod['stock']; ?></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- end /.product-purchase -->
+                        </div>
+                        <!-- end /.single-product -->
+                    </div>
+                    <!-- end /.col-md-4 -->
+                    <?php
+                }
+            } else {
+                ?>
+                <div class="col-md-12">
+                    <div class="product product--card center">
+                        <h4 style="text-align: center;">
+                            Esta empresa aún no cargo ningún producto.
+                        </h4>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
 
         </div>
+        <!-- end /.row -->
         <!-- end /.row -->
     </div>
     <!-- end /.container -->

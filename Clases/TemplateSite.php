@@ -9,6 +9,7 @@ class TemplateSite
   public $keywords;
   public $description;
   public $imagen;
+  public $favicon;
   public $body;
 
   private $canonical = CANONICAL;
@@ -71,7 +72,8 @@ class TemplateSite
     echo '<meta property="og:title" content="'.strip_tags($this->title).'" />';
     echo '<meta property="og:description" content="'.strip_tags($this->description).'" />';
     echo '<meta property="og:image" content="'.$this->imagen.'" />';
-    include 'assets/inc/header.inc.php';
+      echo '<link href="' . $this->favicon . '" rel="Shortcut Icon" />';
+      include 'assets/inc/header.inc.php';
     echo '</head>';
     echo '<body '.$this->body.'>';
     include 'assets/inc/nav.inc.php';

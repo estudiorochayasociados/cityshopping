@@ -15,7 +15,7 @@ class autoload
         define('PAIS', "Argentina");
         define('EMAIL', "web@estudiorochayasoc.com.ar");
         define('PASS_EMAIL', "weAr2010");
-        define('SMTP_EMAIL', "mail.estudiorochayasoc.com.ar");
+        define('SMTP_EMAIL', "cs1008.webhostbox.net");
         define('DIRECCION', "Belgrano 1585");
         define('LOGO', URL . "/assets/images/logo.png");
         define('FAVICON', URL . "/assets/images/favicon.png");

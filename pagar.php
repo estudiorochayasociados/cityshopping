@@ -17,10 +17,9 @@ $cod_pedido = $_SESSION["cod_pedido"];
 //if ($tipo_pedido == '') {
 //    $funciones->headerMove(URL . "/carrito");
 //}
-if (is_array($usuarioSesion)) {
-    //$funciones->headerMove(URL . "/checkout/" . $cod_pedido . "/" . $tipo_pedido);
+if (!empty($usuarioSesion)) {
+    $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
 }
-
 $error='';
 ?>
     <!--================================
@@ -112,7 +111,7 @@ $error='';
                             } else {
                                 $usuarios->edit();
                                 $usuarios->login();
-                                $funciones->headerMove(URL . "/checkout/" . $cod_pedido . "/" . $tipo_pedido);
+                                $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                             }
                         }
                     } else {
@@ -122,7 +121,7 @@ $error='';
                         } else {
                             $usuarios->add();
                             $usuarios->login();
-                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido . "/" . $tipo_pedido);
+                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }
                     }
                     break;
@@ -134,14 +133,14 @@ $error='';
                         if ($email_data['invitado'] == 1) {
                             $usuarios->edit();
                             $usuarios->login();
-                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido . "/" . $tipo_pedido);
+                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }else{
                             $error="Ya existe un usuario registrado con este email.";
                         }
                     }else{
                         //el email no existe
                         $usuarios->invitado_sesion();
-                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido . "/" . $tipo_pedido);
+                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                     }
                     break;
             }
@@ -151,7 +150,7 @@ $error='';
             <div class="<?php if (empty($error)){ echo 'oculto'; } ?>alert alert-warning" role="alert"><?=$error;?></div>
             <form method="post" class="row">
                 <div class="row">
-                    <input type="hidden" value="<?= $tipo_pedido ?>" name="metodos-pago"/>
+                    <input type="hidden" name="metodos-pago"/>
                     <div class="col-md-6">Nombre:<br/>
                         <input class="form-control  mb-10" type="text"
                                value="<?php echo isset($_POST["nombre"]) ? $_POST["nombre"] : '' ?>"

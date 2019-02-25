@@ -5,62 +5,64 @@ $template = new Clases\TemplateSite();
 $funciones = new Clases\PublicFunction();
 $template->set("title", TITULO . " | Cierre de compra");
 $template->set("description", "Finalizá tu compra eligiendo tu medio de pago y la forma de envío");
-$template->set("keywords", "compra de pintura online, carrito de pintura online, compra pintureria, pintura online, pintureria online");
+$template->set("keywords", "");
 $template->set("favicon", LOGO);
 $template->themeInit();
 
-$cod_pedido = $funciones->antihack_mysqli(isset($_GET["cod_pedido"]) ? $_GET["cod_pedido"] : '');
-$tipo_pedido = $funciones->antihack_mysqli(isset($_GET["tipo_pedido"]) ? $_GET["tipo_pedido"] : '');
-
-$carrito = new Clases\Carrito();
 $pedidos = new Clases\Pedidos();
+$carrito = new Clases\Carrito();
 $usuarios = new Clases\Usuarios();
+$productos = new Clases\Productos();
+
+$cod_pedido = $_SESSION["cod_pedido"];
+//$tipo_pedido = isset($_GET["tipo_pedido"]) ? $_GET["tipo_pedido"] : '1';
+
 $pedidos->set("cod", $cod_pedido);
 $pedido = $pedidos->view();
 
-$usuarioSesion = $usuarios->view_sesion();
-
+$usuarioSesion = $_SESSION['usuarios'];
 $carro = $carrito->return();
-$precio = $carrito->precioFinal();
 
-$timezone = -3;
-$fecha = gmdate("Y-m-j H:i:s", time() + 3600 * ($timezone + date("I")));
+$timezone  = -3;
+$fecha = gmdate("Y-m-j H:i:s", time() + 3600*($timezone+date("I")));
 ?>
     <body id="bd" class="cms-index-index2 header-style2 prd-detail sns-products-detail1 cms-simen-home-page-v2 default cmspage">
     <div id="sns_wrapper">
     </div>
     <?php
-    if (is_array($pedido)) {
+    if (is_array($pedido)):
         $pedidos->set("cod", $cod_pedido);
         $pedidos->delete();
-        foreach ($carro as $carroItem) {
-            $pedidos->set("cod", $cod_pedido);
-            $pedidos->set("producto", $carroItem["titulo"]);
-            $pedidos->set("cantidad", $carroItem["cantidad"]);
-            $pedidos->set("precio", $carroItem["precio"]);
-            $pedidos->set("estado", 0);
-            //$pedidos->set("tipo", $pago["titulo"]);
-            $pedidos->set("usuario", $usuarioSesion["cod"]);
-            $pedidos->set("detalle", "");
-            $pedidos->set("fecha", $fecha);
-            $pedidos->add();
-        }
-    } else {
-        foreach ($carro as $carroItem) {
-            $pedidos->set("cod", $cod_pedido);
-            $pedidos->set("producto", $carroItem["titulo"]);
-            $pedidos->set("cantidad", $carroItem["cantidad"]);
-            $pedidos->set("precio", $carroItem["precio"]);
-            $pedidos->set("estado", 0);
-            //$pedidos->set("tipo", $pago["titulo"]);
-            $pedidos->set("usuario", $usuarioSesion["cod"]);
-            $pedidos->set("detalle", "");
-            $pedidos->set("fecha", $fecha);
-            $pedidos->add();
-        }
-    }
+    endif;
+    $cod_empresa;
+    foreach ($carro as $carroItem):
 
+        $productos->set("cod",$carroItem["id"]);
+        $productosData = $productos->view();
+        if($productosData){
+            $cod_empresa = $productosData["cod_empresa"];
+        }
+
+        if(empty($carroItem["opciones"])){
+            $opciones = '';
+        }else{
+            $opciones = '|||'.serialize($carroItem["opciones"]);
+        }
+
+        $pedidos->set("cod", $cod_pedido);
+        $pedidos->set("producto", $carroItem["titulo"].$opciones);
+        $pedidos->set("cantidad", $carroItem["cantidad"]);
+        $pedidos->set("precio", $carroItem["precio"]);
+        $pedidos->set("estado", 1);
+        $pedidos->set("tipo", 1);
+        $pedidos->set("usuario", $usuarioSesion["cod"]);
+        $pedidos->set("empresa", $cod_empresa);
+        $pedidos->set("detalle", "");
+        $pedidos->set("fecha", $fecha);
+        $pedidos->add();
+    endforeach;
     $funciones->headerMove(URL . "/compra-finalizada.php");
+
     //switch ($pago["tipo"]) {
     //    case 0:
     //        $pedidos->set("cod", $cod_pedido);

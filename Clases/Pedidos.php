@@ -58,6 +58,13 @@ class Pedidos
         return $query;
     }
 
+    public function cambiar_valor($key)
+    {
+        $sql   = "UPDATE `pedidos` SET `$key`='{$this->$key}' WHERE `cod`='{$this->cod}'";
+        $query = $this->con->sql($sql);
+        return $query;
+    }
+
     public function delete()
     {
         $sql   = "DELETE FROM `pedidos` WHERE `cod`  = '{$this->cod}'";
@@ -70,6 +77,14 @@ class Pedidos
         $sql   = "SELECT * FROM `pedidos` WHERE cod = '{$this->cod}' ORDER BY id DESC";
         $notas = $this->con->sqlReturn($sql);
         $row   = mysqli_fetch_assoc($notas);
+        return $row;
+    }
+
+    public function info()
+    {
+        $sql = "SELECT * FROM `pedidos` WHERE cod = '{$this->cod}' GROUP BY cod";
+        $pedidos = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($pedidos);
         return $row;
     }
 

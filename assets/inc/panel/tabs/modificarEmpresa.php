@@ -45,7 +45,7 @@ if ($borrarImg != '') {
                                 $coordenadas = $empresaData['coordenadas'];
                             endif;
 
-                            $redes=$facebook.'|||'.$twitter.'|||'.$instagram;
+                            $redes = $facebook . '|||' . $twitter . '|||' . $instagram;
                             $empresa->set("id", $empresaData['id']);
                             $empresa->set("cod", $empresaData['cod']);
                             $empresa->set("fecha", $empresaData['fecha']);
@@ -62,7 +62,7 @@ if ($borrarImg != '') {
                             $empresa->set("delivery", $delivery);
                             $empresa->set("tiempoEntrega", $tiempoEntrega);
                             $empresa->set("coordenadas", $coordenadas);
-                            $empresa->set("redes",$redes);
+                            $empresa->set("redes", $redes);
 
                             if (isset($_POST["enviosEmpresa1"])) {
                                 $envio->set("cod_empresa", $empresaData['cod']);
@@ -256,14 +256,16 @@ if ($borrarImg != '') {
                                                         </div>
                                                     </div>
                                                     <?php
-                                                    if (!empty($empresaData['redes'])){
-                                                        $redes_=explode("|||",$empresaData['redes']);
+                                                    if (!empty($empresaData['redes'])) {
+                                                        $redes_ = explode("|||", $empresaData['redes']);
                                                     }
                                                     ?>
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label>Facebook <small>(Opcional)</small></label>
+                                                                <label>Facebook
+                                                                    <small>(Opcional)</small>
+                                                                </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes'])) {
                                                                     echo $redes_[0];
                                                                 } ?>" name="facebook" class="text_field">
@@ -271,7 +273,9 @@ if ($borrarImg != '') {
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label>Twitter <small>(Opcional)</small></label>
+                                                                <label>Twitter
+                                                                    <small>(Opcional)</small>
+                                                                </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes'])) {
                                                                     echo $redes_[1];
                                                                 } ?>" name="twitter" class="text_field">
@@ -279,7 +283,9 @@ if ($borrarImg != '') {
                                                         </div>
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <label>Instagram <small>(Opcional)</small></label>
+                                                                <label>Instagram
+                                                                    <small>(Opcional)</small>
+                                                                </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes'])) {
                                                                     echo $redes_[2];
                                                                 } ?>" name="instagram" class="text_field">
@@ -424,7 +430,7 @@ if ($borrarImg != '') {
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
                                                                 <label>Barrio</label>
-                                                                <input type="text" style="text-transform:uppercase"  value="<?php if (!empty($empresaData['barrio'])) {
+                                                                <input type="text" style="text-transform:uppercase" value="<?php if (!empty($empresaData['barrio'])) {
                                                                     echo $empresaData['barrio'];
                                                                 } ?>" id="barrioEmpresa" name="barrioEmpresa" class="text_field"
                                                                        placeholder="Ej. Las Rosas">
@@ -529,8 +535,8 @@ if ($borrarImg != '') {
                                                                     foreach ($imagenesArrayEmpresa as $key => $value): ?>
                                                                         <?php
                                                                         echo "<div class='col-md-2 mb-20 mt-20'>";
-                                                                        echo "<img src='".URL .'/'. $value["ruta"] . "' width='100%'  class='mb-20' />";
-                                                                        echo "<a href='" . URL . "/panel?op=empresa&borrarImg=" . $value["id"] . "' class='btn btn-primary'>BORRAR IMAGEN</a>";
+                                                                        echo "<div style='height: 160px;background: url(" . URL . "/" . $value['ruta'] . ")center/contain no-repeat;'></div>";
+                                                                        echo "<a href='" . URL . "/panel?op=empresa&borrarImg=" . $value["id"] . "' class='mt-5 btn btn-primary'>BORRAR IMAGEN</a>";
                                                                         echo "<div class='clearfix'></div>";
                                                                         echo "</div>";
                                                                         ?>

@@ -195,6 +195,7 @@ END FOOTER AREA
 <script src="<?=URL?>/assets/js/vendor/waypoints.min.js"></script>
 <script src="<?=URL?>/assets/js/dashboard.js"></script>
 <script src="<?=URL?>/assets/js/main.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!-- endinject -->
 <script>
     $("#provincia").change(function () {

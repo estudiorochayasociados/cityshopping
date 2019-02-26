@@ -8,6 +8,7 @@ $imagen = new Clases\Imagenes();
 $categoria = new Clases\Categorias();
 $empresa = new Clases\Empresas();
 $funciones = new Clases\PublicFunction();
+$producto=new Clases\Productos();
 //Datos
 ////Gets
 $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
@@ -38,6 +39,8 @@ if (!empty($categoria_get)) {
     $categoria->set("cod", $categoria_get);
     $categoria_data_filtro = $categoria->view();
     $cod = $categoria_data_filtro['cod'];
+    $producto_data=$producto->list(array("categoria='".$cod."' GROUP BY cod_empresa"),'','');
+
     $filter = array("categoria='$cod'");
 }
 $empresa_data = $empresa->list($filter, '', ($cantidad * $pagina) . ',' . $cantidad);
@@ -105,41 +108,21 @@ $template->themeInit();
         <div class="row">
             <div class="col-md-12">
                 <div class="filter-bar">
-                    <div class="filter__option filter--dropdown">
-                        <a href="#" id="drop1" class="dropdown-trigger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories
+                    <div class="filter__option filter--dropdown" style="width: 100%;">
+                        <a href="#" id="drop1" class="dropdown-trigger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-align: center;width: 100%;">Categorias
                             <span class="lnr lnr-chevron-down"></span>
                         </a>
-                        <ul class="custom_dropdown custom_drop2 dropdown-menu" aria-labelledby="drop1">
-                            <li>
-                                <a href="#">Wordpress
-                                    <span>35</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Landing Page
-                                    <span>45</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Psd Template
-                                    <span>13</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Plugins
-                                    <span>08</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">HTML Template
-                                    <span>34</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">Components
-                                    <span>78</span>
-                                </a>
-                            </li>
+                        <ul class="custom_dropdown custom_drop2 dropdown-menu" aria-labelledby="drop1" style="overflow-y: scroll;width: 100%;height: 200px;">
+                            <?php
+                            foreach ($categorias_data as $cat){
+                                ?>
+                                <li>
+                                    <a href="<?=URL?>/comercios?categoria=<?=$cat['cod'];?>"><?=ucfirst($cat['titulo']);?>
+                                    </a>
+                                </li>
+                                <?php
+                            }
+                            ?>
                         </ul>
                     </div>
                     <!-- end /.filter__option -->
@@ -167,51 +150,68 @@ $template->themeInit();
         <!-- start .row -->
         <div class="row">
             <?php
-            foreach ($empresa_data as $emp){
-                ?>
-                <!-- start .col-md-4 -->
-                <div class="col-lg-4 col-md-6">
-                    <!-- start .single-product -->
-                    <div class="product product--card">
-                        <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>">
-                            <div style=" height: 200px; background: url(<?= URL . '/' . $emp['portada'] ?>) no-repeat center center/cover;">
-                            </div>
-                        </a>
-                        <!-- end /.product__thumbnail -->
-
-                        <div class="product-desc">
-                            <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>" class="product_title">
-                                <h4><?= ucfirst(substr(strip_tags($emp['titulo']), 0, 25)); ?></h4>
+            if (!empty($empresa_data)){
+                foreach ($empresa_data as $emp){
+                    ?>
+                    <!-- start .col-md-4 -->
+                    <div class="col-lg-4 col-md-6">
+                        <!-- start .single-product -->
+                        <div class="product product--card">
+                            <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>">
+                                <div style=" height: 200px; background: url(<?= URL . '/' . $emp['portada'] ?>) no-repeat center center/cover;">
+                                </div>
                             </a>
+                            <!-- end /.product__thumbnail -->
 
-                            <p><?= ucfirst(substr(strip_tags($emp['desarrollo']), 0, 150)); ?></p>
+                            <div class="product-desc">
+                                <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>" class="product_title">
+                                    <h4><?= ucfirst(substr(strip_tags($emp['titulo']), 0, 25)); ?></h4>
+                                </a>
+
+                                <p><?= ucfirst(substr(strip_tags($emp['desarrollo']), 0, 150)); ?></p>
+                            </div>
+                            <!-- end /.product-desc -->
                         </div>
-                        <!-- end /.product-desc -->
+                        <!-- end /.single-product -->
                     </div>
-                    <!-- end /.single-product -->
-                </div>
-                <!-- end /.col-md-4 -->
-            <?php
+                    <!-- end /.col-md-4 -->
+                    <?php
+                }
+            }else{
+                ?>
+
+                <?php
             }
             ?>
-
         </div>
         <!-- end /.row -->
 
         <div class="row">
             <div class="col-md-12">
-                <div class="pagination-area">
+                <div class="pagination-area categorised_item_pagination" style="text-align: center;">
                     <nav class="navigation pagination" role="navigation">
                         <div class="nav-links">
-                            <a class="prev page-numbers" href="#">
-                                <span class="lnr lnr-arrow-left"></span>
-                            </a>
-                            <a class="page-numbers current" href="#">1</a>
-                            <a class="page-numbers" href="#">2</a>
-                            <a class="page-numbers" href="#">3</a>
-                            <a class="next page-numbers" href="#">
-                                <span class="lnr lnr-arrow-right"></span>
-                            </a>
+                            <?php
+                            if ($numeroPaginas != 1 && $numeroPaginas != 0) {
+                                $url_final = $funciones->eliminar_get(CANONICAL, "pagina");
+                                $links = '';
+                                $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=1'>1</a>";
+                                $i = max(2, $pagina - 5);
+
+                                if ($i > 2) {
+                                    $links .= "<a class='page-numbers' href='#'>...</a>";
+                                }
+                                for (; $i <= min($pagina + 6, $numeroPaginas); $i++) {
+                                    $links .= "<a class='page-numbers ' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
+                                }
+                                if ($i - 1 != $numeroPaginas) {
+                                    $links .= "<a class='page-numbers' href='#'>...</a>";
+                                    $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=" . $numeroPaginas . "'>" . $numeroPaginas . "</a>";
+                                }
+                                echo $links;
+                                echo "";
+                            }
+                            ?>
                         </div>
                     </nav>
                 </div>

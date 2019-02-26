@@ -201,7 +201,8 @@ $template->themeInit();
                         <?php
                         var_dump($_SESSION['carrito']);
                         //Proceso de compra
-                        if (isset($_POST["enviarCarrito"])) {
+                        if (isset($_POST["enviar_form"])) {
+                            echo "hola";
                             $id = $funciones->antihack_mysqli($producto_data['cod']);
                             $cantidad = $funciones->antihack_mysqli(isset($_POST['cantidad']) ? $_POST['cantidad'] : '');
                             $precio = $funciones->antihack_mysqli(isset($_POST['precio']) ? $_POST['precio'] : '');
@@ -234,7 +235,7 @@ $template->themeInit();
                         }
                         //
                         ?>
-                        <form method="post" onsubmit="return confirm('Do you really want to submit the form?');">
+                        <form method="post" id="comprar-form">
                             <div class="sidebar-card card-pricing card--pricing2">
                                 <ul class="pricing-options">
                                     <?php
@@ -308,7 +309,8 @@ $template->themeInit();
                                 </ul>
                                 <!-- end /.pricing-options -->
                                 <div class="purchase-button">
-                                    <button type="submit" name="enviarCarrito" class="btn btn--lg btn--round">Comprar</button>
+                                    <input type="hidden" name="enviar_form">
+                                    <input type="button" name="enviarCarrito" id="btn-enviar" value="Comprar" class="btn btn--lg btn--round">
                                 </div>
                                 <!-- end /.purchase-button -->
                             </div>
@@ -447,3 +449,27 @@ if (!empty($productos_relacionados)) {
 <?php
 $template->themeEnd();
 ?>
+<script>
+    $('#btn-enviar').click(function(){
+        swal("Usted ya posee un carrito, desea sobreescribir el otro carrito por este nuevo?", {
+            icon:"warning",
+            buttons: {
+                cancel: "No",
+                catch: {
+                    text: "Si",
+                    value: "confirmar",
+                },
+            },
+        })
+            .then((value) => {
+                switch (value) {
+
+                    case "confirmar":
+                      $('#comprar-form').submit();
+                        break;
+
+                    default:
+                }
+            });
+    });
+</script>

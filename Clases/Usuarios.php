@@ -45,6 +45,7 @@ class Usuarios
 
     public function add()
     {
+        $this->password = hash('sha256', $this->password . SALT);
         $validar = $this->validate();
         if (!is_array($validar)) {
             $sql = "INSERT INTO `usuarios` (`cod`, `nombre`, `apellido`, `doc`, `email`, `password`, `postal`, `direccion`, `barrio`, `localidad`, `provincia`, `pais`, `telefono`, `celular`, `invitado`, `vendedor`, `plan`, `fecha`) VALUES ('{$this->cod}', '{$this->nombre}', '{$this->apellido}', '{$this->doc}', '{$this->email}', '{$this->password}', '{$this->postal}', '{$this->direccion}', '{$this->localidad}', '{$this->barrio}', '{$this->provincia}', '{$this->pais}', '{$this->telefono}', '{$this->celular}', '{$this->invitado}', '{$this->vendedor}', '{$this->plan}', '{$this->fecha}')";
@@ -61,6 +62,9 @@ class Usuarios
     {
         $validar = $this->validate();
         $usuario = $this->view();
+        if($usuario["password"] != $this->password){
+            $this->password = hash('sha256', $this->password . SALT);
+        }
         $sql = "UPDATE `usuarios` SET `nombre` = '{$this->nombre}', `apellido` = '{$this->apellido}', `doc` = '{$this->doc}', `email` = '{$this->email}', `password` = '{$this->password}', `postal` = '{$this->postal}', `direccion` = '{$this->direccion}', `barrio` = '{$this->barrio}', `localidad` = '{$this->localidad}', `provincia` = '{$this->provincia}', `pais` = '{$this->pais}', `telefono` = '{$this->telefono}', `celular` = '{$this->celular}', `invitado` = '{$this->invitado}', `vendedor` = '{$this->vendedor}', `plan` = '{$this->plan}', `fecha` = '{$this->fecha}'WHERE `cod`='{$this->cod}'";
 
         if (is_array($validar)) {
@@ -82,6 +86,10 @@ class Usuarios
     {
         $validar = $this->validate();
         $usuario = $this->view();
+        echo $atributo;
+        if($atributo == 'password'){
+            $valor = hash('sha256', $valor . SALT);
+        }
         $sql = "UPDATE `usuarios` SET `$atributo` = '{$valor}' WHERE `cod`='{$this->cod}'";
         if (is_array($validar)) {
             if ($validar["email"] == $usuario["email"]) {
@@ -132,6 +140,7 @@ class Usuarios
 
     public function login()
     {
+        $this->password = hash('sha256', $this->password . SALT);
         $sql = "SELECT * FROM `usuarios` WHERE `email` = '{$this->email}' AND `password`= '{$this->password}'";
         $usuarios = $this->con->sqlReturn($sql);
         $contar = mysqli_num_rows($usuarios);

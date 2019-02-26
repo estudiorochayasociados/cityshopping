@@ -6,6 +6,7 @@ class autoload
     {
         session_start();
         $_SESSION["cod_pedido"] = isset($_SESSION["cod_pedido"]) ? $_SESSION["cod_pedido"] : substr(md5(uniqid(rand())), 0, 10);
+        define('SALT',hash("sha256","salt@estudiorochayasoc.com.ar"));
         define('URL', "http://".$_SERVER['HTTP_HOST']."/CityShopping");
         define('CANONICAL', "http://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
         define('TITULO', "City Shopping");

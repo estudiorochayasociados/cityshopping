@@ -11,39 +11,12 @@ $producto = new Clases\Productos();
 $empresa = new Clases\Empresas();
 $funciones = new Clases\PublicFunction();
 //Datos
-$get = $_GET;
-$get_input = '';
-foreach ($get as $key => $get_value) {
-    if ($key != 'titulo') {
-        $get_input .= "<input type='hidden' name='$key' value='$get_value' />";
-    }
-}
-
-$get_inputs = array();
-foreach ($get as $key => $get_value) {
-    array_push($get_inputs, array('id' => $key, 'hide' => "<input type='hidden' name='$key' value='$get_value' />"));
-}
-$input_titulo = '';
-$input_order = '';
-$input_categoria = '';
-foreach ($get_inputs as $d) {
-    switch ($d['id']) {
-        case 'order':
-            $input_order = $d['hide'];
-            break;
-        case 'buscar':
-            $input_titulo = $d['hide'];
-            break;
-        case 'categoria':
-            $input_categoria = $d['hide'];
-            break;
-    }
-}
 ////Gets
 $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
 $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
 $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
-$orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
+$orden_pagina = isset($_POST["order"]) ? $_POST["order"] : '';
+$empresa_get = isset($_GET["empresa"]) ? $_GET["empresa"] : '';
 ////Categorias
 $categoria->set("area", "rubros");
 $categorias_data = $categoria->listForArea('');
@@ -55,7 +28,7 @@ if ($pagina > 0) {
 if (@count($filter) == 0) {
     $filter = '';
 }
-if (@count($_GET) >= 1) {
+if (@count($_GET) > 1) {
     $anidador = "&";
 } else {
     $anidador = "?";
@@ -66,15 +39,19 @@ if (isset($_GET['pagina'])):
 else:
     $url = CANONICAL;
 endif;
-//
+//er
+if (!empty($categoria_get)||!empty($titulo)||!empty($empresa_get)){
+    $filter=array();
+}else{
+    $filter='';
+}
 if (!empty($categoria_get)) {
     $categoria->set("cod", $categoria_get);
     $categoria_data_filtro = $categoria->view();
     $cod = $categoria_data_filtro['cod'];
-    $filter = array("categoria='$cod'");
+    array_push($filter,"categoria='$cod'");
 }
 if ($titulo != '') {
-    $filter = array();
     $titulo_espacios = strpos($titulo, " ");
     if ($titulo_espacios) {
         $filter_title = array();
@@ -85,8 +62,11 @@ if ($titulo != '') {
         $filter_title_implode = implode(" OR ", $filter_title);
         array_push($filter, "(" . $filter_title_implode . ")");
     } else {
-        $filter = array("(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
+        array_push($filter,"(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
     }
+}
+if (!empty($empresa_get)) {
+    array_push($filter,"cod_empresa='$empresa_get'");
 }
 
 switch ($orden_pagina) {
@@ -107,7 +87,7 @@ $productos_data = $producto->list($filter, $order_final, ($cantidad * $pagina) .
 $numeroPaginas = $producto->paginador($filter, $cantidad);
 ////
 //
-$template->set("title", TITULO . " | Inicio");
+$template->set("title", TITULO . " | Productos");
 $template->set("description", "");
 $template->set("keywords", "");
 $template->set("favicon", FAVICON);
@@ -131,13 +111,6 @@ $template->themeInit();
                             </div>
                             <div class="search__field">
                                 <form method="get" id="buscar">
-                                    <?php
-                                    if (!empty($input_titulo)) {
-                                        echo $input_titulo;
-                                    } else {
-                                        echo $input_titulo;
-                                    }
-                                    ?>
                                     <div class="field-wrapper">
                                         <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un producto" name="buscar"
                                                required>
@@ -186,19 +159,12 @@ $template->themeInit();
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
-                            <div class="collapse show collapsible-content" id="collapse1">
-                                <form method="get">
-                                    <?php
-                                    if (!empty($input_order)) {
-                                        echo $input_order;
-                                    } else {
-                                        echo $input_order;
-                                    }
-                                    ?>
+                            <div class="collapse show collapsible-content" id="collapse1" style="height: 50px;">
+                                <form method="post">
                                     <select name="order" class="form-control" onchange="this.form.submit()">
-                                        <option value="ultimos">Últimos</option>
-                                        <option value="menor">Menor a Mayor</option>
-                                        <option value="mayor">Mayor a Menor</option>
+                                        <option value="ultimos" <?php if ($orden_pagina=="ultimos"){echo "selected";} ?>>Últimos</option>
+                                        <option value="menor" <?php if ($orden_pagina=="menor"){echo "selected";} ?>>Menor a Mayor</option>
+                                        <option value="mayor" <?php if ($orden_pagina=="mayor"){echo "selected";} ?>>Mayor a Menor</option>
                                     </select>
                                 </form>
                             </div>
@@ -212,20 +178,16 @@ $template->themeInit();
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
-                            <div class="collapse show collapsible-content" id="collapse2">
+                            <div class="collapse show collapsible-content" id="collapse2" style="overflow-y: scroll;height: 512px;">
                                 <form method="get">
                                     <?php
-                                    if (!empty($input_categoria)) {
-                                        echo $input_categoria;
-                                    } else {
-                                        echo $input_categoria;
-                                    }
                                     foreach ($categorias_data as $cat) {
                                         ?>
                                         <div class="custom-radio">
-                                            <label for="opt1" onclick="this.form.submit()">
+                                            <label for="opt1" onclick="this.form.submit()" style="font-size: 12px;">
                                                 <input type="radio" id="opt1" class="" name="categoria" value="<?= ucfirst($cat['cod']); ?>">
-                                                <span class="circle"></span><?= ucfirst($cat['titulo']); ?></label>
+                                                <span class="circle"></span><?= ucfirst($cat['titulo']); ?>
+                                            </label>
                                         </div>
                                         <?php
                                     }
@@ -320,7 +282,7 @@ $template->themeInit();
                                             $links .= "<a class='page-numbers' href='#'>...</a>";
                                         }
                                         for (; $i <= min($pagina + 6, $numeroPaginas); $i++) {
-                                            $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
+                                            $links .= "<a class='page-numbers ' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
                                         }
                                         if ($i - 1 != $numeroPaginas) {
                                             $links .= "<a class='page-numbers' href='#'>...</a>";

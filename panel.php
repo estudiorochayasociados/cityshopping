@@ -48,10 +48,13 @@ endif; ?>
 <?php switch ($op) {
     //Seccion de crear empresa
     case "crear-empresa":
+        $mensaje= "Crear empresa: Paso 1";
         break;
     case "crear-empresa-2":
+        $mensaje= "Crear empresa: Paso 2";
         break;
     case "crear-empresa-3":
+        $mensaje= "Crear empresa: Paso 3";
         break;
     //
     case"perfil":

@@ -213,7 +213,7 @@ endif;
                 <form class="popup-form" id="myVendedor" method="post">
                         <div class="login_icon"><i class="icon_lock_alt"></i></div>
                         <input type="text" class="form-control form-white" name="nombreVendedor"
-                               placeholder="Nombre de tu restaurtante / negocio" required>
+                               placeholder="Nombre de tu empresa / negocio" required>
                         <div class="row mt-5">
                             <label class="col-md-12">
                                 <select class="form-control" name="localidadVendedor" id="localidad" required >

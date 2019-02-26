@@ -208,7 +208,7 @@ $template->themeInit();
                         <h2>Productos recientes</h2>
                     </div>
 
-                    <a href="#" class="btn btn--sm">Ver todos</a>
+                    <a href="<?=URL?>/productos?empresa=<?=$empresa_data['cod'];?>" class="btn btn--sm">Ver todos</a>
                 </div>
                 <!-- end /.product-title-area -->
             </div>

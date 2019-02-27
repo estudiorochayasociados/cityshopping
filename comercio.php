@@ -190,7 +190,7 @@ $template->themeInit();
                     <div class="col-md-12 col-sm-12">
 
                         <div class="author_module about_author">
-                            <h2>Descripción</h2>
+                            <h2>Sobre la empresa:</h2>
                             <p><?= ucfirst(strip_tags($empresa_data['desarrollo'])); ?></p>
                         </div>
                     </div>
@@ -203,12 +203,20 @@ $template->themeInit();
 
         <div class="row">
             <div class="col-md-12">
-                <div class="product-title-area">
+                <div class="product-title-area hidden-xs">
                     <div class="product__title">
                         <h2>Productos recientes</h2>
                     </div>
 
                     <a href="<?=URL?>/productos?empresa=<?=$empresa_data['cod'];?>" class="btn btn--sm">Ver todos</a>
+                </div>
+                <!-- end /.product-title-area -->
+                <div class="product-title-area visible-xs">
+                    <div class="product__title" style="width: 100%;text-align: center;">
+                        <h2>Productos</h2>
+                    </div>
+
+                    <a href="<?=URL?>/productos?empresa=<?=$empresa_data['cod'];?>" class="btn btn--sm" style="width: 100%">Ver todos</a>
                 </div>
                 <!-- end /.product-title-area -->
             </div>
@@ -220,7 +228,7 @@ $template->themeInit();
                     $img = $imagen->view();
                     ?>
                     <!-- start .col-md-4 -->
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-4 col-md-4 hidden-xs">
                         <!-- start .single-product -->
                         <div class="product product--card">
                             <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">

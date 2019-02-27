@@ -1,5 +1,4 @@
 <?php
-
 $estado = isset($_GET["estado"]) ? $_GET["estado"] : '';
 $cod = isset($_GET["cod"]) ? $_GET["cod"] : '';
 
@@ -37,7 +36,8 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                             <?php $fecha = $fecha1 . $fecha[1]; ?>
                             <?php
                             $empresa->set("cod", $value["empresa"]);
-                            $empresaData = $empresa->view();
+                            $empresa->set("cod_usuario",'');
+                            $empresa_Data = $empresa->view();
                             ?>
                             <div class="card">
                                 <a data-toggle="collapse" href="#collapse<?= $value["cod"] ?>" aria-expanded="false" aria-controls="collapse<?= $value["cod"] ?>" class="collapsed color_a">
@@ -132,21 +132,21 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                                                     <tbody>
                                                     <tr>
                                                         <td>
-                                                            <?= $empresaData["titulo"] ?>
+                                                            <?= $empresa_Data["titulo"] ?>
                                                         </td>
                                                         <td>
-                                                            <?= $empresaData["direccion"] ?> • <?= $empresaData["ciudad"] ?> • <?= $empresaData["provincia"] ?>
+                                                            <?= $empresa_Data["direccion"] ?> • <?= $empresa_Data["ciudad"] ?> • <?= $empresa_Data["provincia"] ?>
                                                         </td>
                                                         <td>
-                                                            <?= $empresaData["telefono"] ?>
+                                                            <?= $empresa_Data["telefono"] ?>
                                                         </td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
                                                 <p class="visible-xs">
-                                                    <b>Empresa: </b><?= $empresaData["titulo"] ?> <br>
-                                                    <b>Dirección: </b> <?= $empresaData["direccion"] ?>, <?= $empresaData["ciudad"] ?>, <?= $empresaData["provincia"] ?><br>
-                                                    <b>Teléfono: </b> <?= $empresaData["telefono"] ?>
+                                                    <b>Empresa: </b><?= $empresa_Data["titulo"] ?> <br>
+                                                    <b>Dirección: </b> <?= $empresa_Data["direccion"] ?>, <?= $empresa_Data["ciudad"] ?>, <?= $empresa_Data["provincia"] ?><br>
+                                                    <b>Teléfono: </b> <?= $empresa_Data["telefono"] ?>
                                                 </p>
                                             </div>
                                         </div>

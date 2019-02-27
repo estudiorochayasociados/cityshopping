@@ -18,7 +18,6 @@ $envio = new Clases\Envios();
 $categoria = new Clases\Categorias();
 $zebra = new Clases\Zebra_Image();
 $pedido = new Clases\Pedidos();
-
 $op = isset($_GET["op"]) ? $_GET["op"] : '';
 if (empty($op)){
     $funcion->headerMove(URL.'/panel?op=perfil');
@@ -38,13 +37,12 @@ $enviosArray = $envio->list($filterEnvios, "", "");
 if (empty($enviosArray)) {
     $enviosArray = array(0 => array("titulo" => "", "precio" => ""));
 }
+if ($_SESSION['usuarios']['vendedor']==0){
+    $displayTab=false;
+}else{
+    $displayTab=true;
+}
 ?>
-
-<?php if ($_SESSION["usuarios"]["vendedor"] == 0):
-    $displayTab = "style='display: none'";
-else:
-    $displayTab = "";
-endif; ?>
 <?php switch ($op) {
     //Seccion de crear empresa
     case "crear-empresa":
@@ -121,38 +119,49 @@ endif; ?>
                                 <a href="<?= URL ?>/panel?op=perfil">
                                     <span class="lnr lnr-home"></span>Perfil</a>
                             </li>
-                            <li class="<?php if ($_GET['op'] == "empresa") {
-                                echo "active";
-                            } ?>" <?= $displayTab; ?>>
-                                <a href="<?= URL ?>/panel?op=empresa">
-                                    <span class="lnr lnr-cog"></span>Empresa</a>
-                            </li>
-                            <li class="<?php if ($_GET['op'] == "productos") {
-                                echo "active";
-                            } ?>" <?= $displayTab; ?>>
-                                <a href="<?= URL ?>/panel?op=productos">
-                                    <span class="lnr lnr-cart"></span>Productos</a>
-                            </li>
-                            <li class="<?php if ($_GET['op'] == "nuevo") {
-                                echo "active";
-                            } ?>" <?= $displayTab; ?>>
-                                <a href="<?= URL ?>/panel?op=nuevo">
-                                    <span class="lnr lnr-upload"></span>Nuevo producto</a>
-                            </li>
+                            <?php
+                            if ($displayTab){
+                                ?>
+                                <li class="<?php if ($_GET['op'] == "empresa") {
+                                    echo "active";
+                                } ?>">
+                                    <a href="<?= URL ?>/panel?op=empresa">
+                                        <span class="lnr lnr-cog"></span>Empresa</a>
+                                </li>
+                                <li class="<?php if ($_GET['op'] == "productos") {
+                                    echo "active";
+                                } ?>">
+                                    <a href="<?= URL ?>/panel?op=productos">
+                                        <span class="lnr lnr-inbox"></span>Productos</a>
+                                </li>
+                                <li class="<?php if ($_GET['op'] == "nuevo") {
+                                    echo "active";
+                                } ?>">
+                                    <a href="<?= URL ?>/panel?op=nuevo">
+                                        <span class="lnr lnr-upload"></span>Nuevo producto</a>
+                                </li>
+                            <?php
+                            }
+                            ?>
                             <li class="<?php if ($_GET['op'] == "compra") {
                                 echo "active";
                             } ?>">
                                 <a href="<?= URL ?>/panel?op=compra">
                                     <span class="lnr lnr-briefcase"></span>Compra</a>
                             </li>
-                            <li class="<?php if ($_GET['op'] == "venta") {
-                                echo "active";
-                            } ?>" <?= $displayTab; ?>>
-                                <a href="<?= URL ?>/panel?op=venta">
-                                    <span class="lnr lnr-briefcase"></span>Venta</a>
-                            </li>
+                            <?php
+                            if ($displayTab){
+                                ?>
+                                <li class="<?php if ($_GET['op'] == "venta") {
+                                    echo "active";
+                                } ?>">
+                                    <a href="<?= URL ?>/panel?op=venta">
+                                        <span class="lnr lnr-tag"></span>Venta</a>
+                                </li>
+                            <?php
+                            }
+                            ?>
                         </ul>
-
                     </div>
                     <!-- end /.dashboard_menu -->
                     <div class="visible-xs" style="text-align: center;">
@@ -167,36 +176,48 @@ endif; ?>
                                     <a href="<?= URL ?>/panel?op=perfil">
                                         <span class="lnr lnr-home"></span>Perfil</a>
                                 </li>
-                                <li style="width: 100%;" class="<?php if ($_GET['op'] == "empresa") {
-                                    echo "active";
-                                } ?>" <?= $displayTab; ?>>
-                                    <a href="<?= URL ?>/panel?op=empresa">
-                                        <span class="lnr lnr-cog"></span>Empresa</a>
-                                </li>
-                                <li style="width: 100%;" class="<?php if ($_GET['op'] == "productos") {
-                                    echo "active";
-                                } ?>" <?= $displayTab; ?>>
-                                    <a href="<?= URL ?>/panel?op=productos">
-                                        <span class="lnr lnr-cart"></span>Productos</a>
-                                </li>
-                                <li style="width: 100%;" class="<?php if ($_GET['op'] == "nuevo") {
-                                    echo "active";
-                                } ?>" <?= $displayTab; ?>>
-                                    <a href="<?= URL ?>/panel?op=nuevo">
-                                        <span class="lnr lnr-upload"></span>Nuevo producto</a>
-                                </li>
+                                <?php
+                                if ($displayTab){
+                                    ?>
+                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "empresa") {
+                                        echo "active";
+                                    } ?>">
+                                        <a href="<?= URL ?>/panel?op=empresa">
+                                            <span class="lnr lnr-cog"></span>Empresa</a>
+                                    </li>
+                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "productos") {
+                                        echo "active";
+                                    } ?>">
+                                        <a href="<?= URL ?>/panel?op=productos">
+                                            <span class="lnr lnr-inbox"></span>Productos</a>
+                                    </li>
+                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "nuevo") {
+                                        echo "active";
+                                    } ?>">
+                                        <a href="<?= URL ?>/panel?op=nuevo">
+                                            <span class="lnr lnr-upload"></span>Nuevo producto</a>
+                                    </li>
+                                <?php
+                                }
+                                ?>
                                 <li style="width: 100%;" class="<?php if ($_GET['op'] == "compra") {
                                     echo "active";
                                 } ?>">
                                     <a href="<?= URL ?>/panel?op=compra">
                                         <span class="lnr lnr-briefcase"></span>Compra</a>
                                 </li>
-                                <li style="width: 100%;" class="<?php if ($_GET['op'] == "venta") {
-                                    echo "active";
-                                } ?>" <?= $displayTab; ?>>
-                                    <a href="<?= URL ?>/panel?op=venta">
-                                        <span class="lnr lnr-briefcase"></span>Venta</a>
-                                </li>
+                                <?php
+                                if ($displayTab){
+                                    ?>
+                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "venta") {
+                                        echo "active";
+                                    } ?>">
+                                        <a href="<?= URL ?>/panel?op=venta">
+                                            <span class="lnr lnr-tag"></span>Venta</a>
+                                    </li>
+                                <?php
+                                }
+                                ?>
                             </ul>
                         </div>
                     </div>

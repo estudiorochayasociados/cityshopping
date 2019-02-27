@@ -126,7 +126,7 @@ $correo->emailEnviar();
                                     $clase = "text-bold";
                                     $none = "hidden";
                                 } else {
-                                    $producto->set("id", $carroItem['id']);
+                                    $producto->set("cod", $carroItem['id']);
                                     $producto_data = $producto->view();
                                     if ($pedido_info["estado"] == 1 || $pedido_info["estado"] == 2 || $pedido_info["estado"] == 3) {
                                         $producto->editUnico("stock", $producto_data['stock'] - $carroItem['cantidad']);

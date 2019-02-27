@@ -14,6 +14,7 @@ $envio = new Clases\Envios();
 //Datos
 $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 //Carrito
+$carro = $carrito->return();
 $url_limpia = CANONICAL;
 $url_limpia = str_replace("?success", "", $url_limpia);
 $url_limpia = str_replace("?error", "", $url_limpia);
@@ -84,54 +85,82 @@ $template->themeInit();
         <div class="row">
             <div class="col-lg-8">
                 <div class="item-preview item-preview2">
+
                     <?php
                     if (!empty($imagen_data)) {
                         ?>
-                        <div class="item-preview">
-                            <div class="item__preview-slider">
+                        <div id="carouselE" class="carousel slide hidden-xs" data-ride="carousel">
+                            <ol class="carousel-indicators">
                                 <?php
+                                for ($i = 0; $i < @count($imagen_data); $i++) {
+                                    ?>
+                                    <li data-target="#carouselE" data-slide-to="<?= $i; ?>" class="<?php if ($i == 0) {
+                                        echo 'active';
+                                    } ?>"></li>
+                                    <?php
+                                }
+                                ?>
+                            </ol>
+                            <div class="carousel-inner">
+                                <?php
+                                $activo = 0;
                                 foreach ($imagen_data as $img) {
                                     ?>
-                                    <div class="prev-slide">
-                                        <div style=" height: 500px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
-                                        </div>
+                                    <div class="carousel-item hidden-xs <?php if ($activo == 0) {
+                                        echo 'active';
+                                        $activo++;
+                                    } ?>"
+                                         style=" height: 550px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
                                     </div>
                                     <?php
                                 }
                                 ?>
                             </div>
-                            <!-- end /.item--preview-slider -->
-                            <?php
-                            if (@count($imagen_data) > 1) {
-                                ?>
-                                <div class="item__preview-thumb">
-                                    <div class="prev-thumb">
-                                        <div class="thumb-slider">
-                                            <?php
-                                            foreach ($imagen_data as $img) {
-                                                ?>
-                                                <div class="item-thumb">
-                                                    <div style=" height: 80px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
-                                                    </div>
-                                                </div>
-                                                <?php
-                                            }
-                                            ?>
-                                        </div>
-                                        <!-- end /.thumb-slider -->
+                            <a class="carousel-control-prev" href="#carouselE" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselE" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Siguiente</span>
+                            </a>
+                        </div>
 
-                                        <div class="prev-nav thumb-nav">
-                                            <span class="lnr nav-left lnr-arrow-left"></span>
-                                            <span class="lnr nav-right lnr-arrow-right"></span>
-                                        </div>
-                                        <!-- end /.prev-nav -->
-                                    </div>
-                                    <!-- end /.item__action -->
-                                </div>
-                                <!-- end /.item__preview-thumb-->
+                        <div id="carouselEm" class="carousel slide visible-xs" data-ride="carousel">
+                            <ol class="carousel-indicators">
                                 <?php
-                            }
-                            ?>
+                                for ($i = 0; $i < @count($imagen_data); $i++) {
+                                    ?>
+                                    <li data-target="#carouselEm" data-slide-to="<?= $i; ?>" class="<?php if ($i == 0) {
+                                        echo 'active';
+                                    } ?>"></li>
+                                    <?php
+                                }
+                                ?>
+                            </ol>
+                            <div class="carousel-inner">
+                                <?php
+                                $activo = 0;
+                                foreach ($imagen_data as $img) {
+                                    ?>
+                                    <div class="carousel-item hidden-xs <?php if ($activo == 0) {
+                                        echo 'active';
+                                        $activo++;
+                                    } ?>"
+                                         style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselEm" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselEm" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Siguiente</span>
+                            </a>
                         </div>
                         <?php
                     }
@@ -182,13 +211,16 @@ $template->themeInit();
                         <div class="price">
                             <h1>
                                 <?php
+                                $precio_;
                                 if (!empty($producto_data['precioDescuento'])) {
+                                    $precio_ = $producto_data['precioDescuento'];
                                     ?>
-                                    <span>$<?= $producto_data['precioDescuento'] ?> <small class="tachado">$<?= $producto_data['precio'] ?></small></span>
+                                    <span id="prec">$<?= $producto_data['precioDescuento'] ?></span>
                                     <?php
                                 } else {
+                                    $precio_ = $producto_data['precio'];
                                     ?>
-                                    <span>$<?= $producto_data['precio'] ?></span>
+                                    <span id="prec">$<?= $producto_data['precio'] ?></span>
                                     <?php
                                 }
                                 ?>
@@ -199,39 +231,56 @@ $template->themeInit();
                         ?>
                         <!-- end /.purchase-button -->
                         <?php
-                        var_dump($_SESSION['carrito']);
                         //Proceso de compra
                         if (isset($_POST["enviar_form"])) {
-                            echo "hola";
+                            if (!empty($carro)) {
+                                $carrito->destroy();
+                            }
                             $id = $funciones->antihack_mysqli($producto_data['cod']);
                             $cantidad = $funciones->antihack_mysqli(isset($_POST['cantidad']) ? $_POST['cantidad'] : '');
                             $precio = $funciones->antihack_mysqli(isset($_POST['precio']) ? $_POST['precio'] : '');
-                            $tipoEnvio= $funciones->antihack_mysqli(isset($_POST['tipoEnvio']) ? $_POST['tipoEnvio'] : '');
+                            $tipoEnvio = $funciones->antihack_mysqli(isset($_POST['tipoEnvio']) ? $_POST['tipoEnvio'] : '');
                             $producto_ = explode("---", $precio);
-                            $envio_=explode("---",$tipoEnvio);
+                            $envio_ = explode("---", $tipoEnvio);
+
+                            switch ($producto_[2]) {
+                                case "Normal":
+                                    $precio_final = $producto_[0];
+                                    break;
+                                case "Descuento":
+                                    $precio_final = $producto_[0];
+                                    break;
+                                case "Opt":
+                                    if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
+                                        $precio_final = $producto_data['precioDescuento'] + $producto_[0];
+                                    } else {
+                                        $precio_final = $producto_data['precio'] + $producto_[0];
+                                    }
+                                    break;
+                            }
 
                             $carrito->set("id", $id);
                             $carrito->set("cantidad", $cantidad);
                             $carrito->set("titulo", $producto_[1]);
-                            $carrito->set("precio", $producto_[0]);
+                            $carrito->set("precio", $precio_final);
                             $carrito->set("stock", $producto_data['stock']);
                             $carrito->add();
 
                             //Envio
-                            $carrito->set("id","Envio-Seleccion");
-                            $carrito->set("cantidad",1);
-                            $carrito->set("titulo",$envio_[0]);
-                            $carrito->set("precio",$envio_[1]);
+                            $carrito->set("id", "Envio-Seleccion");
+                            $carrito->set("cantidad", 1);
+                            $carrito->set("titulo", $envio_[0]);
+                            $carrito->set("precio", $envio_[1]);
                             $carrito->add();
 
                             //Metodo
-                            $carrito->set("id","Metodo-Pago");
-                            $carrito->set("cantidad",1);
-                            $carrito->set("titulo","Método de pago: Efectivo");
-                            $carrito->set("precio",0);
+                            $carrito->set("id", "Metodo-Pago");
+                            $carrito->set("cantidad", 1);
+                            $carrito->set("titulo", "Método de pago: Efectivo");
+                            $carrito->set("precio", 0);
                             $carrito->add();
 
-                            $funciones->headerMove(URL.'/carrito');
+                            $funciones->headerMove(URL . '/carrito');
                         }
                         //
                         ?>
@@ -243,7 +292,7 @@ $template->themeInit();
                                         ?>
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?=$producto_data['titulo']?>" name="precio" checked>
+                                                <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?= $producto_data['titulo'] ?>---Descuento" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precioDescuento'] ?>');">
                                                 <label for="opt1" data-price="<?= $producto_data['precioDescuento'] ?>">
                                                     <span class="circle"></span>Producto con descuento</label>
                                             </div>
@@ -253,7 +302,7 @@ $template->themeInit();
                                         ?>
                                         <li>
                                             <div class="custom-radio">
-                                                <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>" name="precio" checked>
+                                                <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>---Normal" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precio'] ?>');">
                                                 <label for="opt1" data-price="<?= $producto_data['precio'] ?>">
                                                     <span class="circle"></span>Producto</label>
                                             </div>
@@ -269,12 +318,12 @@ $template->themeInit();
                                             ?>
                                             <li>
                                                 <div class="custom-radio">
-                                                    <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $producto_data['titulo'].' + '.$valor[1] ?>" name="precio">
+                                                    <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $producto_data['titulo'] . ' + ' . $valor[1] ?>---Opt" name="precio" onclick="$('#prec').text('$<?= $precio_ + $valor[0] ?>');">
                                                     <label for="opt<?= $opt; ?>" data-price="<?= $valor[0]; ?>">
                                                         <span class="circle"></span><?= ucfirst($valor[1]); ?></label>
                                                 </div>
                                                 <p>
-                                                    <?=ucfirst($producto_data['titulo'])?> + <?= ucfirst($valor[1]); ?>.
+                                                    <?= ucfirst($producto_data['titulo']) ?> + <?= ucfirst($valor[1]); ?>.
                                                 </p>
                                             </li>
                                             <?php
@@ -284,24 +333,24 @@ $template->themeInit();
                                     ?>
                                     <li>
                                         <h6>Cantidad:</h6>
-                                        <input max="<?= $producto_data['stock'] ?>" min="1" type="number" name="cantidad" id="sst" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
+                                        <input max="<?= $producto_data['stock'] ?>" min="1" type="number" id="cantidad" name="cantidad" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5 noEnterSubmit" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
                                     </li>
                                     <li>
                                         <h6>Envío:</h6>
                                         <select name="tipoEnvio" class="form-control" required>
                                             <?php
-                                            foreach ($enviosArray as $env){
+                                            foreach ($enviosArray as $env) {
                                                 ?>
-                                                <option value="<?='Envío: '.$env['titulo']?>---<?=$env['precio']?>">
+                                                <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
                                                     <?php
-                                                    if ($env['precio']==0){
-                                                        echo ucfirst($env['titulo']).' | Gratis';
-                                                    }else{
-                                                        echo ucfirst($env['titulo']).' | $'.$env['precio'];
+                                                    if ($env['precio'] == 0) {
+                                                        echo ucfirst($env['titulo']) . ' | Gratis';
+                                                    } else {
+                                                        echo ucfirst($env['titulo']) . ' | $' . $env['precio'];
                                                     }
                                                     ?>
                                                 </option>
-                                            <?php
+                                                <?php
                                             }
                                             ?>
                                         </select>
@@ -448,28 +497,66 @@ if (!empty($productos_relacionados)) {
 ==============================================-->
 <?php
 $template->themeEnd();
+if (!empty($carro)) {
+    ?>
+    <script>
+        $('#btn-enviar').click(function () {
+            if ($('#cantidad').val() > $('#cantidad').attr('max') || $('#cantidad').val() < $('#cantidad').attr('min')) {
+                swal("El stock ingresado no es correcto", {
+                    icon: "warning",
+                    buttons: {
+                        cancel: "Ok",
+                    },
+                }).then((value) => {
+                    switch (value) {
+                        default:
+                    }
+                });
+            } else {
+                swal("Usted ya posee un carrito, desea sobreescribir el otro carrito por este nuevo?", {
+                    icon: "warning",
+                    buttons: {
+                        cancel: "No",
+                        catch: {
+                            text: "Si",
+                            value: "confirmar",
+                        },
+                    },
+                })
+                    .then((value) => {
+                        switch (value) {
+
+                            case "confirmar":
+                                $('#comprar-form').submit();
+                                break;
+
+                            default:
+                        }
+                    });
+            }
+        });
+    </script>
+    <?php
+} else {
+    ?>
+    <script>
+        $('#btn-enviar').click(function () {
+            if ($('#cantidad').val() > $('#cantidad').attr('max') || $('#cantidad').val() < $('#cantidad').attr('min')) {
+                swal("El stock ingresado no es correcto", {
+                    icon: "warning",
+                    buttons: {
+                        cancel: "Ok",
+                    },
+                }).then((value) => {
+                    switch (value) {
+                        default:
+                    }
+                });
+            } else {
+                $('#comprar-form').submit();
+            }
+        });
+    </script>
+    <?php
+}
 ?>
-<script>
-    $('#btn-enviar').click(function(){
-        swal("Usted ya posee un carrito, desea sobreescribir el otro carrito por este nuevo?", {
-            icon:"warning",
-            buttons: {
-                cancel: "No",
-                catch: {
-                    text: "Si",
-                    value: "confirmar",
-                },
-            },
-        })
-            .then((value) => {
-                switch (value) {
-
-                    case "confirmar":
-                      $('#comprar-form').submit();
-                        break;
-
-                    default:
-                }
-            });
-    });
-</script>

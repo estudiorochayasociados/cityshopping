@@ -144,7 +144,7 @@ endif;
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="text" class="form-control" name="precioMenu" value="<?= $producto_data['precio']; ?>" style="height: 50px;" required>
+                                                    <input type="number" class="form-control" name="precioMenu" value="<?= $producto_data['precio']; ?>" style="height: 50px;" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -153,12 +153,12 @@ endif;
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="text" value="<?= $producto_data['precioDescuento'] ?>" class="form-control" name="precioDescueto" style="height: 50px;">
+                                                    <input type="number" value="<?= $producto_data['precioDescuento'] ?>" class="form-control" name="precioDescuento" style="height: 50px;">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label>Stock<sup>*</sup></label>
-                                                <input type="text" name="stockMenu" class="text_field"
+                                                <input type="number" name="stockMenu" class="text_field"
                                                        placeholder="Ej. 24" value="<?= $producto_data['stock']; ?>" style="height: 50px;" required>
                                             </div>
                                         </div>

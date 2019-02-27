@@ -112,17 +112,7 @@ if (isset($_POST["registrar"])):
         <?php
         else:
             $usuario->login();
-            if ($senalVendedor == 0):
-                $funcion->headerMove(URL);
-            else:
-                ?>
-                <script>
-                    $(document).ready(function () {
-                        $('#vendedor').modal("show");
-                    });
-                </script>
-            <?php
-            endif;
+            $funcion->headerMove(URL);
         endif;
     else:
         ?>

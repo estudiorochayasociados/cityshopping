@@ -130,7 +130,6 @@ class Usuarios
 
     }
 
-
     public function delete()
     {
         $sql = "DELETE FROM `usuarios`WHERE `cod`= '{$this->cod}'";
@@ -207,6 +206,17 @@ class Usuarios
                 $array[] = $row;
             }
             return $array;
+        }
+    }
+
+    function validarVendedor(){
+        $sql = "SELECT vendedor FROM `usuarios`WHERE cod = '{$this->cod}' AND vendedor='1' ORDER BY id DESC";
+        $usuario = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($usuario);
+        if (!empty($row)){
+            return true;
+        }else{
+            return false;
         }
     }
 

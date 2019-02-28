@@ -111,7 +111,7 @@ $error='';
                             } else {
                                 $usuarios->edit();
                                 $usuarios->login();
-                                $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                              $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                             }
                         }
                     } else {
@@ -121,7 +121,7 @@ $error='';
                         } else {
                             $usuarios->add();
                             $usuarios->login();
-                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                          $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }
                     }
                     break;
@@ -133,14 +133,14 @@ $error='';
                         if ($email_data['invitado'] == 1) {
                             $usuarios->edit();
                             $usuarios->login();
-                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                          $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }else{
                             $error="Ya existe un usuario registrado con este email.";
                         }
                     }else{
                         //el email no existe
                         $usuarios->invitado_sesion();
-                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                      $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                     }
                     break;
             }

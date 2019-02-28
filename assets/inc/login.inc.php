@@ -134,7 +134,7 @@ endif;
             </div>
             <div class="modal-body">
                 <p id="errorRegistro"></p>
-                <form class="popup-form" id="myRegister" method="post">
+                <form class="popup-form " id="myRegister" method="post">
                     <div class="col-md-12 form-group">
                         <input type="text" class="form-control form-white" name="nombre" placeholder="Nombre" required>
                     </div>
@@ -146,21 +146,23 @@ endif;
                     </div>
                     <p id="senalVendedor"></p>
                     <div class="col-md-12 form-group">
-                        <input type="text" class="form-control form-white" name="password" placeholder="Contraseña"
+                        <input type="password" class="form-control form-white" name="password" placeholder="Contraseña"
                                id="password1" required>
                     </div>
                     <div class="col-md-12 form-group">
-                        <input type="text" class="form-control form-white" name="password2" placeholder="Confirmar contraseña"
+                        <input type="password" class="form-control form-white" name="password2" placeholder="Confirmar contraseña"
                                id="password2" required>
                     </div>
                     <div class="col-md-12">
-                        <div class="custom-checkbox2">
-                            <input type="checkbox" id="opt1" value="1" class="" name="terminos">
-                            <label for="opt1">
-                                <span class="circle"></span>He leído y acepto los <strong>Términos &amp; Condiciones</strong></label>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="opt1" value="1" name="terminos" required>
+                                <span>He leído y acepto los <strong>Términos &amp; Condiciones</strong>
+                                </span>
+                            </label>
                         </div>
                     </div>
-                    <div class="col-md-12 centro">
+                    <div class="col-md-12 mt-10 centro">
                         <button type="submit" name="registrar" class="btn btn--round btn-sm">Registrar</button>
                     </div>
                 </form>

@@ -15,6 +15,7 @@ $usuario = new Clases\Usuarios();
 $pagina = isset($_GET["pagina"]) ? $_GET["pagina"] : '0';
 $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
 $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
+//
 ////Categorias
 $categoria->set("area", "rubros");
 $categorias_data = $categoria->listForArea('');
@@ -38,6 +39,7 @@ else:
 endif;
 //
 if (!empty($categoria_get) || !empty($titulo)) {
+    $input_cat = "<input type='hidden' name='categoria' value='$categoria_get'>";
     $filter = array();
 } else {
     $filter = '';
@@ -49,6 +51,9 @@ if (!empty($categoria_get)) {
     $producto_data = $producto->list(array("categoria='" . $cod . "' GROUP BY cod_empresa"), '', '');
     foreach ($producto_data as $prod) {
         array_push($filter, "cod='" . $prod['cod_empresa'] . "'");
+    }
+    if (empty($producto_data)) {
+        $titulo = '';
     }
 }
 if ($titulo != '') {
@@ -65,9 +70,10 @@ if ($titulo != '') {
         array_push($filter, "(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
     }
 }
-
 $empresa_data = $empresa->list($filter, '', ($cantidad * $pagina) . ',' . $cantidad);
-$numeroPaginas = $empresa->paginador($filter, $cantidad);
+if (!empty($empresa_data)) {
+    $numeroPaginas = $empresa->paginador($filter, $cantidad);
+}
 ////
 //
 $template->set("title", TITULO . " | Comercios");
@@ -93,9 +99,13 @@ $template->themeInit();
                                 <h3>Comercios</h3>
                             </div>
                             <div class="search__field">
-                                <form method="get" id="buscar">
+                                <form method="get">
                                     <div class="field-wrapper">
-                                        <input type="hidden" name="request" value="">
+                                        <?php
+                                        if (isset($input_cat)) {
+                                            echo $input_cat;
+                                        }
+                                        ?>
                                         <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un comercio" name="buscar"
                                                required>
                                         <button class="btn btn--round" type="submit">Buscar</button>
@@ -228,24 +238,31 @@ $template->themeInit();
                         <nav class="navigation pagination" role="navigation">
                             <div class="nav-links">
                                 <?php
-                                if ($numeroPaginas != 1 && $numeroPaginas != 0) {
-                                    $url_final = $funciones->eliminar_get(CANONICAL, "pagina");
-                                    $links = '';
-                                    $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=1'>1</a>";
-                                    $i = max(2, $pagina - 5);
+                                if (!empty($numeroPaginas)) {
+                                    if ($numeroPaginas != 1 && $numeroPaginas != 0) {
+                                        $url_final = $funciones->eliminar_get(CANONICAL, "pagina");
+                                        $links = '';
+                                        $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=1'>1</a>";
+                                        $i = max(2, $pagina - 5);
 
-                                    if ($i > 2) {
-                                        $links .= "<a class='page-numbers' href='#'>...</a>";
+                                        if ($i > 2) {
+                                            $links .= "<a class='page-numbers' href='#'>...</a>";
+                                        }
+                                        for (; $i <= min($pagina + 6, $numeroPaginas); $i++) {
+                                            if ($pagina+1==$i){
+                                                $current="current";
+                                            }else{
+                                                $current="";
+                                            }
+                                            $links .= "<a class='page-numbers $current' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
+                                        }
+                                        if ($i - 1 != $numeroPaginas) {
+                                            $links .= "<a class='page-numbers' href='#'>...</a>";
+                                            $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=" . $numeroPaginas . "'>" . $numeroPaginas . "</a>";
+                                        }
+                                        echo $links;
+                                        echo "";
                                     }
-                                    for (; $i <= min($pagina + 6, $numeroPaginas); $i++) {
-                                        $links .= "<a class='page-numbers ' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
-                                    }
-                                    if ($i - 1 != $numeroPaginas) {
-                                        $links .= "<a class='page-numbers' href='#'>...</a>";
-                                        $links .= "<a class='page-numbers' href='" . $url_final . $anidador . "pagina=" . $numeroPaginas . "'>" . $numeroPaginas . "</a>";
-                                    }
-                                    echo $links;
-                                    echo "";
                                 }
                                 ?>
                             </div>

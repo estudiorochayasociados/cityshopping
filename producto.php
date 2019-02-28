@@ -333,7 +333,7 @@ $template->themeInit();
                                     ?>
                                     <li>
                                         <h6>Cantidad:</h6>
-                                        <input max="<?= $producto_data['stock'] ?>" min="1" type="number" id="cantidad" name="cantidad" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5 noEnterSubmit" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
+                                        <input onkeydown="return (event.keyCode!=13);" max="<?= $producto_data['stock'] ?>" min="1" type="number" id="cantidad" name="cantidad" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5 noEnterSubmit" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
                                     </li>
                                     <li>
                                         <h6>Envío:</h6>
@@ -559,4 +559,5 @@ if (!empty($carro)) {
     </script>
     <?php
 }
+
 ?>

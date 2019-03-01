@@ -20,7 +20,6 @@ if (isset($_POST["agregar"])) {
     $usuarios->set("celular", $funciones->antihack_mysqli(isset($_POST["celular"]) ? $_POST["celular"] : ''));
     $usuarios->set("invitado", $funciones->antihack_mysqli(isset($_POST["invitado"]) ? $_POST["invitado"] : '0'));
     $usuarios->set("vendedor", $funciones->antihack_mysqli(isset($_POST["vendedor"]) ? $_POST["vendedor"] : '0'));
-    $usuarios->set("plan", $funciones->antihack_mysqli(isset($_POST["plan"]) ? $_POST["plan"] : ''));
     $usuarios->set("fecha", $funciones->antihack_mysqli(isset($_POST["fecha"]) ? $_POST["fecha"] : date("Y-m-d")));
 
     $usuarios->add();
@@ -92,15 +91,6 @@ if (isset($_POST["agregar"])) {
                 <option selected disabled>Seleccionar</option>
                 <option value="1">Si</option>
                 <option value="0">No</option>
-            </select>
-        </label>
-        <label class="col-md-2">
-            Plan:<br/>
-            <select name="plan">
-                <option selected disabled>Seleccionar</option>
-                <option value="1">Básico</option>
-                <option value="2">Medio</option>
-                <option value="3">Completo</option>
             </select>
         </label>
         <div class="clearfix">

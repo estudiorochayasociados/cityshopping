@@ -12,6 +12,9 @@ $novedad = new Clases\Novedades();
 $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 $novedad->set("cod", $cod);
 $novedad_data = $novedad->view();
+if (empty($novedad_data)){
+    $funciones->headerMove(URL.'/index');
+}
 $imagen->set("cod", $novedad_data['cod']);
 $imagen_data = $imagen->listForProduct();
 $fechas_ = explode("-", $novedad_data['fecha']);

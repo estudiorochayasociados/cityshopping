@@ -14,6 +14,9 @@ $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 //
 $empresa->set("cod", $cod);
 $empresa_data = $empresa->view();
+if (empty($empresa_data)) {
+    $funciones->headerMove(URL . '/index');
+}
 $imagen->set("cod", $empresa_data['cod']);
 $imagen_data = $imagen->listForProduct();
 $filter = array("cod_empresa='" . $empresa_data['cod'] . "'");
@@ -79,17 +82,13 @@ $template->themeInit();
                                 <h4><?= ucfirst($empresa_data['titulo']); ?></h4>
                             </div>
                             <!-- end /.author -->
-                            <?php
-                            if (!empty($empresa_data['redes'])) {
-                                $redes_ = explode("|||", $empresa_data['redes']);
-                                ?>
                                 <div class="social social--color--filled">
                                     <ul>
                                         <?php
-                                        if (!empty($redes_[0])) {
+                                        if (!empty($empresa_data['redes'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $redes_[0] ?>">
+                                                <a href="<?= $empresa_data['redes'] ?>">
                                                     <span class="fa fa-facebook"></span>
                                                 </a>
                                             </li>
@@ -97,10 +96,10 @@ $template->themeInit();
                                         }
                                         ?>
                                         <?php
-                                        if (!empty($redes_[1])) {
+                                        if (!empty($empresa_data['redes2'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $redes_[1] ?>">
+                                                <a href="<?= $empresa_data['redes2'] ?>">
                                                     <span class="fa fa-twitter"></span>
                                                 </a>
                                             </li>
@@ -109,10 +108,10 @@ $template->themeInit();
                                         ?>
 
                                         <?php
-                                        if (!empty($redes_[2])) {
+                                        if (!empty($empresa_data['redes3'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $redes_[2] ?>">
+                                                <a href="<?= $empresa_data['redes3'] ?>">
                                                     <span class="fa fa-instagram"></span>
                                                 </a>
                                             </li>
@@ -121,9 +120,6 @@ $template->themeInit();
                                         ?>
                                     </ul>
                                 </div>
-                                <?php
-                            }
-                            ?>
                             <!-- end /.social -->
                             <!-- end /.author-btn -->
                         </div>
@@ -135,10 +131,10 @@ $template->themeInit();
                         <h2>Contacto</h2>
                         <ul class="mt-10">
                             <li>
-                                <p><span class="lnr lnr-phone-handset"></span> Teléfono: <br><?=$empresa_data['telefono'];?></p>
+                                <p><span class="lnr lnr-phone-handset"></span> Teléfono: <br><?= $empresa_data['telefono']; ?></p>
                             </li>
                             <li>
-                                <p><span class="lnr lnr-envelope"></span> Email: <br> <?=$empresa_data['email'];?></p>
+                                <p><span class="lnr lnr-envelope"></span> Email: <br> <?= $empresa_data['email']; ?></p>
                             </li>
                         </ul>
                     </div>
@@ -207,16 +203,26 @@ $template->themeInit();
                     <div class="product__title">
                         <h2>Productos recientes</h2>
                     </div>
-
-                    <a href="<?=URL?>/productos?empresa=<?=$empresa_data['cod'];?>" class="btn btn--sm">Ver todos</a>
+                    <?php
+                    if (!empty($producto_data)) {
+                        ?>
+                        <a href="<?= URL ?>/productos?empresa=<?= $empresa_data['cod']; ?>" class="btn btn--sm">Ver todos</a>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <!-- end /.product-title-area -->
                 <div class="product-title-area visible-xs">
                     <div class="product__title" style="width: 100%;text-align: center;">
                         <h2>Productos</h2>
                     </div>
-
-                    <a href="<?=URL?>/productos?empresa=<?=$empresa_data['cod'];?>" class="btn btn--sm" style="width: 100%">Ver todos</a>
+                    <?php
+                    if (!empty($producto_data)) {
+                        ?>
+                        <a href="<?= URL ?>/productos?empresa=<?= $empresa_data['cod']; ?>" class="btn btn--sm" style="width: 100%">Ver todos</a>
+                        <?php
+                    }
+                    ?>
                 </div>
                 <!-- end /.product-title-area -->
             </div>

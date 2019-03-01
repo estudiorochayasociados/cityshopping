@@ -14,7 +14,6 @@ $funcion = new Clases\PublicFunction();
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Vendedor</th>
-                <th>Plan</th>
                 <th>Ajustes</th>
                 </thead>
                 <tbody>
@@ -31,19 +30,8 @@ $funcion = new Clases\PublicFunction();
 
                 endif;
 
-                if (isset($_POST["email"])):
-                    $cod = $funcion->antihack_mysqli(isset($_POST["cod"]) ? $_POST["cod"] : '');
-                    $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
-                    $plan = $funcion->antihack_mysqli(isset($_POST["plan"]) ? $_POST["plan"] : 1);
-
-                    $usuarios->set("cod", $cod);
-                    $usuarios->set("email", $email);
-                    $usuarios->editUnico("plan", $plan);
-
-                endif;
-
                 $filter = array("vendedor = 1");
-                $data = $usuarios->list($filter, "", "");
+                $data = $usuarios->list($filter);
                 if (is_array($data)) {
                     for ($i = 0; $i < count($data); $i++) {
                         if($data[$i]['plan'] == 1){$plan1 = 'selected';}else{$plan1 = '';}
@@ -62,12 +50,6 @@ $funcion = new Clases\PublicFunction();
                         echo "<input type='hidden' name='cod' value='".strtoupper($data[$i]["cod"])."' >";
                         echo "<input type='hidden' name='email' value='".strtoupper($data[$i]["email"])."' >";
                         echo "<input type='checkbox' onchange='this.form.submit()' name='vendedor' value='1' ".$check.">";
-                        echo "</td>";
-                        echo "<td><select name='plan' onchange='this.form.submit()'>";
-                        echo "<option value='1'".$plan1.">Básico</option>";
-                        echo "<option value='2'".$plan2.">Medio</option>";
-                        echo "<option value='3'".$plan3.">Completo</option>";
-                        echo "</select></td>";
                         echo "</form>";
                         echo "<td>";
                         echo '<a class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Modificar" href="' . URL . '/index.php?op=usuarios&accion=modificar&cod=' . $data[$i]["cod"] . '">

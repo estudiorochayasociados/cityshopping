@@ -77,8 +77,8 @@ if (!empty($empresa_data)) {
 ////
 //
 $template->set("title", TITULO . " | Comercios");
-$template->set("description", "");
-$template->set("keywords", "");
+$template->set("description", "Comercios en City Shopping");
+$template->set("keywords", "Comercios en City Shopping");
 $template->set("favicon", FAVICON);
 $template->set("body", "home3");
 $template->themeInit();

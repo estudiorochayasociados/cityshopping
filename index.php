@@ -34,8 +34,8 @@ $productos_data = $producto->list('', '', 6);
 ////
 //
 $template->set("title", TITULO . " | Inicio");
-$template->set("description", "");
-$template->set("keywords", "");
+$template->set("description", "Inicio City Shopping");
+$template->set("keywords", "City Shopping");
 $template->set("favicon", FAVICON);
 $template->set("body", "home3");
 $template->themeInit();
@@ -108,8 +108,8 @@ $template->themeInit();
                 $empresa->set("cod", $prod['cod_empresa']);
                 $empresa_data = $empresa->view();
                 //
-                $imagen->set("cod",$prod['cod']);
-                $img=$imagen->view();
+                $imagen->set("cod", $prod['cod']);
+                $img = $imagen->view();
                 ?>
                 <!-- start .col-md-4 -->
                 <div class="col-lg-4 col-md-6">
@@ -175,7 +175,7 @@ $template->themeInit();
         <div class="row">
             <div class="col-md-12">
                 <div class="more-product">
-                    <a href="<?=URL?>/productos" class="btn btn--lg btn--round">Todos los productos</a>
+                    <a href="<?= URL ?>/productos" class="btn btn--lg btn--round">Todos los productos</a>
                 </div>
             </div>
             <!-- end ./col-md-12 -->
@@ -219,32 +219,68 @@ $template->themeInit();
 <!--================================
     END SPECIAL FEATURES AREA
 =================================-->
-
-<!--================================
+<?php
+if (isset($_SESSION['usuarios'])) {
+    if ($_SESSION['usuarios']['vendedor'] != 1) {
+        ?>
+        <!--================================
     START CALL TO ACTION AREA
 =================================-->
-<section class="call-to-action bgimage">
-    <div class="bg_image_holder">
-        <img src="images/calltobg.jpg" alt="">
-    </div>
-    <div class="container content_above">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="call-to-wrap">
-                    <h1 class="text--white">Quieres ser vendedor?</h1>
-                    <?php if (empty($_SESSION["usuarios"])): ?>
-                        <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
-                    <?php else: ?>
-                        <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
-                    <?php endif; ?>
+        <section class="call-to-action bgimage">
+            <div class="bg_image_holder">
+                <img src="images/calltobg.jpg" alt="">
+            </div>
+            <div class="container content_above">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="call-to-wrap">
+                            <h1 class="text--white">Quieres ser vendedor?</h1>
+                            <?php if (empty($_SESSION["usuarios"])): ?>
+                                <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                            <?php else: ?>
+                                <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--================================
+            END CALL TO ACTION AREA
+        =================================-->
+        <?php
+    }
+} else {
+    ?>
+    <!--================================
+    START CALL TO ACTION AREA
+=================================-->
+    <section class="call-to-action bgimage">
+        <div class="bg_image_holder">
+            <img src="images/calltobg.jpg" alt="">
+        </div>
+        <div class="container content_above">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="call-to-wrap">
+                        <h1 class="text--white">Quieres ser vendedor?</h1>
+                        <?php if (empty($_SESSION["usuarios"])): ?>
+                            <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                        <?php else: ?>
+                            <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!--================================
-    END CALL TO ACTION AREA
-=================================-->
+    </section>
+    <!--================================
+        END CALL TO ACTION AREA
+    =================================-->
+    <?php
+}
+?>
+
 <?php
 $template->themeEnd();
 ?>

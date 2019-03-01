@@ -54,7 +54,6 @@ class Usuarios
         } else {
             $r = 0;
         }
-        echo $r;
         return $r;
     }
 
@@ -86,7 +85,6 @@ class Usuarios
     {
         $validar = $this->validate();
         $usuario = $this->view();
-        echo $atributo;
         if($atributo == 'password'){
             $valor = hash('sha256', $valor . SALT);
         }
@@ -139,7 +137,10 @@ class Usuarios
 
     public function login()
     {
-        $this->password = hash('sha256', $this->password . SALT);
+        $usuario = $this->view();
+        if($usuario["password"] != $this->password){
+            $this->password = hash('sha256', $this->password . SALT);
+        }
         $sql = "SELECT * FROM `usuarios` WHERE `email` = '{$this->email}' AND `password`= '{$this->password}'";
         $usuarios = $this->con->sqlReturn($sql);
         $contar = mysqli_num_rows($usuarios);

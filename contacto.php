@@ -7,8 +7,8 @@ $funciones = new Clases\PublicFunction();
 $enviar = new Clases\Email();
 //
 $template->set("title", TITULO . " | Contacto");
-$template->set("description", "");
-$template->set("keywords", "");
+$template->set("description", "Contacto City Shopping");
+$template->set("keywords", "Contacto City Shopping");
 $template->set("favicon", FAVICON);
 $template->set("body", "contact-page");
 $template->themeInit();

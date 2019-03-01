@@ -14,7 +14,6 @@ $funcion = new Clases\PublicFunction();
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Vendedor</th>
-                <th>Plan</th>
                 <th>Ajustes</th>
                 </thead>
                 <tbody>
@@ -32,7 +31,7 @@ $funcion = new Clases\PublicFunction();
                 endif;
 
                 $filter = array("vendedor = 2");
-                $data = $usuarios->list($filter, "", "");
+                $data = $usuarios->list($filter);
                 if (is_array($data)) {
                     for ($i = 0; $i < count($data); $i++) {
                         if(strtoupper($data[$i]["vendedor"]) == 1):

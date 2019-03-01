@@ -22,6 +22,9 @@ $op = isset($_GET["op"]) ? $_GET["op"] : '';
 if (empty($op)){
     $funcion->headerMove(URL.'/panel?op=perfil');
 }
+if (empty($_SESSION['usuarios'])){
+    $funcion->headerMove(URL);
+}
 $cod_usuario = $_SESSION['usuarios']['cod'];
 $empresa->set("cod_usuario", $cod_usuario);
 $empresaData = $empresa->view();

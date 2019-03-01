@@ -57,32 +57,34 @@ START MENU AREA
                                                     if (!empty($carro)) {
                                                         foreach ($carro as $car) {
                                                             ?>
-                                                            <div class="cart_product">
-
-                                                                <div class="product__info">
-                                                                    <div class="info">
-                                                                        <a class="title"><?= ucfirst($car['titulo']) ?></a>
+                                                                <div class=" row cart_product">
+                                                                    <div class="col-md-9">
+                                                                        <div class="product__info">
+                                                                            <div class="info">
+                                                                                <a class="title"><?= ucfirst($car['titulo']) ?></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="product__action">
+                                                                            <?php
+                                                                            if ($car['precio'] > 0) {
+                                                                                ?>
+                                                                                <p>$<?= $car['precio'] ?></p>
+                                                                                <?php
+                                                                            } else {
+                                                                                if ($car['id'] != 'Metodo-Pago') {
+                                                                                    ?>
+                                                                                    <p>Gratis!</p>
+                                                                                    <?php
+                                                                                }
+                                                                                ?>
+                                                                                <?php
+                                                                            }
+                                                                            ?>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-
-                                                                <div class="product__action">
-                                                                    <?php
-                                                                    if ($car['precio'] > 0) {
-                                                                        ?>
-                                                                        <p>$<?= $car['precio'] ?></p>
-                                                                        <?php
-                                                                    } else {
-                                                                        if ($car['id'] != 'Metodo-Pago') {
-                                                                            ?>
-                                                                            <p>Gratis!</p>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                        <?php
-                                                                    }
-                                                                    ?>
-                                                                </div>
-                                                            </div>
                                                             <?php
                                                         }
                                                         ?>

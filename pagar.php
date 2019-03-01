@@ -3,10 +3,10 @@ require_once "Config/Autoload.php";
 Config\Autoload::runSitio();
 $template = new Clases\TemplateSite();
 $funciones = new Clases\PublicFunction();
-$template->set("title", TITULO." | Dejanos tus datos");
-$template->set("description", TITULO." Dejanos tus datos");
-$template->set("keywords", TITULO." Dejanos tus datos");
-$template->set("body","checkout-page");
+$template->set("title", TITULO . " | Dejanos tus datos");
+$template->set("description", TITULO . " Dejanos tus datos");
+$template->set("keywords", TITULO . " Dejanos tus datos");
+$template->set("body", "checkout-page");
 $template->set("favicon", FAVICON);
 $template->themeInit();
 $carrito = new Clases\Carrito();
@@ -18,9 +18,13 @@ $cod_pedido = $_SESSION["cod_pedido"];
 //    $funciones->headerMove(URL . "/carrito");
 //}
 if (!empty($usuarioSesion)) {
-    $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+    if (empty($usuarioSesion['provincia']) || empty($usuarioSesion['localidad']) || empty($usuarioSesion['direccion']) || empty($usuarioSesion['telefono'])) {
+        $funciones->headerMove(URL . "/completarPerfil");
+    } else {
+        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+    }
 }
-$error='';
+$error = '';
 ?>
     <!--================================
             START BREADCRUMB AREA
@@ -32,7 +36,7 @@ $error='';
                     <div class="breadcrumb">
                         <ul>
                             <li>
-                                <a href="<?=URL?>/index">Inicio</a>
+                                <a href="<?= URL ?>/index">Inicio</a>
                             </li>
                             <li class="active">
                                 <a href="#">Compra N°: <?= $cod_pedido ?></a>
@@ -103,51 +107,53 @@ $error='';
                     if (!empty($email_data)) {
                         //pregunta si esta registrado
                         if ($email_data['invitado'] == 0) {
-                            $error="Ya existe un usuario registrado con este email.";
+                            $error = "Ya existe un usuario registrado con este email.";
                         } else {
                             //si invitado es 1
                             if ($password1 != $password2) {
-                                $error="Error las contraseñas no coinciden.";
+                                $error = "Error las contraseñas no coinciden.";
                             } else {
                                 $usuarios->edit();
                                 $usuarios->login();
-                              $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                                $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                             }
                         }
                     } else {
                         //si no existe, agrega el usuario
                         if ($password1 != $password2) {
-                            $error="Error las contraseñas no coinciden.";
+                            $error = "Error las contraseñas no coinciden.";
                         } else {
                             $usuarios->add();
                             $usuarios->login();
-                          $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }
                     }
                     break;
                 //checkbox desmarcado
                 case 1:
                     //si el email exite
-                    if (!empty($email_data)){
+                    if (!empty($email_data)) {
                         //si el email tiene invitado 1
                         if ($email_data['invitado'] == 1) {
                             $usuarios->edit();
                             $usuarios->login();
-                          $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
-                        }else{
-                            $error="Ya existe un usuario registrado con este email.";
+                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                        } else {
+                            $error = "Ya existe un usuario registrado con este email.";
                         }
-                    }else{
+                    } else {
                         //el email no existe
                         $usuarios->invitado_sesion();
-                      $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                     }
                     break;
             }
         }
         ?>
         <div class="col-md-12">
-            <div class="<?php if (empty($error)){ echo 'oculto'; } ?>alert alert-warning" role="alert"><?=$error;?></div>
+            <div class="<?php if (empty($error)) {
+                echo 'oculto';
+            } ?>alert alert-warning" role="alert"><?= $error; ?></div>
             <form method="post" class="row">
                 <div class="row">
                     <input type="hidden" name="metodos-pago"/>
@@ -195,11 +201,14 @@ $error='';
                                placeholder="Escribir dirección" name="direccion" required/>
                     </div>
                     <div class="col-md-12">
-                        <div class="custom-checkbox2">
+                        <!--<div class="custom-checkbox2">
                             <input type="checkbox" id="opt1" name="invitado" value="0" onchange="$('.password').slideToggle()">
                             <label for="opt1">
                                 <span class="circle"></span>¿Deseas crear una cuenta de usuario y dejar tus datos grabados para la próxima compra?</label>
-                        </div>
+                        </div>-->
+                        <label class="col-md-12 col-xs-12 mt-10 mb-10 crear" style="font-size:16px">
+                            <input class="checks" type="checkbox" name="invitado" value="1" onchange="$('.password').slideToggle()"> ¿Deseas crear una cuenta de usuario y dejar tus datos grabados para la próxima compra?
+                        </label>
                     </div>
                     <div class="col-md-6 col-xs-6 password" style="display: none;">Contraseña:<br/>
                         <input class="form-control  mb-10" type="password"
@@ -212,11 +221,14 @@ $error='';
                                placeholder="Escribir repassword" name="password2"/>
                     </div>
                     <div class="col-md-12">
-                        <div class="custom-checkbox2">
+                        <!--<div class="custom-checkbox2">
                             <input type="checkbox" id="opt2" name="factura" value="0" onchange="$('.factura').slideToggle()">
                             <label for="opt2">
                                 <span class="circle"></span>Solicitar FACTURA A</label>
-                        </div>
+                        </div>-->
+                        <label class="col-md-12 col-xs-12 mt-10 mb-10" style="font-size:16px">
+                            <input class="checks" type="checkbox" name="factura" value="0" onchange="$('.factura').slideToggle()"> Solicitar FACTURA A
+                        </label>
                     </div>
                     <div class="col-md-12 col-xs-12 factura" style="display: none;">CUIT:<br/>
                         <input class="form-control  mb-10" type="number"

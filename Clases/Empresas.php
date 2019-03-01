@@ -19,6 +19,8 @@ class Empresas
     public $coordenadas;
     public $desarrollo;
     public $redes;
+    public $redes2;
+    public $redes3;
     public $logo;
     public $portada;
     public $categoria;
@@ -50,7 +52,7 @@ class Empresas
 
     public function add()
     {
-        $sql   = "INSERT INTO `empresas`(`cod`, `titulo`, `telefono`, `email`, `provincia`, `ciudad`, `barrio`, `direccion`, `postal`, `coordenadas`, `desarrollo`, `redes`, `logo`, `portada`, `categoria`, `subcategoria`, `keywords`, `description`, `fecha`, `cod_usuario`, `tiempoEntrega`, `delivery`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->telefono}', '{$this->email}', '{$this->provincia}', '{$this->ciudad}', '{$this->barrio}', '{$this->direccion}', '{$this->postal}', '{$this->coordenadas}', '{$this->desarrollo}', '{$this->redes}','{$this->logo}','{$this->portada}', '{$this->categoria}', '{$this->subcategoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->cod_usuario}', '{$this->tiempoEntrega}', '{$this->delivery}')";
+        $sql   = "INSERT INTO `empresas`(`cod`, `titulo`, `telefono`, `email`, `provincia`, `ciudad`, `barrio`, `direccion`, `postal`, `coordenadas`, `desarrollo`, `redes`, `redes2`, `redes3`, `logo`, `portada`, `categoria`, `subcategoria`, `keywords`, `description`, `fecha`, `cod_usuario`, `tiempoEntrega`, `delivery`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->telefono}', '{$this->email}', '{$this->provincia}', '{$this->ciudad}', '{$this->barrio}', '{$this->direccion}', '{$this->postal}', '{$this->coordenadas}', '{$this->desarrollo}', '{$this->redes}', '{$this->redes2}', '{$this->redes3}','{$this->logo}','{$this->portada}', '{$this->categoria}', '{$this->subcategoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->cod_usuario}', '{$this->tiempoEntrega}', '{$this->delivery}')";
         $query = $this->con->sql($sql);
         return $query;
     }
@@ -70,6 +72,8 @@ class Empresas
         `coordenadas` = '{$this->coordenadas}',
         `desarrollo` = '{$this->desarrollo}',
         `redes` = '{$this->redes}',
+        `redes2` = '{$this->redes2}',
+        `redes3` = '{$this->redes3}',
         `logo` = '{$this->logo}',
         `portada` = '{$this->portada}',
         `categoria` = '{$this->categoria}',

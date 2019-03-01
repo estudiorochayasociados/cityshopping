@@ -367,3 +367,11 @@
 .blanco{
     color: white;
 }
+.categorias{
+    overflow-y: scroll !important;
+    height: 512px !important
+}
+.checks{
+    height: 13px;
+    margin-right: 5px;
+}

@@ -10,8 +10,8 @@ $funciones = new Clases\PublicFunction();
 $novedad = new Clases\Novedades();
 //
 $template->set("title", TITULO . " | Blogs");
-$template->set("description", "");
-$template->set("keywords", "");
+$template->set("description", "Blogs de City Shopping");
+$template->set("keywords", "Blogs de City Shopping");
 $template->set("favicon", FAVICON);
 $template->set("body", "blog-page2");
 $template->themeInit();

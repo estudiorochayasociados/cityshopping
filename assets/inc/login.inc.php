@@ -111,6 +111,7 @@ if (isset($_POST["registrar"])):
             </script>
         <?php
         else:
+            $usuario->set("password",$password);
             $usuario->login();
             $funcion->headerMove(URL);
         endif;
@@ -156,7 +157,7 @@ endif;
                     <div class="col-md-12">
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" id="opt1" value="1" name="terminos" required>
+                                <input type="checkbox" class="form-check-input checks" id="opt1" value="1" name="terminos" required>
                                 <span>He leído y acepto los <strong>Términos &amp; Condiciones</strong>
                                 </span>
                             </label>
@@ -175,7 +176,6 @@ endif;
 <?php
 if (isset($_POST["vendedor"])):
     $nombre = $funcion->antihack_mysqli(isset($_POST["nombreVendedor"]) ? $_POST["nombreVendedor"] : '');
-    $provincia = $funcion->antihack_mysqli(isset($_POST["provinciaVendedor"]) ? $_POST["provinciaVendedor"] : '');
     $localidad = $funcion->antihack_mysqli(isset($_POST["localidadVendedor"]) ? $_POST["localidadVendedor"] : '');
     $telefono = $funcion->antihack_mysqli(isset($_POST["telefonoUsuario"]) ? $_POST["telefonoUsuario"] : '');
 
@@ -184,6 +184,24 @@ if (isset($_POST["vendedor"])):
     $usuario->editUnico("telefono", $telefono);
     $usuario->editUnico("vendedor", 2);
 
+    $mensajeFinal = "<b>Recibimos tu suscripción, en breve te contactaremos.</b>  " . " <br/>";
+
+    //USUARIO
+    $correo->set("asunto", "Realizaste tu registro como vendedor");
+    $correo->set("receptor", $_SESSION["usuarios"]['email']);
+    $correo->set("emisor", EMAIL);
+    $correo->set("mensaje", $mensajeFinal);
+    $correo->emailEnviar();
+
+    $mensajeFinalAdmin = "<b>Nombre de comercio:</b>: " . $nombre . " <br/>";
+    $mensajeFinalAdmin .= "<b>Email</b>: " . $_SESSION["usuarios"]['email'] . "<br/>";
+    $mensajeFinalAdmin .= "<b>Teléfono</b>: " . $telefono . "<br/>";
+    $mensajeFinalAdmin .= "<b>Localidad</b>: " . $localidad . "<br/>";
+    //ADMIN
+    $correo->set("asunto", "Suscripción para ser vendedor");
+    $correo->set("receptor", EMAIL);
+    $correo->set("mensaje", $mensajeFinalAdmin);
+    $correo->emailEnviar();
     ?>
     <script>
         $(document).ready(function () {
@@ -215,7 +233,7 @@ endif;
                             </label>
                         </div>
                         <?php if (empty($_SESSION["usuarios"]["telefono"])): ?>
-                            <input type="text" class="form-control form-white" name="telefonoUsuario"
+                            <input type="number" class="form-control form-white" name="telefonoUsuario"
                                    placeholder="Tu teléfono personal" required>
                         <?php endif; ?>
                         <div class="centro">

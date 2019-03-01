@@ -21,6 +21,9 @@ $url_limpia = str_replace("?error", "", $url_limpia);
 //
 $producto->set("cod", $cod);
 $producto_data = $producto->view();
+if (empty($producto_data)){
+    $funciones->headerMove(URL.'/index');
+}
 $imagen->set("cod", $producto_data['cod']);
 $imagen_data = $imagen->listForProduct();
 $empresa->set('cod', $producto_data['cod_empresa']);

@@ -3,7 +3,7 @@ require_once "Config/Autoload.php";
 Config\Autoload::runSitio();
 $template = new Clases\TemplateSite();
 $funciones = new Clases\PublicFunction();
-$template->set("title", "Compra finalizada");
+$template->set("title", TITULO ." | Compra finalizada");
 $template->set("description", "Compra finalizada");
 $template->set("keywords", "Compra finalizada");
 $template->set("favicon", FAVICON);
@@ -181,7 +181,7 @@ $correo->emailEnviar();
 
 $carritos->destroy();
 unset($_SESSION["cod_pedido"]);
-if ($usuario_data["invitado"] == 1) {
+if ($usuario_data["invitado"] == 1 || $_SESSION['usuarios']['invitado']==1) {
     unset($_SESSION["usuarios"]);
 }
 $template->themeEnd();

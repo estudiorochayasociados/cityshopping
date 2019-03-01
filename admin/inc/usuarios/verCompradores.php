@@ -31,7 +31,7 @@ $funcion = new Clases\PublicFunction();
                 endif;
 
                 $filter = array("vendedor = 0");
-                $data = $usuarios->list($filter, "", "");
+                $data = $usuarios->list($filter);
                 if (is_array($data)) {
                     for ($i = 0; $i < count($data); $i++) {
                         if(strtoupper($data[$i]["vendedor"]) == 1):

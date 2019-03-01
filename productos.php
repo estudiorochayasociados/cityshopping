@@ -127,8 +127,8 @@ if (!empty($productos_data)) {
 ////
 //
 $template->set("title", TITULO . " | Productos");
-$template->set("description", "");
-$template->set("keywords", "");
+$template->set("description", "Todos los productos en City Shopping");
+$template->set("keywords", "Todos los productos en City Shopping");
 $template->set("favicon", FAVICON);
 $template->set("body", "home3");
 $template->themeInit();
@@ -204,6 +204,9 @@ $template->themeInit();
                             </a>
                             <div class="collapse show collapsible-content" id="collapse1" style="height: 50px;">
                                 <form method="get">
+                                    <?php
+                                    if (!empty($input_order)) echo $input_order;
+                                    ?>
                                     <input type="hidden" value="2" name="ck">
                                     <select name="order" class="form-control" onchange="this.form.submit()">
                                         <option value="ultimos" <?php if ($orden_pagina == "ultimos") {
@@ -231,9 +234,10 @@ $template->themeInit();
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
-                            <div class="collapse show collapsible-content" id="collapse2" style="overflow-y: scroll;height: 512px;">
+                            <div class="collapse show collapsible-content categorias" id="collapse2">
                                 <form method="get">
                                     <input type="hidden" value="3" name="ck">
+                                    <ul>
                                         <?php
                                         if (!empty($input_categoria)) {
                                             echo $input_categoria;
@@ -242,18 +246,22 @@ $template->themeInit();
                                             ?>
                                             <!--
                                             <div class="custom-radio">
-                                                <a href="<?=URL.'/productos?categoria='.$cat['cod'];?>">
+                                                <a href="<?= URL . '/productos?categoria=' . $cat['cod']; ?>">
                                                 <label for="opt1"  style="font-size: 12px;">
                                                     <input type="radio" id="opt1" class="" name="categoria" value="<?= ucfirst($cat['cod']); ?>">
                                                     <span class="circle"></span><?= ucfirst($cat['titulo']); ?>
                                                 </label>
                                             </a>
                                             </div>-->
-                                            <a href="<?=URL.'/productos?categoria='.$cat['cod'];?>"><p><?= ucfirst($cat['titulo']); ?></p>
-                                            </a>
+                                            <li>
+                                                <label>
+                                                    <input type="checkbox" class="checks" value="<?= $cat['cod']; ?>" name="categoria" onclick="this.form.submit();" <?php if ($categoria_get==$cat['cod']){ echo "checked";} ?>><span><?= ucfirst($cat['titulo']); ?></span>
+                                                </label>
+                                            </li>
                                             <?php
                                         }
                                         ?>
+                                    </ul>
                                 </form>
                             </div>
                             <!-- end /.collapsible_content -->
@@ -291,7 +299,7 @@ $template->themeInit();
                                         <ul class="titlebtm">
                                             <li>
                                                 <p>
-                                                    <a href="<?= URL . '/producto/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
+                                                    <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
                                                         <?= ucfirst(substr(strip_tags($empresa_data['titulo']), 0, 50)); ?>
                                                     </a>
                                                 </p>

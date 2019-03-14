@@ -56,6 +56,9 @@ class PublicFunction
         $string = str_replace("/", "", $string);
         $string = str_replace(",", "", $string);
         $string = str_replace(".", "", $string);
+        $string = str_replace('"', '', $string);
+        $string = str_replace('“', '', $string);
+        $string = str_replace('”', '', $string);
         $string = strtolower($string);
         //para ampliar los caracteres a reemplazar agregar lineas de este tipo:
         //$string = str_replace("caracter - que - queremos - cambiar","caracter - por - el - cual - lo - vamos - a - cambiar",$string);
@@ -115,5 +118,17 @@ class PublicFunction
         endif;
 
         return $anidador;
+    }
+
+    public function variables_get_input($hidden)
+    {
+        foreach ($_GET as $key => $val) {
+            if ($key == "pagina") {
+            } else {
+                if ($key != $hidden) {
+                    echo "<input type='hidden' name='" . $key . "' value='" . $val . "' />";
+                }
+            }
+        }
     }
 }

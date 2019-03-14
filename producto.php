@@ -21,8 +21,8 @@ $url_limpia = str_replace("?error", "", $url_limpia);
 //
 $producto->set("cod", $cod);
 $producto_data = $producto->view();
-if (empty($producto_data)){
-    $funciones->headerMove(URL.'/index');
+if (empty($producto_data)) {
+    $funciones->headerMove(URL . '/index');
 }
 $imagen->set("cod", $producto_data['cod']);
 $imagen_data = $imagen->listForProduct();
@@ -119,14 +119,20 @@ $template->themeInit();
                                 }
                                 ?>
                             </div>
-                            <a class="carousel-control-prev" href="#carouselE" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Anterior</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselE" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Siguiente</span>
-                            </a>
+                            <?php
+                            if (@count($imagen_data) > 1) {
+                                ?>
+                                <a class="carousel-control-prev" href="#carouselE" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Anterior</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselE" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Siguiente</span>
+                                </a>
+                                <?php
+                            }
+                            ?>
                         </div>
 
                         <div id="carouselEm" class="carousel slide visible-xs" data-ride="carousel">
@@ -174,16 +180,12 @@ $template->themeInit();
                                 <li>
                                     <a href="#product-details" class="active" aria-controls="product-details" role="tab" data-toggle="tab">Detalle</a>
                                 </li>
-                                <li>
-                                    <a href="#product-comment" aria-controls="product-comment" role="tab" data-toggle="tab">Comentarios </a>
-                                </li>
                             </ul>
                         </div>
                         <!-- end /.item-navigation -->
 
                         <div class="tab-content">
                             <div class="tab-pane product-tab fade show active" id="product-details">
-                                <h1>Detalle</h1>
                                 <p><?= ucfirst(strip_tags($producto_data['desarrollo'])); ?></p>
 
                                 <div class="item_social_share">

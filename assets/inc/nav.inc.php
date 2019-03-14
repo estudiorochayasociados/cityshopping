@@ -55,7 +55,9 @@ START MENU AREA
                                                 <div class="cart_area">
                                                     <?php
                                                     if (!empty($carro)) {
+                                                        $precio = 0;
                                                         foreach ($carro as $car) {
+                                                            $precio += ($car["precio"] * $car["cantidad"]);
                                                             ?>
                                                                 <div class=" row cart_product">
                                                                     <div class="col-md-9">
@@ -90,7 +92,7 @@ START MENU AREA
                                                         ?>
                                                         <div class="total">
                                                             <p>
-                                                                <span>Total :</span>$<?= $carrito->precioFinal(); ?></p>
+                                                                <span>Total :</span>$<?= $precio; ?></p>
                                                         </div>
                                                         <div class="cart_action">
                                                             <a class="go_cart" href="<?= URL ?>/carrito?remover">Vaciar</a>

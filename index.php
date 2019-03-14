@@ -43,7 +43,7 @@ $template->themeInit();
 <!--================================
         START HERO AREA
     =================================-->
-<section class="hero-area hero--2 bgimage" style="height: 550px;">
+<section class="hero-area hero--2 bgimage" style="height: 450px;">
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <?php
@@ -53,7 +53,8 @@ $template->themeInit();
                 ?>
                 <div class="carousel-item <?php if ($sli == 0) {
                     echo "active";
-                } ?>" style="height:550px;width:100%;background:url(<?= $img['ruta']; ?>) no-repeat center center/cover;">
+                } ?>">
+                    <img class="d-block" src="<?=URL.'/'.$img['ruta'];?>" alt="<?=$sli['titulo'];?>">
                 </div>
                 <?php
             }
@@ -68,7 +69,7 @@ $template->themeInit();
 <!--================================
     START PRODUCTS AREA
 =================================-->
-<section class="products section--padding pt-10">
+<section class="products pad">
     <!-- start container -->
     <div class="container">
         <div class="mb-10">

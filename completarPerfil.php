@@ -47,7 +47,6 @@ $usuarioData = $usuario->view();
     =================================-->
     <div class="container mt-30">
         <?php
-        var_dump($_SESSION['usuarios']);
         if (isset($_POST["completarPerfil"])):
             $nombre = $funcion->antihack_mysqli(isset($_POST["nombreInvitado"]) ? $_POST["nombreInvitado"] : $usuarioData['nombre']);
             $apellido = $funcion->antihack_mysqli(isset($_POST["apellidoInvitado"]) ? $_POST["apellidoInvitado"] : $usuarioData['apellido']);

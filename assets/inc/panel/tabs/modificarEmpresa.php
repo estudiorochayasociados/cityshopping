@@ -30,9 +30,9 @@ if ($borrarImg != '') {
                             $tiempoEntrega = $funcion->antihack_mysqli(isset($_POST["tiempoEntregaEmpresa"]) ? $_POST["tiempoEntregaEmpresa"] : $empresaData['tiempoEntrega']);
 
 
-                            $facebook = $funcion->antihack_mysqli(isset($_POST["facebook"]) ? $_POST["facebook"] : $facebook_);
-                            $twitter = $funcion->antihack_mysqli(isset($_POST["twitter"]) ? $_POST["twitter"] : $twitter_);
-                            $instagram = $funcion->antihack_mysqli(isset($_POST["instagram"]) ? $_POST["instagram"] : $instagram_);
+                            $facebook = $funcion->antihack_mysqli(isset($_POST["facebook"]) ? $_POST["facebook"] : $empresaData['redes']);
+                            $twitter = $funcion->antihack_mysqli(isset($_POST["twitter"]) ? $_POST["twitter"] : $empresaData['redes2']);
+                            $instagram = $funcion->antihack_mysqli(isset($_POST["instagram"]) ? $_POST["instagram"] : $empresaData['redes3']);
 
                             if ($direccion != $empresaData['direccion'] || $ciudad != $empresaData['ciudad'] || $provincia != $empresaData['provincia']):
                                 $ubicacionEmpresa = $direccion . '+' . $ciudad . '+' . $provincia;

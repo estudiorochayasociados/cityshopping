@@ -10,11 +10,11 @@ if (isset($_POST["login"])) {
         $recuperarPass = $funcion->antihack_mysqli(isset($_POST["recuperarPass"]) ? $_POST["recuperarPass"] : '');
         $cod = substr(md5(uniqid(rand())), 0, 10);
 
-        $usuarioData = $usuario->list(array("email = '".$recuperarPass."'"));
-        $usuario->set("cod",$usuarioData[0]["cod"]);
-        $usuario->editUnico("password",$cod);
+        $usuarioData = $usuario->list(array("email = '" . $recuperarPass . "'"));
+        $usuario->set("cod", $usuarioData[0]["cod"]);
+        $usuario->editUnico("password", $cod);
 
-        $mensaje = "Su nueva contraseña es: <b>".$cod."</b><br><br>";
+        $mensaje = "Su nueva contraseña es: <b>" . $cod . "</b><br><br>";
 
         $correo->set("asunto", "Recuperar Contraseña");
         $correo->set("receptor", $recuperarPass);
@@ -111,8 +111,25 @@ if (isset($_POST["registrar"])):
             </script>
         <?php
         else:
-            $usuario->set("password",$password);
+            $usuario->set("password", $password);
             $usuario->login();
+
+            $mensajeFinal = "<b>Gracias por registrarte en nuestra plataforma.</b>  " . " <br/>";
+
+            //USUARIO
+            $correo->set("asunto", "Realizaste tu registro");
+            $correo->set("receptor", $_SESSION["usuarios"]['email']);
+            $correo->set("emisor", EMAIL);
+            $correo->set("mensaje", $mensajeFinal);
+            $correo->emailEnviar();
+
+            $mensajeFinalAdmin = "<b>Usuario :</b>: " . $_SESSION["usuarios"]['nombre'] . $_SESSION["usuarios"]['apellido'] . " <br/>";
+            $mensajeFinalAdmin .= "<b>Email</b>: " . $_SESSION["usuarios"]['email'] . "<br/>";
+            //ADMIN
+            $correo->set("asunto", "Nuevo usuario registrado");
+            $correo->set("receptor", EMAIL);
+            $correo->set("mensaje", $mensajeFinalAdmin);
+            $correo->emailEnviar();
             $funcion->headerMove(URL);
         endif;
     else:
@@ -221,24 +238,24 @@ endif;
             <div class="modal-body">
                 <p id="errorVendedor"></p>
                 <form class="popup-form" id="myVendedor" method="post">
-                        <div class="login_icon"><i class="icon_lock_alt"></i></div>
-                        <input type="text" class="form-control form-white" name="nombreVendedor"
-                               placeholder="Nombre de tu empresa / negocio" required>
-                        <div class="row mt-5">
-                            <label class="col-md-12">
-                                <select class="form-control" name="localidadVendedor" id="localidad" required >
-                                    <option value="" selected disabled>Localidad</option>
-                                    <option value="San Francisco">San Francisco</option>
-                                </select>
-                            </label>
-                        </div>
-                        <?php if (empty($_SESSION["usuarios"]["telefono"])): ?>
-                            <input type="number" class="form-control form-white" name="telefonoUsuario"
-                                   placeholder="Tu teléfono personal" required>
-                        <?php endif; ?>
-                        <div class="centro">
-                            <button type="submit" name="vendedor" class="btn btn--round mt-5 btn-sm">Solicitar</button>
-                        </div>
+                    <div class="login_icon"><i class="icon_lock_alt"></i></div>
+                    <input type="text" class="form-control form-white" name="nombreVendedor"
+                           placeholder="Nombre de tu empresa / negocio" required>
+                    <div class="row mt-5">
+                        <label class="col-md-12">
+                            <select class="form-control" name="localidadVendedor" id="localidad" required>
+                                <option value="" selected disabled>Localidad</option>
+                                <option value="San Francisco">San Francisco</option>
+                            </select>
+                        </label>
+                    </div>
+                    <?php if (empty($_SESSION["usuarios"]["telefono"])): ?>
+                        <input type="number" class="form-control form-white" name="telefonoUsuario"
+                               placeholder="Tu teléfono personal" required>
+                    <?php endif; ?>
+                    <div class="centro">
+                        <button type="submit" name="vendedor" class="btn btn--round mt-5 btn-sm">Solicitar</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -250,24 +267,24 @@ endif;
     <div class="modal-dialog">
         <div class="modal-content modal-popup">
             <div class="modal-body">
-            <a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
-            <br/>
-            <div id="confirm">
-                <i class="icon_check_alt2 text_white"></i>
-                <h3 class="text_white">¡Tu solicitud fue enviada correctamente!</h3>
-            </div>
-            <br/>
-            <div class="alert alert-success" role="alert">¡Tu solicitud fue enviada correctamente!. Te vamos a
-                avisar
-                por email o teléfono cuando te habilitemos.
-            </div>
+                <a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
+                <br/>
+                <div id="confirm">
+                    <i class="icon_check_alt2 text_white"></i>
+                    <h3 class="text_white">¡Tu solicitud fue enviada correctamente!</h3>
+                </div>
+                <br/>
+                <div class="alert alert-success" role="alert">¡Tu solicitud fue enviada correctamente!. Te vamos a
+                    avisar
+                    por email o teléfono cuando te habilitemos.
+                </div>
             </div>
         </div>
     </div>
 </div>
 <!-- End Register modal -->
 <script>
-    function Cambb(){
+    function Cambb() {
         $(document).ready(function () {
             $("#senalVendedor").html('<input name="senalVendedor" value="1" type="hidden">');
         });

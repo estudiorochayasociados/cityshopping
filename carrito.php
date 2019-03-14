@@ -146,7 +146,7 @@ if ($countCarrito == 0) {
                             <td class="hidden-xs"></td>
                             <td class="hidden-xs"></td>
 
-                            <td> $<?= number_format($carrito->precioFinal(), "2", ",", "."); ?></td>
+                            <td> $<?= $precio; ?></td>
                         </tr>
                         </tbody>
                     </table>

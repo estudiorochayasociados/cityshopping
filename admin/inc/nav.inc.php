@@ -108,11 +108,11 @@ $subpages = ["banners","sliders","novedades"];
                 </li>
                 <li class="nav-item dropdown <?php if (!in_array('empresas', $pages)) {echo 'd-none';}?>">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                        Restaurantes
+                        Comercios
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="<?=URL?>/index.php?op=empresas&accion=ver">
-                            Ver Restaurantes
+                            Ver Comercios
                         </a>
                     </div>
                 </li>

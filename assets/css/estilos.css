@@ -364,6 +364,9 @@
 .hidden {
     display: none
 }
+.pad{
+    padding-top: 50px !important;
+}
 .blanco{
     color: white;
 }

@@ -17,10 +17,14 @@ $categoria_get = isset($_GET["categoria"]) ? $_GET["categoria"] : '';
 $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
 $orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
 $empresa_get = isset($_GET["empresa"]) ? $_GET["empresa"] : '';
-$ck = isset($_GET["ck"]) ? $_GET["ck"] : '';
 ////Categorias
-$categoria->set("area", "rubros");
-$categorias_data = $categoria->listForArea('');
+$filtro=array("cod!= '' GROUP BY categoria");
+$productos_cat = $producto->list($filtro, '', '');
+$categorias_data = array();
+foreach ($productos_cat as $prod_cat) {
+    $categoria->set("cod", $prod_cat['categoria']);
+    array_push($categorias_data, $categoria->view());
+}
 ////Productos
 $cantidad = 6;
 if ($pagina > 0) {
@@ -29,8 +33,18 @@ if ($pagina > 0) {
 if (@count($filter) == 0) {
     $filter = '';
 }
-if (@count($_GET) > 1) {
-    $anidador = "&";
+if ($_GET) {
+    if (@count($_GET) > 1) {
+        if (isset($_GET["pagina"])) {
+            $anidador = "&";
+        }
+    } else {
+        if (isset($_GET["pagina"])) {
+            $anidador = "?";
+        } else {
+            $anidador = "&";
+        }
+    }
 } else {
     $anidador = "?";
 }
@@ -41,8 +55,6 @@ else:
     $url = CANONICAL;
 endif;
 //
-//$test = $funciones->eliminar_get(CANONICAL,'categoria');
-//var_dump($test);
 if (!empty($categoria_get) || !empty($titulo) || !empty($empresa_get)) {
     $filter = array();
 } else {
@@ -87,39 +99,6 @@ switch ($orden_pagina) {
         $orden_pagina = 'ultimos';
         break;
 }
-if (!empty($categoria_get) || !empty($titulo) || !empty($orden_pagina)) {
-    switch ($ck) {
-        //titulo
-        case 1:
-            $input_order = "<input type='hidden' name='buscar' value='$titulo'>";
-            $input_order .= "<input type='hidden' name='categoria' value='$categoria_get'>";
-            //$input_order.="<input type='hidden' name='order' value='$orden_pagina'>";
-            $input_categoria = "<input type='hidden' name='buscar' value='$titulo'>";
-            $input_categoria .= "<input type='hidden' name='order' value='$orden_pagina'>";
-            //$input_categoria.="<input type='hidden' name='categoria' value='$categoria_get'>";
-            break;
-        //order
-        case 2:
-            $input_titulo = "<input type='hidden' name='order' value='$orden_pagina'>";
-            $input_titulo .= "<input type='hidden' name='categoria' value='$categoria_get'>";
-            //$input_titulo.="<input type='hidden' name='buscar' value='$titulo'>";
-            $input_categoria = "<input type='hidden' name='buscar' value='$titulo'>";
-            $input_categoria .= "<input type='hidden' name='order' value='$orden_pagina'>";
-            //$input_categoria.="<input type='hidden' name='categoria' value='$categoria_get'>";
-            break;
-        //categoria
-        case 3:
-            $input_titulo = "<input type='hidden' name='order' value='$orden_pagina'>";
-            $input_titulo .= "<input type='hidden' name='categoria' value='$categoria_get'>";
-            //$input_titulo.="<input type='hidden' name='buscar' value='$titulo'>";
-            $input_order = "<input type='hidden' name='buscar' value='$titulo'>";
-            $input_order .= "<input type='hidden' name='categoria' value='$categoria_get'>";
-            //$input_order.="<input type='hidden' name='order' value='$orden_pagina'>";
-            break;
-        default:
-            break;
-    }
-}
 $productos_data = $producto->list($filter, $order_final, ($cantidad * $pagina) . ',' . $cantidad);
 if (!empty($productos_data)) {
     $numeroPaginas = $producto->paginador($filter, $cantidad);
@@ -151,10 +130,7 @@ $template->themeInit();
                             <div class="search__field">
                                 <form method="get" id="buscar">
                                     <div class="field-wrapper">
-                                        <?php
-                                        if (!empty($input_titulo)) echo $input_titulo;
-                                        ?>
-                                        <input type="hidden" value="1" name="ck">
+                                        <?php $funciones->variables_get_input("buscar"); ?>
                                         <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un producto" name="buscar"
                                                required>
                                         <button class="btn btn--round" type="submit">Buscar</button>
@@ -204,10 +180,7 @@ $template->themeInit();
                             </a>
                             <div class="collapse show collapsible-content" id="collapse1" style="height: 50px;">
                                 <form method="get">
-                                    <?php
-                                    if (!empty($input_order)) echo $input_order;
-                                    ?>
-                                    <input type="hidden" value="2" name="ck">
+                                    <?php $funciones->variables_get_input("order"); ?>
                                     <select name="order" class="form-control" onchange="this.form.submit()">
                                         <option value="ultimos" <?php if ($orden_pagina == "ultimos") {
                                             echo "selected";
@@ -236,26 +209,16 @@ $template->themeInit();
                             </a>
                             <div class="collapse show collapsible-content categorias" id="collapse2">
                                 <form method="get">
-                                    <input type="hidden" value="3" name="ck">
+                                    <?php $funciones->variables_get_input("categoria"); ?>
                                     <ul>
                                         <?php
-                                        if (!empty($input_categoria)) {
-                                            echo $input_categoria;
-                                        }
                                         foreach ($categorias_data as $cat) {
                                             ?>
-                                            <!--
-                                            <div class="custom-radio">
-                                                <a href="<?= URL . '/productos?categoria=' . $cat['cod']; ?>">
-                                                <label for="opt1"  style="font-size: 12px;">
-                                                    <input type="radio" id="opt1" class="" name="categoria" value="<?= ucfirst($cat['cod']); ?>">
-                                                    <span class="circle"></span><?= ucfirst($cat['titulo']); ?>
-                                                </label>
-                                            </a>
-                                            </div>-->
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="checks" value="<?= $cat['cod']; ?>" name="categoria" onclick="this.form.submit();" <?php if ($categoria_get==$cat['cod']){ echo "checked";} ?>><span><?= ucfirst($cat['titulo']); ?></span>
+                                                    <input type="checkbox" class="checks" value="<?= $cat['cod']; ?>" name="categoria" onclick="this.form.submit();" <?php if ($categoria_get == $cat['cod']) {
+                                                        echo "checked";
+                                                    } ?>><span><?= ucfirst($cat['titulo']); ?></span>
                                                 </label>
                                             </li>
                                             <?php

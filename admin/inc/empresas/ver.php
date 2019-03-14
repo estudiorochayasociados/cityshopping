@@ -2,6 +2,8 @@
 $empresas = new Clases\Empresas();
 $usuarios = new Clases\Usuarios();
 $funcion = new Clases\PublicFunction();
+$producto = new Clases\Productos();
+$imagen = new Clases\Imagenes();
 ?>
     <div class="mt-20">
         <div class="col-lg-12 col-md-12">
@@ -47,6 +49,15 @@ $funcion = new Clases\PublicFunction();
 if (isset($_GET["borrar"])) {
     $cod = $funciones->antihack_mysqli(isset($_GET["borrar"]) ? $_GET["borrar"] : '');
     $empresas->set("cod",$cod);
+    $producto_data=$producto->list(array("cod_empresa='".$cod."'"),'','');
+    if (!empty($producto_data)){
+        foreach ($producto_data as $prod){
+            $producto->set("cod",$prod['cod']);
+            $imagen->set("cod",$prod['cod']);
+            $imagen->deleteAll();
+            $producto->delete();
+        }
+    }
     $empresas->delete();
     $funciones->headerMove(URL . "/index.php?op=empresas");
 }

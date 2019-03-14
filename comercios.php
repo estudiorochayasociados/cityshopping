@@ -27,8 +27,18 @@ if ($pagina > 0) {
 if (@count($filter) == 0) {
     $filter = '';
 }
-if (@count($_GET) > 1) {
-    $anidador = "&";
+if ($_GET) {
+    if (@count($_GET) > 1) {
+        if (isset($_GET["pagina"])) {
+            $anidador = "&";
+        }
+    } else {
+        if (isset($_GET["pagina"])) {
+            $anidador = "?";
+        } else {
+            $anidador = "&";
+        }
+    }
 } else {
     $anidador = "?";
 }

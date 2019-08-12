@@ -1,7 +1,7 @@
 <?php
 $contenido = new Clases\Contenidos();
-$contenido->set("cod","Empresa creada");
-$contenido_data=$contenido->view();
+$contenido->set("cod", "Empresa creada");
+$contenido_data = $contenido->view();
 ?>
 <div class="dashboard-area">
     <div class="dashboard_contents">
@@ -36,33 +36,35 @@ $contenido_data=$contenido->view();
                 $empresa->set("postal", $empresaData['postal']);
                 $empresa->set("coordenadas", $empresaData['coordenadas']);
 
-                //logo
-                $imgInicio = $_FILES["logo"]["tmp_name"];
-                $tucadena = $_FILES["logo"]["name"];
-                $partes = explode(".", $tucadena);
-                $dom = (count($partes) - 1);
-                $dominio = $partes[$dom];
-                $prefijo = substr(md5(uniqid(rand())), 0, 10);
-                if ($dominio != '') {
-                    $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
-                    move_uploaded_file($imgInicio, $destinoFinal);
-                    chmod($destinoFinal, 0777);
-                    $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
+                if (!empty($_FILES['logo']['name'])) {
+                    //logo
+                    $imgInicio = $_FILES["logo"]["tmp_name"];
+                    $tucadena = $_FILES["logo"]["name"];
+                    $partes = explode(".", $tucadena);
+                    $dom = (count($partes) - 1);
+                    $dominio = $partes[$dom];
+                    $prefijo = substr(md5(uniqid(rand())), 0, 10);
+                    if ($dominio != '') {
+                        $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
+                        move_uploaded_file($imgInicio, $destinoFinal);
+                        chmod($destinoFinal, 0777);
+                        $destinoRecortado = "assets/archivos/recortadas/a_" . $prefijo . "." . $dominio;
 
-                    $zebra->source_path = $destinoFinal;
-                    $zebra->target_path = $destinoRecortado;
-                    $zebra->jpeg_quality = 80;
-                    $zebra->preserve_aspect_ratio = true;
-                    $zebra->enlarge_smaller_images = true;
-                    $zebra->preserve_time = true;
+                        $zebra->source_path = $destinoFinal;
+                        $zebra->target_path = $destinoRecortado;
+                        $zebra->jpeg_quality = 80;
+                        $zebra->preserve_aspect_ratio = true;
+                        $zebra->enlarge_smaller_images = true;
+                        $zebra->preserve_time = true;
 
-                    if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
-                        unlink($destinoFinal);
+                        if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) {
+                            unlink($destinoFinal);
+                        }
+
+                        $empresa->set("logo", str_replace("../", "", $destinoRecortado));
                     }
-
-                    $empresa->set("logo", str_replace("../", "", $destinoRecortado));
+                    //logo
                 }
-                //logo
 
                 if (!empty($_FILES["portada"]["name"])):
                     //portada
@@ -178,7 +180,7 @@ $contenido_data=$contenido->view();
                                         <div class="col-md-12 centro">
                                             <div class="box_style_2">
                                                 <div id="confirm">
-                                                    <?=$contenido_data['contenido'];?>
+                                                    <?= $contenido_data['contenido']; ?>
                                                 </div>
                                                 <a class="btn btn--round btn--md" href="<?= URL; ?>/panel?op=empresa">Panel de empresa <i class="icon-shop-1"></i></a>
                                             </div>

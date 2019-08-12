@@ -27,6 +27,8 @@
                 $empresa->set("desarrollo", $desarrollo);
                 $empresa->set("fecha", $fecha);
                 $empresa->set("cod_usuario", $cod_usuario);
+                $empresa->set('tiempoEntrega', 0);
+                $empresa->set('delivery', 0);
 
                 $empresa->add();
 

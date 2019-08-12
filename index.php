@@ -28,6 +28,11 @@ foreach ($categorias_sliders as $categorias) {
         $slider->set("categoria", $categorias['cod']);
         $slider_data_principal = $slider->listForCategory('', '');
     }
+    if ($categorias['titulo'] == "Mobile") {
+        $slider->set("categoria", $categorias['cod']);
+        $slider_data_principal_mobile = $slider->listForCategory('', '');
+    }
+
 }
 ////Productos
 $productos_data = $producto->list('', '', 6);
@@ -43,8 +48,8 @@ $template->themeInit();
 <!--================================
         START HERO AREA
     =================================-->
-<section class="hero-area hero--2 bgimage" style="height: 450px;">
-    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+<section class="hidden-xs">
+    <div id="carouselE1" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <?php
             foreach ($slider_data_principal as $sli => $key) {
@@ -54,14 +59,62 @@ $template->themeInit();
                 <div class="carousel-item <?php if ($sli == 0) {
                     echo "active";
                 } ?>">
-                    <img class="d-block" src="<?=URL.'/'.$img['ruta'];?>" alt="<?=$sli['titulo'];?>">
+                    <img class="d-block" src="<?= URL . '/' . $img['ruta']; ?>" alt="<?= $sli['titulo']; ?>">
                 </div>
                 <?php
             }
             ?>
         </div>
+        <?php
+        if (@count($slider_data_principal) > 1) {
+            ?>
+            <a class="carousel-control-prev" href="#carouselE1" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselE1" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+            <?php
+        }
+        ?>
     </div>
 </section>
+<section class="d-md-none">
+    <div id="carouselEM" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <?php
+            foreach ($slider_data_principal_mobile as $sli => $key) {
+                $imagen->set("cod", $key['cod']);
+                $img = $imagen->view();
+                ?>
+                <div class="carousel-item <?php if ($sli == 0) {
+                    echo "active";
+                } ?>">
+                    <img class="d-block" src="<?= URL . '/' . $img['ruta']; ?>" alt="<?= $sli['titulo']; ?>">
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+        if (@count($slider_data_principal_mobile) > 1) {
+            ?>
+            <a class="carousel-control-prev" href="#carouselEM" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselEM" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+            <?php
+        }
+        ?>
+    </div>
+</section>
+<div class="clearfix"></div>
 <!--================================
     END HERO AREA
 =================================-->
@@ -72,20 +125,26 @@ $template->themeInit();
 <section class="products pad">
     <!-- start container -->
     <div class="container">
-        <div class="mb-10">
+        <div class="mb-10 hidden-xs">
             <?php
-            foreach ($banner_data_largo as $ban) {
-                $imagen->set("cod", $ban['cod']);
-                $img = $imagen->view();
-                $banner->set("id", $ban['id']);
-                $value = $ban['vistas'] + 1;
-                $banner->set("vistas", $value);
-                $banner->increaseViews();
-                ?>
-                <img src="<?= URL . '/' . $img['ruta'] ?>">
-                <?php
-            }
+//
+//            foreach ($banner_data_largo as $ban) {
+//                $imagen->set("cod", $ban['cod']);
+//                $img = $imagen->view();
+//                $banner->set("id", $ban['id']);
+//                $value = $ban['vistas'] + 1;
+//                $banner->set("vistas", $value);
+//                $banner->increaseViews();
+//
+/*                <img src="<?= URL . '/' . $img['ruta'] ?>">*/
+//
+//            }
+
             ?>
+            <img src="<?=URL?>/assets/GIF-CON-ICONOS.gif">
+        </div>
+        <div class="mb-10 d-md-none">
+            <img src="<?=URL?>/assets/GIF-CON-ICONOS-MOVIL.gif">
         </div>
         <!-- start row -->
         <div class="row">
@@ -118,7 +177,7 @@ $template->themeInit();
                     <div class="product product--card product--card3">
                         <div class="">
                             <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
-                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                 </div>
                             </a>
                             <!-- end /.prod_btn -->
@@ -146,7 +205,8 @@ $template->themeInit();
                                 <?php
                                 if (!empty($prod['precioDescuento'])) {
                                     ?>
-                                    <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                    <span>$<?= $prod['precioDescuento'] ?>
+                                        <small class="tachado">$<?= $prod['precio'] ?></small></span>
                                     <?php
                                 } else {
                                     ?>
@@ -176,52 +236,25 @@ $template->themeInit();
         <div class="row">
             <div class="col-md-12">
                 <div class="more-product">
-                    <a href="<?= URL ?>/productos" class="btn btn--lg btn--round">Todos los productos</a>
+                    <a href="<?= URL ?>/productos" class="btn btn--lg btn--round">Ver más productos</a>
                 </div>
             </div>
             <!-- end ./col-md-12 -->
         </div>
         <!-- end /.row -->
-    </div>
-    <!-- end /.container -->
-</section>
-<!--================================
-    END PRODUCTS AREA
-=================================-->
-<!--================================
-        START SPECIAL FEATURES AREA
-    =================================-->
-<section class="special-feature-area bgcolor2 special-feature--2">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="special-feature feature--1">
-                    <img src="images/spf1.png" alt="Special Feature image">
-                    <h3 class="special__feature-title">30 Days Money Back
-                        <span class="highlight">Guarantee</span>
-                    </h3>
-                </div>
+        <div class="row mt-20">
+            <div class="col-md-12 hidden-xs">
+                <img src="<?= URL . '/assets/GIF-CITY-SHOPPING.gif' ?>">
             </div>
-            <!-- end /.col-md-6 -->
-            <div class="col-md-6">
-                <div class="special-feature feature--2">
-                    <img src="images/spf2.png" alt="Special Feature image">
-                    <h3 class="special__feature-title">Fast and Friendly
-                        <span class="highlight">Support</span>
-                    </h3>
-                </div>
+            <div class="col-md-12 d-md-none">
+                <img src="<?= URL?>/assets/GIF-CITY-MOVIL.gif">
             </div>
-            <!-- end /.col-md-6 -->
         </div>
-        <!-- end /.row -->
     </div>
     <!-- end /.container -->
 </section>
-<!--================================
-    END SPECIAL FEATURES AREA
-=================================-->
 <?php
-if (isset($_SESSION['usuarios'])) {
+if (!empty($_SESSION['usuarios'])) {
     if ($_SESSION['usuarios']['vendedor'] != 1) {
         ?>
         <!--================================
@@ -229,17 +262,17 @@ if (isset($_SESSION['usuarios'])) {
 =================================-->
         <section class="call-to-action bgimage">
             <div class="bg_image_holder">
-                <img src="images/calltobg.jpg" alt="">
+                <img src="<?= URL ?>/assets/images/calltobg.jpg" alt="">
             </div>
             <div class="container content_above">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="call-to-wrap">
-                            <h1 class="text--white">Quieres ser vendedor?</h1>
+                            <h1 class="text--white">¿Te gustaría ser vendedor?</h1>
                             <?php if (empty($_SESSION["usuarios"])): ?>
-                                <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                                <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                             <?php else: ?>
-                                <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                                <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -258,17 +291,17 @@ if (isset($_SESSION['usuarios'])) {
 =================================-->
     <section class="call-to-action bgimage">
         <div class="bg_image_holder">
-            <img src="images/calltobg.jpg" alt="">
+            <img src="<?= URL ?>/assets/images/calltobg.jpg" alt="">
         </div>
         <div class="container content_above">
             <div class="row">
                 <div class="col-md-12">
                     <div class="call-to-wrap">
-                        <h1 class="text--white">Quieres ser vendedor?</h1>
+                        <h1 class="text--white">¿Te gustaría ser vendedor?</h1>
                         <?php if (empty($_SESSION["usuarios"])): ?>
-                            <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                            <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                         <?php else: ?>
-                            <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Únete</a>
+                            <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                         <?php endif; ?>
                     </div>
                 </div>

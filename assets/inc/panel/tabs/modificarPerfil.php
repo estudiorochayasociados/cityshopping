@@ -11,8 +11,8 @@ if (isset($_POST["modificarPerfil"])):
     $telefono = $funcion->antihack_mysqli(!empty($_POST["telefonoPerfil"]) ? $_POST["telefonoPerfil"] : $usuarioData['telefono']);
     $postal = $funcion->antihack_mysqli(!empty($_POST["postalPerfil"]) ? $_POST["postalPerfil"] : $usuarioData['postal']);
     $vendedor = $usuarioData['vendedor'];
-    $oldpassword=hash('sha256', $_POST["old_passwordPerfil"] . SALT);
     if (!empty($_POST["new_passwordPerfil"]) && !empty($_POST["new_password2Perfil"]) && !empty($_POST["old_passwordPerfil"])):
+        $oldpassword = hash('sha256', $_POST["old_passwordPerfil"] . SALT);
         if ($oldpassword == $usuarioData['password']):
             if ($_POST["new_passwordPerfil"] == $_POST["new_password2Perfil"]):
                 $password = $funcion->antihack_mysqli($_POST["new_passwordPerfil"]);
@@ -118,11 +118,11 @@ endif;
                                                 <label>Provincia</label>
                                                 <select class="form-control" name="provinciaPerfil" id="provincia" required>
                                                     <?php
-                                                    if (!empty($usuarioData['provincia'])){
+                                                    if (!empty($usuarioData['provincia'])) {
                                                         ?>
-                                                        <option value="<?=$usuarioData['provincia']?>" selected disabled><?=$usuarioData['provincia']?></option>
+                                                        <option value="<?= $usuarioData['provincia'] ?>" selected disabled><?= $usuarioData['provincia'] ?></option>
                                                         <?php
-                                                    }else{
+                                                    } else {
                                                         ?>
                                                         <option value="" selected disabled>Provincia</option>
                                                         <?php
@@ -135,11 +135,11 @@ endif;
                                                 <label>Localidad</label>
                                                 <select class="form-control" name="localidadPerfil" id="localidad" required>
                                                     <?php
-                                                    if (!empty($usuarioData['provincia'])){
+                                                    if (!empty($usuarioData['provincia'])) {
                                                         ?>
-                                                        <option value="<?=$usuarioData['localidad']?>" selected disabled><?=$usuarioData['localidad']?></option>
+                                                        <option value="<?= $usuarioData['localidad'] ?>" selected disabled><?= $usuarioData['localidad'] ?></option>
                                                         <?php
-                                                    }else{
+                                                    } else {
                                                         ?>
                                                         <option value="" selected disabled>Localidad</option>
                                                         <?php
@@ -201,9 +201,9 @@ endif;
                             </a>
                             <div class="information__set toggle_module collapse show" id="collapse2">
                                 <div class="information_wrapper form--fields">
-                                <p>
-                                    Completa los siguientes campos:
-                                </p>
+                                    <p>
+                                        Completa los siguientes campos:
+                                    </p>
                                     <div class="form-group">
                                         <label>Contraseña actual<sup>*</sup></label>
                                         <input class="text_field" name="old_passwordPerfil" id="old_passwordPerfil"
@@ -221,9 +221,9 @@ endif;
                                         <input class="text_field" name="new_password2Perfil" id="new_password2Perfil"
                                                type="password" placeholder="Ej. Azf45D3yU" required>
                                     </div>
-                                <div class="dashboard_setting_btn ">
-                                    <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar contraseña
-                                </div>
+                                    <div class="dashboard_setting_btn ">
+                                        <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar contraseña
+                                    </div>
                                 </div>
                                 <!-- end /.information_wrapper -->
                             </div>

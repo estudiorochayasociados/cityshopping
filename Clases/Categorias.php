@@ -117,4 +117,17 @@ class Categorias
             return $array;
         }
     }
+
+    public function listIfHave($db)
+    {
+        $array = array();
+        $sql = " SELECT `categorias`.`titulo`,`categorias`.`cod`, count(`" . $db . "`.`categoria`) as cantidad FROM `" . $db . "`,`categorias` WHERE `categoria` = `categorias`.`cod` GROUP BY categoria ORDER BY cantidad DESC ";
+        $listIfHave = $this->con->sqlReturn($sql);
+        if ($listIfHave) {
+            while ($row = mysqli_fetch_assoc($listIfHave)) {
+                $array[] = $row;
+            }
+            return $array;
+        }
+    }
 }

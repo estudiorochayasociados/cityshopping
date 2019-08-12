@@ -160,7 +160,7 @@ label, .form-group p.label {
   font-weight: 500;
   font-size: 16px;
   line-height: 26px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   margin-bottom: 10px;
   color: #000;
 }
@@ -186,20 +186,26 @@ select:focus {
 
 .select--field {
   height: 55px;
-  border: 1px solid #dcdcdc;
+  border: 1px solid #777;
+  color:#333 !important; 
 }
 
 .text_field {
   line-height: 50px;
-  background: #f4f5f8;
-  border: none;
+  border: 1px solid #777 !important;
+  color:#333 !important; 
 }
 
 textarea {
-  border: 1px solid #ececec;
   min-height: 135px;
   line-height: 25px;
   padding-top: 15px;
+  border: 1px solid #777 !important;
+  color:#333 !important;
+}
+
+.breadcrumb {
+  text-transform:uppercase;
 }
 
 textarea.text_field {
@@ -1833,7 +1839,7 @@ h6 {
   background: #0674ec;
   padding: 0;
   margin: 0;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-size: 15px;
   font-weight: 500;
   color: #fff;
@@ -2205,7 +2211,7 @@ h6 {
 
 .product-desc .product_title h4 {
   font-size: 20px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-weight: 500;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
@@ -2762,7 +2768,7 @@ h6 {
   color: #fff;
   font-weight: 500;
   font-size: 30px;
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 
 .breadcrumb-area .breadcrumb {
@@ -3081,7 +3087,7 @@ h6 {
   padding: 0 15px;
   display: inline-block;
   margin-left: -4px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-size: 15px;
   -webkit-border-radius: 200px;
           border-radius: 200px;
@@ -5503,7 +5509,7 @@ h6 {
 
 .dropdown.dropdown--menu ul li a {
   padding: 0 10px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   font-weight: 400;
   color: #54667a;
   line-height: 44px;
@@ -6952,7 +6958,7 @@ ul.nav-tabs li + li {
 ul.nav-tabs li a {
   color: #000;
   font-size: 17px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   padding: 0 28px;
   display: block;
   margin-right: 0;
@@ -8649,11 +8655,12 @@ span.counter {
 }
 
 .search .search__title {
+  text-transform: uppercase;
   padding-bottom: 30px;
 }
 
 .search .search__title h3 {
-  font-size: 26px;
+  font-size: 24px;
   color: #fff;
 }
 
@@ -9114,7 +9121,7 @@ span.counter {
   font-size: 12px;
   color: #fff;
   line-height: 28px;
-  text-transform: capitalize;
+  text-transform: uppercase;
   -webkit-border-radius: 200px;
           border-radius: 200px;
   font-weight: 500;
@@ -9801,7 +9808,7 @@ span.counter {
 .visit_data .referrals_data ul li .visit span {
   margin-right: 6px;
   color: #747a86;
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 
 .chart_top .v_refer .nav-tabs {
@@ -13385,7 +13392,7 @@ span.counter {
   font-size: 16px;
   color: #555555;
   line-height: 30px;
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 
 /***************************************
@@ -14507,14 +14514,13 @@ span.counter {
   }
   .product-title-area .product__title, .shortcode_module_title .product__title, .dashboard_contents .dashboard_title_area .product__title {
     float: none;
-    width: -webkit-calc(100% - 95px);
-    width: calc(100% - 95px);
     display: inline-block;
     vertical-align: middle;
   }
   .product-title-area .product__title h2, .shortcode_module_title .product__title h2, .dashboard_contents .dashboard_title_area .product__title h2 {
     line-height: 34px;
-    font-size: 24px;
+    font-size: 20px;
+    text-transform: uppercase;
   }
   .product-title-area .product__slider-nav, .shortcode_module_title .product__slider-nav, .dashboard_contents .dashboard_title_area .product__slider-nav {
     float: none;

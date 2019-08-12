@@ -407,10 +407,6 @@ if ($borrarImg != '') {
                                                                         echo 'selected';
                                                                     } ?>>Córdoba
                                                                     </option>
-                                                                    <option value="Buenos Aires" <?php if ($empresaData['provincia'] == 'Buenos Aires') {
-                                                                        echo 'selected';
-                                                                    } ?>>Buenos Aires
-                                                                    </option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -422,10 +418,6 @@ if ($borrarImg != '') {
                                                                     <option value="San Francisco" <?php if ($empresaData['ciudad'] == 'San Francisco') {
                                                                         echo 'selected';
                                                                     } ?>>San Francisco
-                                                                    </option>
-                                                                    <option value="Gran Buenos Aires Zona Sur" <?php if ($empresaData['ciudad'] == 'Gran Buenos Aires Zona Sur') {
-                                                                        echo 'selected';
-                                                                    } ?>>Gran Buenos Aires Zona Sur
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -492,7 +484,7 @@ if ($borrarImg != '') {
                                                     </p>
                                                     <div class="form-group">
                                                         <h3>Logo</h3>
-                                                        <label>Logo de tu empresa</label><br/>
+                                                        <label>Logo de tu empresa <small>(400x400 px)</small></label><br/>
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <?php if ($empresaData['logo'] != '') { ?>
@@ -513,7 +505,7 @@ if ($borrarImg != '') {
                                                     <hr/>
                                                     <div class="form-group">
                                                         <h3>Portada</h3>
-                                                        <label>Portada de tu empresa</label><br/>
+                                                        <label>Portada de tu empresa </label><br/>
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <?php if ($empresaData['portada'] != '') { ?>

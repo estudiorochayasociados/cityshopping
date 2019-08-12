@@ -34,8 +34,12 @@ $enviosArray = $envio->list($filterEnvios, "", "");
 $filter = array("categoria='" . $producto_data['categoria'] . "'");
 $productos_relacionados = $producto->list($filter, "RAND()", 3);
 //
-if (!empty($producto_data['imagenes'][0]['ruta'])) {
-    $ruta_ = URL . "/" . $producto_data['imagenes'][0]['ruta'];
+if (!empty($imagen_data)) {
+    if (isset($imagen_data['ruta'])) {
+        $ruta_ = URL . "/" . $imagen_data['ruta'];
+    } else {
+        $ruta_ = URL . "/" . $imagen_data['imagenes'][0]['ruta'];
+    }
 } else {
     $ruta_ = '';
 }
@@ -56,9 +60,6 @@ $template->themeInit();
             <div class="col-md-12">
                 <div class="breadcrumb">
                     <ul>
-                        <li>
-                            <a href="<?= URL ?>/index">Inicio</a>
-                        </li>
                         <li>
                             <a href="<?= URL ?>/productos">Productos</a>
                         </li>
@@ -113,7 +114,7 @@ $template->themeInit();
                                         echo 'active';
                                         $activo++;
                                     } ?>"
-                                         style=" height: 550px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                         style=" height: 550px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                     </div>
                                     <?php
                                 }
@@ -156,7 +157,7 @@ $template->themeInit();
                                         echo 'active';
                                         $activo++;
                                     } ?>"
-                                         style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                         style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                     </div>
                                     <?php
                                 }
@@ -186,7 +187,7 @@ $template->themeInit();
 
                         <div class="tab-content">
                             <div class="tab-pane product-tab fade show active" id="product-details">
-                                <p><?= ucfirst(strip_tags($producto_data['desarrollo'])); ?></p>
+                                <p><?= ucfirst($producto_data['desarrollo']); ?></p>
 
                                 <div class="item_social_share">
                                     <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
@@ -344,17 +345,23 @@ $template->themeInit();
                                         <h6>Envío:</h6>
                                         <select name="tipoEnvio" class="form-control" required>
                                             <?php
-                                            foreach ($enviosArray as $env) {
-                                                ?>
-                                                <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
-                                                    <?php
-                                                    if ($env['precio'] == 0) {
-                                                        echo ucfirst($env['titulo']) . ' | Gratis';
-                                                    } else {
-                                                        echo ucfirst($env['titulo']) . ' | $' . $env['precio'];
-                                                    }
+                                            if (!empty($enviosArray)) {
+                                                foreach ($enviosArray as $env) {
                                                     ?>
-                                                </option>
+                                                    <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
+                                                        <?php
+                                                        if ($env['precio'] == 0) {
+                                                            echo ucfirst($env['titulo']) . ' | Gratis';
+                                                        } else {
+                                                            echo ucfirst($env['titulo']) . ' | $' . $env['precio'];
+                                                        }
+                                                        ?>
+                                                    </option>
+                                                    <?php
+                                                }
+                                            } else {
+                                                ?>
+                                                <option value="Envío: Retiro en sucursal">Retiro en sucursal</option>
                                                 <?php
                                             }
                                             ?>
@@ -439,7 +446,7 @@ if (!empty($productos_relacionados)) {
                         <!-- start .single-product -->
                         <div class="product product--card product--card-small">
                             <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod_rel['titulo']) . '/' . $funciones->normalizar_link($prod_rel['cod']); ?>">
-                                <div style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                <div style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                 </div>
                             </a>
                             <!-- end /.product__thumbnail -->
@@ -464,7 +471,8 @@ if (!empty($productos_relacionados)) {
                                     <?php
                                     if (!empty($prod_rel['precioDescuento'])) {
                                         ?>
-                                        <span>$<?= $prod_rel['precioDescuento'] ?> <small class="tachado">$<?= $prod_rel['precio'] ?></small></span>
+                                        <span>$<?= $prod_rel['precioDescuento'] ?>
+                                            <small class="tachado">$<?= $prod_rel['precio'] ?></small></span>
                                         <?php
                                     } else {
                                         ?>

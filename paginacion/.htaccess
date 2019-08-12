@@ -1,0 +1,8 @@
+ RewriteEngine on
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteRule ^(.*)$ $1.php
+RewriteRule ^producto/(.+)_([0-9]+)$ producto.php?id=$2
+RewriteRule ^nota/(.+)_([0-9]+)$ nota.php?id=$2
+AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript ap
+ 

@@ -88,7 +88,7 @@ $template->themeInit();
                         <div class="contact_tile contacto">
                             <span class="tiles__icon lnr lnr-inbox"></span>
                             <div class="tiles__content">
-                                <p><?=EMAIL?></p>
+                                <p><?=EMAIL_NOTIFICACION?></p>
                             </div>
                         </div>
                         <!-- end /.contact_tile -->

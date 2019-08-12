@@ -378,3 +378,28 @@
     height: 13px;
     margin-right: 5px;
 }
+
+
+.select--field {
+    height: 55px;
+    border: 1px solid #777;
+    color:#333 !important; 
+  }
+  
+  .text_field {
+    line-height: 50px;
+    border: 1px solid #777 !important;
+    color:#333 !important; 
+  }
+  
+  textarea {
+    min-height: 135px;
+    line-height: 25px;
+    padding-top: 15px;
+    border: 1px solid #777 !important;
+    color:#333 !important;
+  }
+
+  input::placeholder {
+      color:#e1e1e1 !important;
+  }

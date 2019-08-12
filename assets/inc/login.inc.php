@@ -10,25 +10,37 @@ if (isset($_POST["login"])) {
         $recuperarPass = $funcion->antihack_mysqli(isset($_POST["recuperarPass"]) ? $_POST["recuperarPass"] : '');
         $cod = substr(md5(uniqid(rand())), 0, 10);
 
-        $usuarioData = $usuario->list(array("email = '" . $recuperarPass . "'"));
-        $usuario->set("cod", $usuarioData[0]["cod"]);
-        $usuario->editUnico("password", $cod);
+        $usuario->set("email", $recuperarPass);
+        $usuarioData = $usuario->validate2();
+        if ($usuarioData['status']) {
+            $usuario->set("cod", $usuarioData['data']["cod"]);
+            $usuario->editUnico("password", $cod);
 
-        $mensaje = "Su nueva contraseña es: <b>" . $cod . "</b><br><br>";
+            $mensaje = "Su nueva contraseña es: <b>" . $cod . "</b><br><br>";
 
-        $correo->set("asunto", "Recuperar Contraseña");
-        $correo->set("receptor", $recuperarPass);
-        $correo->set("emisor", EMAIL);
-        $correo->set("mensaje", $mensaje);
-        $correo->emailEnviar();
-        ?>
-        <script>
-            $(document).ready(function () {
-                $("#errorLogin").html('<br/><div class="alert alert-success" role="alert">Revise su email para ver su nueva contraseña.</div>');
-                $('#login_2').modal("show");
-            });
-        </script>
-        <?php
+            $correo->set("asunto", "Recuperar Contraseña");
+            $correo->set("receptor", $recuperarPass);
+            $correo->set("emisor", EMAIL);
+            $correo->set("mensaje", $mensaje);
+            $correo->emailEnviar();
+            ?>
+            <script>
+                $(document).ready(function () {
+                    $("#errorLogin").html('<br/><div class="alert alert-success" role="alert">Revise su email para ver su nueva contraseña.</div>');
+                    $('#login_2').modal("show");
+                });
+            </script>
+            <?php
+        } else {
+            ?>
+            <script>
+                $(document).ready(function () {
+                    $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">El email no existe.</div>');
+                    $('#login_2').modal("show");
+                });
+            </script>
+            <?php
+        }
     } else {
         $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
         $password = $funcion->antihack_mysqli(isset($_POST["password"]) ? $_POST["password"] : '');
@@ -55,6 +67,9 @@ if (isset($_POST["login"])) {
     <div class="modal-dialog">
         <div class="modal-content modal-popup">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h2>Iniciar Sesión</h2>
             </div>
             <div class="modal-body">
@@ -99,6 +114,7 @@ if (isset($_POST["registrar"])):
         $usuario->set("email", $email);
         $usuario->set("password", $password);
         $usuario->set("plan", 3);
+        $usuario->set("vendedor", 0);
         $usuario->set("fecha", $fecha);
 
         if ($usuario->add() == 0):
@@ -148,6 +164,9 @@ endif;
     <div class="modal-dialog">
         <div class="modal-content modal-popup">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h2>Registro</h2>
             </div>
             <div class="modal-body">

@@ -7,14 +7,15 @@ class autoload
         session_start();
         $_SESSION["cod_pedido"] = isset($_SESSION["cod_pedido"]) ? $_SESSION["cod_pedido"] : substr(md5(uniqid(rand())), 0, 10);
         define('SALT',hash("sha256","salt@estudiorochayasoc.com.ar"));
-        define('URL', "http://".$_SERVER['HTTP_HOST']."/CityShopping");
-        define('CANONICAL', "http://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping2");
+        define('CANONICAL', "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
         define('TITULO', "City Shopping");
         define('TELEFONO', "(03564) 420108");
         define('CIUDAD', "San Francisco");
         define('PROVINCIA', "Cordoba");
         define('PAIS', "Argentina");
         define('EMAIL', "web@estudiorochayasoc.com.ar");
+        define('EMAIL_NOTIFICACION', "ces@ces-sanfco.com.ar");
         define('PASS_EMAIL', "weAr2010");
         define('SMTP_EMAIL', "cs1008.webhostbox.net");
         define('DIRECCION', "Belgrano 1585");
@@ -45,8 +46,8 @@ class autoload
     public static function runAdmin()
     {
         session_start();
-        define('URLSITE',"http://".$_SERVER['HTTP_HOST']."/CityShopping");
-        define('URL', "http://".$_SERVER['HTTP_HOST']."/CityShopping/admin");
+        define('URLSITE',"https://".$_SERVER['HTTP_HOST']."/CityShopping2");
+        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping2/admin");
         require_once "../Clases/Zebra_Image.php";
         spl_autoload_register(
             function ($clase)

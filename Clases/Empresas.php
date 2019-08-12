@@ -52,9 +52,10 @@ class Empresas
 
     public function add()
     {
-        $sql   = "INSERT INTO `empresas`(`cod`, `titulo`, `telefono`, `email`, `provincia`, `ciudad`, `barrio`, `direccion`, `postal`, `coordenadas`, `desarrollo`, `redes`, `redes2`, `redes3`, `logo`, `portada`, `categoria`, `subcategoria`, `keywords`, `description`, `fecha`, `cod_usuario`, `tiempoEntrega`, `delivery`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->telefono}', '{$this->email}', '{$this->provincia}', '{$this->ciudad}', '{$this->barrio}', '{$this->direccion}', '{$this->postal}', '{$this->coordenadas}', '{$this->desarrollo}', '{$this->redes}', '{$this->redes2}', '{$this->redes3}','{$this->logo}','{$this->portada}', '{$this->categoria}', '{$this->subcategoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->cod_usuario}', '{$this->tiempoEntrega}', '{$this->delivery}')";
+        $sql = "INSERT INTO `empresas`(`cod`, `titulo`, `telefono`, `email`, `provincia`, `ciudad`, `barrio`, `direccion`, `postal`, `coordenadas`, `desarrollo`, `redes`, `redes2`, `redes3`, `logo`, `portada`, `categoria`, `subcategoria`, `keywords`, `description`, `fecha`, `cod_usuario`, `tiempoEntrega`, `delivery`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->telefono}', '{$this->email}', '{$this->provincia}', '{$this->ciudad}', '{$this->barrio}', '{$this->direccion}', '{$this->postal}', '{$this->coordenadas}', '{$this->desarrollo}', '{$this->redes}', '{$this->redes2}', '{$this->redes3}','{$this->logo}','{$this->portada}', '{$this->categoria}', '{$this->subcategoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->cod_usuario}', '{$this->tiempoEntrega}', '{$this->delivery}')";
         $query = $this->con->sql($sql);
-        return $query;
+
+//        return $query;
     }
 
     public function edit()
@@ -90,20 +91,21 @@ class Empresas
 
     public function delete()
     {
-        $sql   = "DELETE FROM `empresas` WHERE `cod`  = '{$this->cod}'";
+        $sql = "DELETE FROM `empresas` WHERE `cod`  = '{$this->cod}'";
         $query = $this->con->sql($sql);
         return $query;
     }
 
     public function view()
     {
-        $sql   = "SELECT * FROM `empresas` WHERE id = '{$this->id}' ||  cod = '{$this->cod}' ||  cod_usuario = '{$this->cod_usuario}' ORDER BY id DESC";
+        $sql = "SELECT * FROM `empresas` WHERE id = '{$this->id}' ||  cod = '{$this->cod}' ||  cod_usuario = '{$this->cod_usuario}' ORDER BY id DESC";
         $notas = $this->con->sqlReturn($sql);
-        $row   = mysqli_fetch_assoc($notas);
+        $row = mysqli_fetch_assoc($notas);
         return $row;
     }
 
-    function list($filter,$order,$limit) {
+    function list($filter, $order, $limit)
+    {
         $array = array();
         if (is_array($filter)) {
             $filterSql = "WHERE ";
@@ -130,11 +132,12 @@ class Empresas
             while ($row = mysqli_fetch_assoc($notas)) {
                 $array[] = $row;
             }
-            return $array ;
-        } 
+            return $array;
+        }
     }
 
-    function paginador($filter,$cantidad) {
+    function paginador($filter, $cantidad)
+    {
         $array = array();
         if (is_array($filter)) {
             $filterSql = "WHERE ";

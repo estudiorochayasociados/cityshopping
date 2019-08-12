@@ -20,9 +20,9 @@ START MENU AREA
             <!-- start .row -->
             <div class="row">
                 <!-- start .col-md-3 -->
-                <div class="col-lg-3 col-md-3 col-6 v_middle">
+                <div class="col-lg-3 col-md-3 col-9 v_middle">
                     <div class="logo">
-                        <a href="index.html">
+                        <a href="<?=URL?>">
                             <img src="<?= LOGO ?>" alt="<?= TITULO ?>" class="img-fluid">
                         </a>
                     </div>
@@ -30,7 +30,7 @@ START MENU AREA
                 <!-- end /.col-md-3 -->
 
                 <!-- start .col-md-5 -->
-                <div class="col-lg-8 offset-lg-1 col-md-9 col-6 v_middle">
+                <div class="col-lg-8 offset-lg-1 col-md-9 col-3 v_middle">
                     <!-- start .author-area -->
                     <div class="author-area">
                         <div class="author__notification_area">

@@ -6,13 +6,12 @@
         <!-- start .container -->
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-4 col-md-7">
                     <div class="info-footer">
                         <div class="info__logo">
                             <img src="<?=LOGO?>" alt="<?=TITULO?>">
                         </div>
-                        <p class="info--text">Nunc placerat mi id nisi interdum they mollis. Praesent pharetra, justo ut scel erisque the mattis,
-                            leo quam.</p>
+                        <p class="info--text">¡Bienvenido/a a la nueva plataforma del Centro Empresarial y de Servicios de San Francisco creada específicamente para sus socios! Comprá y vendé desde San Francisco... ¡a todo el país! </p>
                         <ul class="info-contact">
                             <li>
                                 <span class="lnr lnr-phone info-icon"></span>
@@ -20,7 +19,7 @@
                             </li>
                             <li>
                                 <span class="lnr lnr-envelope info-icon"></span>
-                                <span class="info"><?=EMAIL?></span>
+                                <span class="info"><?=EMAIL_NOTIFICACION?></span>
                             </li>
                             <li>
                                 <span class="lnr lnr-map-marker info-icon"></span>
@@ -32,74 +31,20 @@
                 </div>
                 <!-- end /.col-md-3 -->
 
-                <div class="col-lg-5 col-md-6">
-                    <div class="footer-menu">
-                        <h4 class="footer-widget-title text--white">Nosotros</h4>
-                        <ul>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.footer-menu -->
-
-                    <div class="footer-menu">
-                        <h4 class="footer-widget-title text--white">Contenido</h4>
-                        <ul>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                            <li>
-                                <a href="#">Contenido </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- end /.footer-menu -->
+                <div class="col-lg-4 col-md-5 ">
+                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fces.sanfrancisco%2F&tabs&small_header=false&hide_cover=false&show_facepile=true&appId=474156319660121" width="100%" height="180" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>                                    
                 </div>
                 <!-- end /.col-md-5 -->
 
                 <div class="col-lg-4 col-md-12">
                     <div class="newsletter">
                         <h4 class="footer-widget-title text--white">Newsletter</h4>
-                        <p>Subscribe to get the latest news, update and offer information. Don't worry, we won't send spam!</p>
+                        <p>¡Suscribite y conocé todas las promociones de la ciudad! Obtené descuentos especiales.</p>
                         <div class="newsletter__form">
                             <form action="#">
                                 <div class="field-wrapper">
-                                    <input class="relative-field rounded" type="text" placeholder="Enter email">
-                                    <button class="btn btn--round" type="submit">Submit</button>
+                                    <input class="relative-field rounded" type="text" placeholder="CORREO ELECTRÓNICO">
+                                    <button class="btn btn--round" type="submit">ENVIAR</button>
                                 </div>
                             </form>
                         </div>
@@ -108,33 +53,13 @@
                         <div class="social social--color--filled">
                             <ul>
                                 <li>
-                                    <a href="#">
+                                    <a href="https://www.facebook.com/ces.sanfrancisco/" target="_blank">
                                         <span class="fa fa-facebook"></span>
                                     </a>
-                                </li>
+                                </li> 
                                 <li>
-                                    <a href="#">
-                                        <span class="fa fa-twitter"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-google-plus"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-pinterest"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-linkedin"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-dribbble"></span>
+                                    <a href="https://www.instagram.com/ces.sanfrancisco/" target="_blank">
+                                        <span class="fa fa-instagram"></span>
                                     </a>
                                 </li>
                             </ul>

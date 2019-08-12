@@ -51,6 +51,7 @@ class Usuarios
             $sql = "INSERT INTO `usuarios` (`cod`, `nombre`, `apellido`, `doc`, `email`, `password`, `postal`, `direccion`, `barrio`, `localidad`, `provincia`, `pais`, `telefono`, `celular`, `invitado`, `vendedor`, `plan`, `fecha`) VALUES ('{$this->cod}', '{$this->nombre}', '{$this->apellido}', '{$this->doc}', '{$this->email}', '{$this->password}', '{$this->postal}', '{$this->direccion}', '{$this->localidad}', '{$this->barrio}', '{$this->provincia}', '{$this->pais}', '{$this->telefono}', '{$this->celular}', '{$this->invitado}', '{$this->vendedor}', '{$this->plan}', '{$this->fecha}')";
             $this->con->sql($sql);
             $r = 1;
+
         } else {
             $r = 0;
         }
@@ -61,7 +62,7 @@ class Usuarios
     {
         $validar = $this->validate();
         $usuario = $this->view();
-        if($usuario["password"] != $this->password){
+        if ($usuario["password"] != $this->password) {
             $this->password = hash('sha256', $this->password . SALT);
         }
         $sql = "UPDATE `usuarios` SET `nombre` = '{$this->nombre}', `apellido` = '{$this->apellido}', `doc` = '{$this->doc}', `email` = '{$this->email}', `password` = '{$this->password}', `postal` = '{$this->postal}', `direccion` = '{$this->direccion}', `barrio` = '{$this->barrio}', `localidad` = '{$this->localidad}', `provincia` = '{$this->provincia}', `pais` = '{$this->pais}', `telefono` = '{$this->telefono}', `celular` = '{$this->celular}', `invitado` = '{$this->invitado}', `vendedor` = '{$this->vendedor}', `plan` = '{$this->plan}', `fecha` = '{$this->fecha}'WHERE `cod`='{$this->cod}'";
@@ -85,7 +86,7 @@ class Usuarios
     {
         $validar = $this->validate();
         $usuario = $this->view();
-        if($atributo == 'password'){
+        if ($atributo == 'password') {
             $valor = hash('sha256', $valor . SALT);
         }
         $sql = "UPDATE `usuarios` SET `$atributo` = '{$valor}' WHERE `cod`='{$this->cod}'";
@@ -138,7 +139,7 @@ class Usuarios
     public function login()
     {
         $usuario = $this->view();
-        if($usuario["password"] != $this->password){
+        if ($usuario["password"] != $this->password) {
             $this->password = hash('sha256', $this->password . SALT);
         }
         $sql = "SELECT * FROM `usuarios` WHERE `email` = '{$this->email}' AND `password`= '{$this->password}'";
@@ -182,7 +183,7 @@ class Usuarios
             $sql = "SELECT * FROM `usuarios` WHERE email = '{$this->email}'";
             $usuario = $this->con->sqlReturn($sql);
             $row = mysqli_fetch_assoc($usuario);
-        }else{
+        } else {
             $row = 'string';
         }
 
@@ -210,15 +211,35 @@ class Usuarios
         }
     }
 
-    function validarVendedor(){
+    function validarVendedor()
+    {
         $sql = "SELECT vendedor FROM `usuarios`WHERE cod = '{$this->cod}' AND vendedor='1' ORDER BY id DESC";
         $usuario = $this->con->sqlReturn($sql);
         $row = mysqli_fetch_assoc($usuario);
-        if (!empty($row)){
+        if (!empty($row)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
+
+    //Agregado 08/08/19
+    public function validate2()
+    {
+        if (!empty($this->email)) {
+            $sql = "SELECT * FROM `usuarios` WHERE email = '{$this->email}'";
+            $usuario = $this->con->sqlReturn($sql);
+            $row = mysqli_fetch_assoc($usuario);
+            if (!empty($row)) {
+                return ["status" => true, "data" => $row];
+            } else {
+                return ["status" => false];
+            }
+        } else {
+            return ["status" => false];
+        }
+
+        return $row;
+    }
 }

@@ -18,7 +18,7 @@ $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
 $orden_pagina = isset($_GET["order"]) ? $_GET["order"] : '';
 $empresa_get = isset($_GET["empresa"]) ? $_GET["empresa"] : '';
 ////Categorias
-$filtro=array("cod!= '' GROUP BY categoria");
+$filtro = array("cod!= '' GROUP BY categoria");
 $productos_cat = $producto->list($filtro, '', '');
 $categorias_data = array();
 foreach ($productos_cat as $prod_cat) {
@@ -26,7 +26,7 @@ foreach ($productos_cat as $prod_cat) {
     array_push($categorias_data, $categoria->view());
 }
 ////Productos
-$cantidad = 6;
+$cantidad = 12;
 if ($pagina > 0) {
     $pagina = $pagina - 1;
 }
@@ -72,12 +72,12 @@ if ($titulo != '') {
         $filter_title = array();
         $titulo_explode = explode(" ", $titulo);
         foreach ($titulo_explode as $titulo_) {
-            array_push($filter_title, "(titulo LIKE '%$titulo_%'  || desarrollo LIKE '%$titulo_%')");
+            array_push($filter_title, "(titulo LIKE '%$titulo_%')");
         }
         $filter_title_implode = implode(" OR ", $filter_title);
         array_push($filter, "(" . $filter_title_implode . ")");
     } else {
-        array_push($filter, "(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
+        array_push($filter, "(titulo LIKE '%$titulo%')");
     }
 }
 if (!empty($empresa_get)) {
@@ -174,7 +174,7 @@ $template->themeInit();
                     <aside class="sidebar product--sidebar">
                         <div class="sidebar-card card--category">
                             <a class="card-title" href="#collapse1" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse1">
-                                <h4>Ordenamiento
+                                <h4 class="fs-15">ORDENAR POR
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
@@ -203,7 +203,8 @@ $template->themeInit();
                         <!-- end /.sidebar-card -->
                         <div class="sidebar-card card--category">
                             <a class="card-title" href="#collapse2" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapse2">
-                                <h4>Categorias
+                                <h4 class="fs-15">
+                                    CATEGORÍAS
                                     <span class="lnr lnr-chevron-down"></span>
                                 </h4>
                             </a>
@@ -216,7 +217,7 @@ $template->themeInit();
                                             ?>
                                             <li>
                                                 <label>
-                                                    <input type="checkbox" class="checks" value="<?= $cat['cod']; ?>" name="categoria" onclick="this.form.submit();" <?php if ($categoria_get == $cat['cod']) {
+                                                    <input type="checkbox" class="checks" value="<?= $cat['cod']; ?>" name="categoria" onclick="document.location.href='<?= URL . '/productos?categoria=' . $cat['cod'] ?>'" <?php if ($categoria_get == $cat['cod']) {
                                                         echo "checked";
                                                     } ?>><span><?= ucfirst($cat['titulo']); ?></span>
                                                 </label>
@@ -239,63 +240,76 @@ $template->themeInit();
                 <div class="col-lg-9">
                     <div class="row">
                         <?php
-                        foreach ($productos_data as $prod) {
-                            //Empresa
-                            $empresa->set("cod", $prod['cod_empresa']);
-                            $empresa_data = $empresa->view();
-                            //
-                            $imagen->set("cod", $prod['cod']);
-                            $img = $imagen->view();
-                            ?>
-                            <div class="col-md-4">
-                                <!-- start .single-product -->
-                                <div class="product product--card product--card-small">
-                                    <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
-                                        <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
-                                        </div>
-                                    </a>
-                                    <!-- end /.product__thumbnail -->
-                                    <div class="product-desc">
-                                        <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
-                                            <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 20)); ?></h4>
+                        if (!empty($productos_data)) {
+                            foreach ($productos_data as $prod) {
+                                //Empresa
+                                $empresa->set("cod", $prod['cod_empresa']);
+                                $empresa_data = $empresa->view();
+                                //
+                                $imagen->set("cod", $prod['cod']);
+                                $img = $imagen->view();
+                                ?>
+                                <div class="col-md-4">
+                                    <!-- start .single-product -->
+                                    <div class="product product--card product--card-small">
+                                        <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
+                                            <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
+                                            </div>
                                         </a>
-                                        <ul class="titlebtm">
-                                            <li>
+                                        <!-- end /.product__thumbnail -->
+                                        <div class="product-desc">
+                                            <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>" class="product_title">
+                                                <h4><?= ucfirst(substr(strip_tags($prod['titulo']), 0, 20)); ?></h4>
+                                            </a>
+                                            <ul class="titlebtm">
+                                                <li>
+                                                    <p>
+                                                        <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
+                                                            <?= ucfirst(substr(strip_tags($empresa_data['titulo']), 0, 50)); ?>
+                                                        </a>
+                                                    </p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- end /.product-desc -->
+                                        <div class="product-purchase">
+                                            <div class="price_love">
+                                                <?php
+                                                if (!empty($prod['precioDescuento'])) {
+                                                    ?>
+                                                    <span>$<?= $prod['precioDescuento'] ?>
+                                                        <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                    <span>$<?= $prod['precio'] ?></span>
+                                                    <?php
+                                                }
+                                                ?>
                                                 <p>
-                                                    <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($empresa_data['titulo']) . '/' . $funciones->normalizar_link($empresa_data['cod']); ?>">
-                                                        <?= ucfirst(substr(strip_tags($empresa_data['titulo']), 0, 50)); ?>
-                                                    </a>
+                                            </div>
+                                            <div class="sell">
+                                                <p>
+                                                    <span class="lnr lnr-layers"></span>
+                                                    <span><?= $prod['stock']; ?></span>
                                                 </p>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <!-- end /.product-desc -->
-                                    <div class="product-purchase">
-                                        <div class="price_love">
-                                            <?php
-                                            if (!empty($prod['precioDescuento'])) {
-                                                ?>
-                                                <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <span>$<?= $prod['precio'] ?></span>
-                                                <?php
-                                            }
-                                            ?>
-                                            <p>
+                                            </div>
                                         </div>
-                                        <div class="sell">
-                                            <p>
-                                                <span class="lnr lnr-layers"></span>
-                                                <span><?= $prod['stock']; ?></span>
-                                            </p>
-                                        </div>
+                                        <!-- end /.product-purchase -->
                                     </div>
-                                    <!-- end /.product-purchase -->
+                                </div>
+                                <!-- end /.single-product -->
+                                <?php
+                            }
+                        } else {
+                            ?>
+                            <div class="col-md-12">
+                                <div class="product product--card center">
+                                    <h4 style="text-align: center;">
+                                        No existe ningún producto con esa descripción.
+                                    </h4>
                                 </div>
                             </div>
-                            <!-- end /.single-product -->
                             <?php
                         }
                         ?>

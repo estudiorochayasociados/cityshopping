@@ -8,14 +8,13 @@ $cod_usuario = $_SESSION['usuarios']['cod'];
 $empresa->set("cod_usuario", $cod_usuario);
 $empresaData = $empresa->view();
 $cod_empresa = $empresaData['cod'];
-
-?>
+ ?>
 <?php
 if (isset($_POST["crear_menu"])):
     $categoria_post = $funcion->antihack_mysqli(isset($_POST["categoriaMenu"]) ? $_POST["categoriaMenu"] : '');
     $nombre = $funcion->antihack_mysqli(isset($_POST["nombreMenu"]) ? $_POST["nombreMenu"] : '');
     $precio = $funcion->antihack_mysqli(isset($_POST["precioMenu"]) ? $_POST["precioMenu"] : '');
-    $precioDescuento = $funcion->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : '');
+    $precioDescuento = $funcion->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : '0');
 
     $desarrollo = $funcion->antihack_mysqli(isset($_POST["desarrolloMenu"]) ? $_POST["desarrolloMenu"] : '');
     $stock = $funcion->antihack_mysqli(isset($_POST["stockMenu"]) ? $_POST["stockMenu"] : '');
@@ -33,7 +32,7 @@ if (isset($_POST["crear_menu"])):
     }
 
 
-    $cod = substr(md5(uniqid(rand())), 0, 10);
+    $cod = substr(md5(uniqid(rand())), 0, 15);
 
     $fecha = getdate();
     $fecha = $fecha['year'] . '-' . $fecha['mon'] . '-' . $fecha['mday'];
@@ -58,7 +57,7 @@ if (isset($_POST["crear_menu"])):
             $partes = explode(".", $tucadena);
             $dom = (count($partes) - 1);
             $dominio = $partes[$dom];
-            $prefijo = substr(md5(uniqid(rand())), 0, 10);
+            $prefijo = substr(md5(uniqid(rand())), 0, 15);
             if ($dominio != '') {
                 $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
                 move_uploaded_file($imgInicio, $destinoFinal);

@@ -18,7 +18,7 @@ $titulo = isset($_GET["buscar"]) ? $_GET["buscar"] : '';
 //
 ////Categorias
 $categoria->set("area", "rubros");
-$categorias_data = $categoria->listForArea('');
+$categorias_data = $categoria->listIfHave('empresas');
 ////Comercios
 $cantidad = 6;
 if ($pagina > 0) {
@@ -54,33 +54,24 @@ if (!empty($categoria_get) || !empty($titulo)) {
 } else {
     $filter = '';
 }
+
 if (!empty($categoria_get)) {
     $categoria->set("cod", $categoria_get);
     $categoria_data_filtro = $categoria->view();
     $cod = $categoria_data_filtro['cod'];
-    $producto_data = $producto->list(array("categoria='" . $cod . "' GROUP BY cod_empresa"), '', '');
-    foreach ($producto_data as $prod) {
-        array_push($filter, "cod='" . $prod['cod_empresa'] . "'");
+    $empresaData = $empresa->list(array("categoria='" . $cod . "' GROUP BY cod"), '', '1');
+    if (!empty($empresaData)) {
+        array_push($filter, "categoria='" . $cod . "'");
     }
-    if (empty($producto_data)) {
+    if (empty($empresaData)) {
         $titulo = '';
     }
 }
 if ($titulo != '') {
-    $titulo_espacios = strpos($titulo, " ");
-    if ($titulo_espacios) {
-        $filter_title = array();
-        $titulo_explode = explode(" ", $titulo);
-        foreach ($titulo_explode as $titulo_) {
-            array_push($filter_title, "(titulo LIKE '%$titulo_%'  || desarrollo LIKE '%$titulo_%')");
-        }
-        $filter_title_implode = implode(" OR ", $filter_title);
-        array_push($filter, "(" . $filter_title_implode . ")");
-    } else {
-        array_push($filter, "(titulo LIKE '%$titulo%' || desarrollo LIKE '%$titulo%')");
-    }
+    array_push($filter, "(titulo LIKE '%$titulo%')");
 }
 $empresa_data = $empresa->list($filter, '', ($cantidad * $pagina) . ',' . $cantidad);
+
 if (!empty($empresa_data)) {
     $numeroPaginas = $empresa->paginador($filter, $cantidad);
 }
@@ -111,11 +102,6 @@ $template->themeInit();
                             <div class="search__field">
                                 <form method="get">
                                     <div class="field-wrapper">
-                                        <?php
-                                        if (isset($input_cat)) {
-                                            echo $input_cat;
-                                        }
-                                        ?>
                                         <input class="relative-field rounded" value="<?= isset($titulo) ? $titulo : ''; ?>" type="text" placeholder="Buscar un comercio" name="buscar"
                                                required>
                                         <button class="btn btn--round" type="submit">Buscar</button>
@@ -207,7 +193,7 @@ $template->themeInit();
                                 <!-- start .single-product -->
                                 <div class="product product--card">
                                     <a href="<?= URL . '/comercio/' . $funciones->normalizar_link($emp['titulo']) . '/' . $funciones->normalizar_link($emp['cod']); ?>">
-                                        <div style=" height: 200px; background: url(<?= URL . '/' . $emp['portada'] ?>) no-repeat center center/cover;">
+                                        <div style=" height: 200px; background: url(<?= URL . '/' . $emp['logo'] ?>) no-repeat center center/contain;">
                                         </div>
                                     </a>
                                     <!-- end /.product__thumbnail -->
@@ -259,10 +245,10 @@ $template->themeInit();
                                             $links .= "<a class='page-numbers' href='#'>...</a>";
                                         }
                                         for (; $i <= min($pagina + 6, $numeroPaginas); $i++) {
-                                            if ($pagina+1==$i){
-                                                $current="current";
-                                            }else{
-                                                $current="";
+                                            if ($pagina + 1 == $i) {
+                                                $current = "current";
+                                            } else {
+                                                $current = "";
                                             }
                                             $links .= "<a class='page-numbers $current' href='" . $url_final . $anidador . "pagina=" . $i . "'>" . $i . "</a>";
                                         }

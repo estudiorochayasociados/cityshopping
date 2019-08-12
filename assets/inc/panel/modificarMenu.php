@@ -68,7 +68,7 @@ if (isset($_POST["modificar_menu"])):
             $partes = explode(".", $tucadena);
             $dom = (count($partes) - 1);
             $dominio = $partes[$dom];
-            $prefijo = substr(md5(uniqid(rand())), 0, 10);
+            $prefijo = substr(md5(uniqid(rand())), 0, 15);
             if ($dominio != '') {
                 $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
                 move_uploaded_file($imgInicio, $destinoFinal);

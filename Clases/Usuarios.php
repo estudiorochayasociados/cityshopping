@@ -27,7 +27,7 @@ class Usuarios
     public $fecha;
     private $con;
 
-//Metodos
+    //Metodos
     public function __construct()
     {
         $this->con = new Conexion();
@@ -241,5 +241,71 @@ class Usuarios
         }
 
         return $row;
+    }
+
+    //Agregado 14/08/19
+    public function firstGuestSession()
+    {
+        $_SESSION["usuarios"] = array(
+            'cod' => $this->cod,
+            'nombre' => $this->nombre,
+            'apellido' => $this->apellido,
+            'doc' => $this->doc,
+            'email' => $this->email,
+            'direccion' => $this->direccion,
+            'localidad' => $this->localidad,
+            'provincia' => $this->provincia,
+            'telefono' => $this->telefono,
+            'invitado' => $this->invitado,
+            'vendedor' => 0,
+            'fecha' => $this->fecha);
+
+        $sql = "INSERT INTO `usuarios` (`cod`, `nombre`, `apellido`, `doc`, `email`, `direccion`, `postal`, `localidad`, `provincia`, `pais`, `telefono`, `celular`, `vendedor`,`invitado`, `fecha`) 
+                VALUES ('{$this->cod}',
+                        '{$this->nombre}',
+                        '{$this->apellido}',
+                        '{$this->doc}',
+                        '{$this->email}',
+                        '{$this->direccion}',
+                        '{$this->postal}',
+                        '{$this->localidad}',
+                        '{$this->provincia}',
+                        '{$this->pais}',
+                        '{$this->telefono}',
+                        '{$this->celular}',
+                        0,
+                        1,
+                        '{$this->fecha}'
+                        )";
+        $this->con->sql($sql);
+    }
+
+    public function guestSession()
+    {
+        $_SESSION["usuarios"] = array(
+            'cod' => $this->cod,
+            'nombre' => $this->nombre,
+            'apellido' => $this->apellido,
+            'doc' => $this->doc,
+            'email' => $this->email,
+            'direccion' => $this->direccion,
+            'localidad' => $this->localidad,
+            'provincia' => $this->provincia,
+            'telefono' => $this->telefono,
+            'invitado' => $this->invitado,
+            'vendedor' => 0,
+            'fecha' => $this->fecha);
+
+        $sql = "UPDATE `usuarios` 
+                SET `nombre` = '{$this->nombre}',
+                    `apellido` = '{$this->apellido}',
+                    `doc` = '{$this->doc}',
+                    `email` = '{$this->email}',
+                    `direccion` = '{$this->direccion}',
+                    `localidad` = '{$this->localidad}',
+                    `provincia` = '{$this->provincia}',
+                    `telefono` = '{$this->telefono}'
+                WHERE `cod`='{$this->cod}'";
+        $this->con->sql($sql);
     }
 }

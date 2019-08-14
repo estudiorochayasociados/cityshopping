@@ -14,6 +14,8 @@ $carrito = new Clases\Carrito();
 $usuarios = new Clases\Usuarios();
 $productos = new Clases\Productos();
 
+$factura = $funciones->antihack_mysqli(isset($_GET["fact"]) ? $_GET["fact"] : '');
+
 $cod_pedido = $_SESSION["cod_pedido"];
 //$tipo_pedido = isset($_GET["tipo_pedido"]) ? $_GET["tipo_pedido"] : '1';
 
@@ -23,34 +25,36 @@ $pedido = $pedidos->view();
 $usuarioSesion = $_SESSION['usuarios'];
 $carro = $carrito->return();
 
-$timezone  = -3;
-$fecha = gmdate("Y-m-j H:i:s", time() + 3600*($timezone+date("I")));
+$timezone = -3;
+$fecha = gmdate("Y-m-j H:i:s", time() + 3600 * ($timezone + date("I")));
 ?>
     <body id="bd" class="cms-index-index2 header-style2 prd-detail sns-products-detail1 cms-simen-home-page-v2 default cmspage">
     <div id="sns_wrapper">
     </div>
     <?php
-    if (is_array($pedido)):
+    if (is_array($pedido)) {
         $pedidos->set("cod", $cod_pedido);
         $pedidos->delete();
-    endif;
-    $cod_empresa;
-    foreach ($carro as $carroItem):
+    }
 
-        $productos->set("cod",$carroItem["id"]);
+    $cod_empresa = '';
+
+    foreach ($carro as $carroItem) {
+
+        $productos->set("cod", $carroItem["id"]);
         $productosData = $productos->view();
-        if($productosData){
+        if (!empty($productosData)) {
             $cod_empresa = $productosData["cod_empresa"];
         }
 
-        if(empty($carroItem["opciones"])){
+        if (empty($carroItem["opciones"])) {
             $opciones = '';
-        }else{
-            $opciones = '|||'.serialize($carroItem["opciones"]);
+        } else {
+            $opciones = '|||' . serialize($carroItem["opciones"]);
         }
 
         $pedidos->set("cod", $cod_pedido);
-        $pedidos->set("producto", $carroItem["titulo"].$opciones);
+        $pedidos->set("producto", $carroItem["titulo"] . $opciones);
         $pedidos->set("cantidad", $carroItem["cantidad"]);
         $pedidos->set("precio", $carroItem["precio"]);
         $pedidos->set("estado", 1);
@@ -60,8 +64,12 @@ $fecha = gmdate("Y-m-j H:i:s", time() + 3600*($timezone+date("I")));
         $pedidos->set("detalle", "");
         $pedidos->set("fecha", $fecha);
         $pedidos->add();
-    endforeach;
-    $funciones->headerMove(URL . "/compra-finalizada.php");
+    }
+    if (!empty($factura)) {
+        $funciones->headerMove(URL . "/compra-finalizada.php?fact=1");
+    } else {
+        $funciones->headerMove(URL . "/compra-finalizada.php");
+    }
 
     //switch ($pago["tipo"]) {
     //    case 0:

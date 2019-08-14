@@ -68,13 +68,33 @@ if (isset($_POST["agregar"])) {
         </label>
         <label class="col-md-4">Provincia:<br/>
             <select name="provincia" id="provincia" required>
-                <option value="" selected disabled>Provincia</option>
+                <?php
+                if (!empty($usuario['provincia'])) {
+                    ?>
+                    <option value="<?= $usuario['provincia'] ?>" selected><?= $usuario['provincia'] ?></option>
+                    <?php
+                } else {
+                    ?>
+                    <option value="" selected disabled>Provincia</option>
+                    <?php
+                }
+                ?>
                 <?php $funciones->provincias() ?>
             </select>
         </label>
         <label class="col-md-4">Localidad:<br/>
             <select name="localidad" id="localidad" required>
-                <option value="" selected disabled>Localidad</option>
+                <?php
+                if (!empty($usuario['localidad'])) {
+                    ?>
+                    <option value="<?= $usuario['localidad'] ?>" selected><?= $usuario['localidad'] ?></option>
+                    <?php
+                } else {
+                    ?>
+                    <option value="" selected disabled>Localidad</option>
+                    <?php
+                }
+                ?>
             </select>
         </label>
         <label class="col-md-4">

@@ -23,7 +23,7 @@ $template->themeInit();
                 <div class="breadcrumb">
                     <ul>
                         <li>
-                            <a href="<?=URL?>/index">Inicio</a>
+                            <a href="<?= URL ?>/index">Inicio</a>
                         </li>
                         <li class="active">
                             <a href="#">Contacto</a>
@@ -67,7 +67,7 @@ $template->themeInit();
                         <div class="contact_tile contacto">
                             <span class="tiles__icon lnr lnr-map-marker"></span>
                             <div class="tiles__content">
-                                <p><?=DIRECCION .', '.CIUDAD.', Cba.'?></p>
+                                <p><?= DIRECCION . ', ' . CIUDAD . ', Cba.' ?></p>
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ $template->themeInit();
                         <div class="contact_tile contacto">
                             <span class="tiles__icon lnr lnr-phone"></span>
                             <div class="tiles__content">
-                                <p><?=TELEFONO?></p>
+                                <p><?= TELEFONO ?></p>
                             </div>
                         </div>
                         <!-- end /.contact_tile -->
@@ -88,7 +88,7 @@ $template->themeInit();
                         <div class="contact_tile contacto">
                             <span class="tiles__icon lnr lnr-inbox"></span>
                             <div class="tiles__content">
-                                <p><?=EMAIL_NOTIFICACION?></p>
+                                <p><?= EMAIL_NOTIFICACION ?></p>
                             </div>
                         </div>
                         <!-- end /.contact_tile -->
@@ -106,38 +106,49 @@ $template->themeInit();
                                     <div class="contact_form--wrapper">
                                         <?php
                                         if (isset($_POST["enviar"])) {
-                                            $nombre = $funciones->antihack_mysqli(isset($_POST["nombre"]) ? $_POST["nombre"] : '');
-                                            $email = $funciones->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
-                                            $telefono = $funciones->antihack_mysqli(isset($_POST["telefono"]) ? $_POST["telefono"] : '');
-                                            $asunto = $funciones->antihack_mysqli(isset($_POST["asunto"]) ? $_POST["asunto"] : '');
-                                            $consulta = $funciones->antihack_mysqli(isset($_POST["mensaje"]) ? $_POST["mensaje"] : '');
 
-                                            $mensajeFinal = "<b>Nombre</b>: " . $nombre . " <br/>";
-                                            $mensajeFinal .= "<b>Email</b>: " . $email . "<br/>";
-                                            $mensajeFinal .= "<b>Teléfono</b>: " . $telefono . "<br/>";
-                                            $mensajeFinal .= "<b>Asunto</b>: " . $asunto . "<br/>";
-                                            $mensajeFinal .= "<b>Consulta</b>: " . $consulta . "<br/>";
+                                            // Verify the reCAPTCHA response
+                                            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . CAPTCHA_SECRET . '&response=' . $_POST['g-recaptcha-response']);
 
-                                            //USUARIO
-                                            $enviar->set("asunto", "Realizaste tu consulta");
-                                            $enviar->set("receptor", $email);
-                                            $enviar->set("emisor", EMAIL);
-                                            $enviar->set("mensaje", $mensajeFinal);
-                                            if ($enviar->emailEnviar() == 1) {
-                                                echo '<div class="alert alert-success" role="alert">¡Consulta enviada correctamente!</div>';
-                                            }
+                                            // Decode json data
+                                            $responseData = json_decode($verifyResponse);
 
-                                            $mensajeFinalAdmin = "<b>Nombre</b>: " . $nombre . " <br/>";
-                                            $mensajeFinalAdmin .= "<b>Email</b>: " . $email . "<br/>";
-                                            $mensajeFinalAdmin .= "<b>Teléfono</b>: " . $telefono . "<br/>";
-                                            $mensajeFinalAdmin .= "<b>Asunto</b>: " . $asunto . "<br/>";
-                                            $mensajeFinalAdmin .= "<b>Consulta</b>: " . $consulta . "<br/>";
-                                            //ADMIN
-                                            $enviar->set("asunto", "Consulta Web");
-                                            $enviar->set("receptor", EMAIL);
-                                            $enviar->set("mensaje", $mensajeFinalAdmin);
-                                            if ($enviar->emailEnviar() == 0) {
-                                                echo '<div class="alert alert-danger" role="alert">¡No se ha podido enviar la consulta!</div>';
+                                            if ($responseData->success) {
+                                                $nombre = $funciones->antihack_mysqli(isset($_POST["nombre"]) ? $_POST["nombre"] : '');
+                                                $email = $funciones->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
+                                                $telefono = $funciones->antihack_mysqli(isset($_POST["telefono"]) ? $_POST["telefono"] : '');
+                                                $asunto = $funciones->antihack_mysqli(isset($_POST["asunto"]) ? $_POST["asunto"] : '');
+                                                $consulta = $funciones->antihack_mysqli(isset($_POST["mensaje"]) ? $_POST["mensaje"] : '');
+
+                                                $mensajeFinal = "<b>Nombre</b>: " . $nombre . " <br/>";
+                                                $mensajeFinal .= "<b>Email</b>: " . $email . "<br/>";
+                                                $mensajeFinal .= "<b>Teléfono</b>: " . $telefono . "<br/>";
+                                                $mensajeFinal .= "<b>Asunto</b>: " . $asunto . "<br/>";
+                                                $mensajeFinal .= "<b>Consulta</b>: " . $consulta . "<br/>";
+
+                                                //USUARIO
+                                                $enviar->set("asunto", "Realizaste tu consulta");
+                                                $enviar->set("receptor", $email);
+                                                $enviar->set("emisor", EMAIL);
+                                                $enviar->set("mensaje", $mensajeFinal);
+                                                if ($enviar->emailEnviar() == 1) {
+                                                    echo '<div class="alert alert-success" role="alert">¡Consulta enviada correctamente!</div>';
+                                                }
+
+                                                $mensajeFinalAdmin = "<b>Nombre</b>: " . $nombre . " <br/>";
+                                                $mensajeFinalAdmin .= "<b>Email</b>: " . $email . "<br/>";
+                                                $mensajeFinalAdmin .= "<b>Teléfono</b>: " . $telefono . "<br/>";
+                                                $mensajeFinalAdmin .= "<b>Asunto</b>: " . $asunto . "<br/>";
+                                                $mensajeFinalAdmin .= "<b>Consulta</b>: " . $consulta . "<br/>";
+                                                //ADMIN
+                                                $enviar->set("asunto", "Consulta Web");
+                                                $enviar->set("receptor", EMAIL);
+                                                $enviar->set("mensaje", $mensajeFinalAdmin);
+                                                if ($enviar->emailEnviar() == 0) {
+                                                    echo '<div class="alert alert-danger" role="alert">¡No se ha podido enviar la consulta!</div>';
+                                                }
+                                            } else {
+                                                echo '<div class="alert alert-danger" role="alert">¡Completar el CAPTCHA correctamente!</div>';
                                             }
                                         }
                                         ?>
@@ -173,6 +184,9 @@ $template->themeInit();
                                             <textarea cols="30" rows="10" name="mensaje" placeholder="Su mensaje" required></textarea>
 
                                             <div class="sub_btn">
+                                                <div class="col-md-12 form-group">
+                                                    <div class="g-recaptcha" data-sitekey="<?= CAPTCHA_KEY ?>"></div>
+                                                </div>
                                                 <button type="submit" name="enviar" class="btn btn--round btn--default">Enviar</button>
                                             </div>
                                         </form>

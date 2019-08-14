@@ -16,6 +16,9 @@
     width: 60%;
     padding: 10px;
 }
+.oculto{
+    display: none !important;
+}
 /*margin top*/
 
 .mt-0 {

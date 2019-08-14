@@ -47,7 +47,6 @@ class Productos
     {
         $sql   = "INSERT INTO `productos`(`cod`, `cod_empresa`,`titulo`,`cod_producto`, `precio`, `precioDescuento`, `stock`, `desarrollo`, `variantes`,`adicionales`,`categoria`, `subcategoria`, `seccion`, `keywords`, `description`, `fecha`, `meli`, `url`) VALUES ('{$this->cod}', '{$this->cod_empresa}', '{$this->titulo}','{$this->cod_producto}', '{$this->precio}', '{$this->precioDescuento}', '{$this->stock}', '{$this->desarrollo}', '{$this->variantes}', '{$this->adicionales}', '{$this->categoria}', '{$this->subcategoria}', '{$this->seccion}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->meli}', '{$this->url}')";
         $query = $this->con->sql($sql);
-        echo $sql;
         return $query;
 
     }

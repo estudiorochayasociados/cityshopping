@@ -4,7 +4,7 @@ Config\Autoload::runSitio();
 $funciones = new Clases\PublicFunction();
 $usuario = new Clases\Usuarios();
 $empresa = new Clases\Empresas();
-
+/*
 $usuariosCes = $usuario->listChoto('');
 foreach ($usuariosCes as $usuariosCes_) {
     $usuario->set("cod", $usuariosCes_['cod']);
@@ -47,4 +47,6 @@ foreach ($usuariosCes as $usuariosCes_) {
 //    var_dump($imagen);
     echo "<br>";
 //    break;
-}
+}*/
+
+var_dump($cod = substr(md5(uniqid(rand())), 0, 10));

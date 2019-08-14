@@ -7,7 +7,7 @@ class autoload
         session_start();
         $_SESSION["cod_pedido"] = isset($_SESSION["cod_pedido"]) ? $_SESSION["cod_pedido"] : substr(md5(uniqid(rand())), 0, 10);
         define('SALT',hash("sha256","salt@estudiorochayasoc.com.ar"));
-        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping2");
+        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping");
         define('CANONICAL', "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
         define('TITULO', "City Shopping");
         define('TELEFONO', "(03564) 420108");
@@ -23,6 +23,8 @@ class autoload
         define('FAVICON', URL . "/assets/images/favicon.png");
         define('APP_ID_FB', "");
         define('PLAN', isset($_SESSION["usuarios"]["plan"]) ? $_SESSION["usuarios"]["plan"] : 1);
+        define('CAPTCHA_KEY','6LfwlVUUAAAAAKbrTmmJ4HCxU8bF8Ms6JjbmL1Me');
+        define('CAPTCHA_SECRET','6LfwlVUUAAAAAOBjeQuKlRpsjEngOoSmaDFgXAO4');
         spl_autoload_register(
             function($clase)
             {
@@ -46,8 +48,9 @@ class autoload
     public static function runAdmin()
     {
         session_start();
-        define('URLSITE',"https://".$_SERVER['HTTP_HOST']."/CityShopping2");
-        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping2/admin");
+        define('URLSITE',"https://".$_SERVER['HTTP_HOST']."/CityShopping");
+        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping/admin");
+        define('SALT',hash("sha256","salt@estudiorochayasoc.com.ar"));
         require_once "../Clases/Zebra_Image.php";
         spl_autoload_register(
             function ($clase)

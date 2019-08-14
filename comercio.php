@@ -20,7 +20,7 @@ if (empty($empresa_data)) {
 $imagen->set("cod", $empresa_data['cod']);
 $imagen_data = $imagen->listForProduct();
 $filter = array("cod_empresa='" . $empresa_data['cod'] . "'");
-$producto_data = $producto->list($filter, '', 2);
+$producto_data = $producto->list($filter, '', 3);
 //
 if (!empty($empresa_data['portada'])) {
     $ruta_ = URL . "/" . $empresa_data['portada'];
@@ -88,7 +88,7 @@ $template->themeInit();
                                         if (!empty($empresa_data['redes'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $empresa_data['redes'] ?>">
+                                                <a target="_blank" href="<?= $empresa_data['redes'] ?>">
                                                     <span class="fa fa-facebook"></span>
                                                 </a>
                                             </li>
@@ -99,7 +99,7 @@ $template->themeInit();
                                         if (!empty($empresa_data['redes2'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $empresa_data['redes2'] ?>">
+                                                <a target="_blank" href="<?= $empresa_data['redes2'] ?>">
                                                     <span class="fa fa-twitter"></span>
                                                 </a>
                                             </li>
@@ -111,7 +111,7 @@ $template->themeInit();
                                         if (!empty($empresa_data['redes3'])) {
                                             ?>
                                             <li>
-                                                <a href="<?= $empresa_data['redes3'] ?>">
+                                                <a target="_blank" href="<?= $empresa_data['redes3'] ?>">
                                                     <span class="fa fa-instagram"></span>
                                                 </a>
                                             </li>

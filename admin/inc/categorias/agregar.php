@@ -57,6 +57,7 @@ if (isset($_POST["agregar"])) {
             <select name="area">
                 <option value="" disabled selected>-- categorías --</option>
                 <option value="productos">Productos</option>
+                <option value="rubros">Rubros</option>
                 <option value="banners">Banners</option>
                 <option value="sliders">Sliders</option>
                 <option value="novedades">Novedades</option>

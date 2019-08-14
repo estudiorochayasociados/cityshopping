@@ -6,60 +6,78 @@ $correo = new Clases\Email();
 <!-- Login modal -->
 <?php
 if (isset($_POST["login"])) {
-    if ($_POST["recuperarPass"]) {
-        $recuperarPass = $funcion->antihack_mysqli(isset($_POST["recuperarPass"]) ? $_POST["recuperarPass"] : '');
-        $cod = substr(md5(uniqid(rand())), 0, 10);
 
-        $usuario->set("email", $recuperarPass);
-        $usuarioData = $usuario->validate2();
-        if ($usuarioData['status']) {
-            $usuario->set("cod", $usuarioData['data']["cod"]);
-            $usuario->editUnico("password", $cod);
+// Verify the reCAPTCHA response
+    $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . CAPTCHA_SECRET . '&response=' . $_POST['g-recaptcha-response']);
 
-            $mensaje = "Su nueva contraseña es: <b>" . $cod . "</b><br><br>";
+// Decode json data
+    $responseData = json_decode($verifyResponse);
 
-            $correo->set("asunto", "Recuperar Contraseña");
-            $correo->set("receptor", $recuperarPass);
-            $correo->set("emisor", EMAIL);
-            $correo->set("mensaje", $mensaje);
-            $correo->emailEnviar();
-            ?>
-            <script>
-                $(document).ready(function () {
-                    $("#errorLogin").html('<br/><div class="alert alert-success" role="alert">Revise su email para ver su nueva contraseña.</div>');
-                    $('#login_2').modal("show");
-                });
-            </script>
-            <?php
+    if ($responseData->success) {
+        if ($_POST["recuperarPass"]) {
+            $recuperarPass = $funcion->antihack_mysqli(isset($_POST["recuperarPass"]) ? $_POST["recuperarPass"] : '');
+            $cod = substr(md5(uniqid(rand())), 0, 10);
+
+            $usuario->set("email", $recuperarPass);
+            $usuarioData = $usuario->validate2();
+            if ($usuarioData['status']) {
+                $usuario->set("cod", $usuarioData['data']["cod"]);
+                $usuario->editUnico("password", $cod);
+
+                $mensaje = "Su nueva contraseña es: <b>" . $cod . "</b><br><br>";
+
+                $correo->set("asunto", "Recuperar Contraseña");
+                $correo->set("receptor", $recuperarPass);
+                $correo->set("emisor", EMAIL);
+                $correo->set("mensaje", $mensaje);
+                $correo->emailEnviar();
+                ?>
+                <script>
+                    $(document).ready(function () {
+                        $("#errorLogin").html('<br/><div class="alert alert-success" role="alert">Revise su email para ver su nueva contraseña.</div>');
+                        $('#login_2').modal("show");
+                    });
+                </script>
+                <?php
+            } else {
+                ?>
+                <script>
+                    $(document).ready(function () {
+                        $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">El email no existe.</div>');
+                        $('#login_2').modal("show");
+                    });
+                </script>
+                <?php
+            }
         } else {
-            ?>
-            <script>
-                $(document).ready(function () {
-                    $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">El email no existe.</div>');
-                    $('#login_2').modal("show");
-                });
-            </script>
-            <?php
+            $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
+            $password = $funcion->antihack_mysqli(isset($_POST["password"]) ? $_POST["password"] : '');
+
+            $usuario->set("email", $email);
+            $usuario->set("password", $password);
+
+            if ($usuario->login() == 0) {
+                ?>
+                <script>
+                    $(document).ready(function () {
+                        $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">Email o contraseña incorrecta.</div>');
+                        $('#login_2').modal("show");
+                    });
+                </script>
+                <?php
+            } else {
+                $funcion->headerMove(URL.'/panel?op=perfil');
+            }
         }
     } else {
-        $email = $funcion->antihack_mysqli(isset($_POST["email"]) ? $_POST["email"] : '');
-        $password = $funcion->antihack_mysqli(isset($_POST["password"]) ? $_POST["password"] : '');
-
-        $usuario->set("email", $email);
-        $usuario->set("password", $password);
-
-        if ($usuario->login() == 0) {
-            ?>
-            <script>
-                $(document).ready(function () {
-                    $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">Email o contraseña incorrecta.</div>');
-                    $('#login_2').modal("show");
-                });
-            </script>
-            <?php
-        } else {
-            $funcion->headerMove(URL);
-        }
+        ?>
+        <script>
+            $(document).ready(function () {
+                $("#errorLogin").html('<br/><div class="alert alert-warning" role="alert">Completar CAPTCHA correctamente.</div>');
+                $('#login_2').modal("show");
+            });
+        </script>
+        <?php
     }
 }
 ?>
@@ -81,6 +99,9 @@ if (isset($_POST["login"])) {
                     </div>
                     <div class="col-md-12 form-group">
                         <input type="password" class="form-control form-white" name="password" placeholder="Contraseña">
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <div class="g-recaptcha" data-sitekey="<?= CAPTCHA_KEY ?>"></div>
                     </div>
                     <div class="col-md-12 mb-5">
                         <a id="btnPass" href="#">¿Olvidaste tu contraseña?</a>

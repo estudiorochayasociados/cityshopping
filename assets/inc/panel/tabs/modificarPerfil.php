@@ -42,7 +42,7 @@ if (isset($_POST["modificarPerfil"])):
     $usuario->set("fecha", $usuarioData['fecha']);
 
     $usuario->edit();
-    $funcion->headerMove(URL . '/panel');
+    //$funcion->headerMove(URL . '/panel');
 endif;
 ?>
 <!--================================

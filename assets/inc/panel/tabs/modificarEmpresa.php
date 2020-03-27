@@ -298,7 +298,7 @@ if ($borrarImg != '') {
                                                         </div>
                                                     </div>
                                                     <div class="dashboard_setting_btn">
-                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Modificar Datos
+                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
                                                         </button>
                                                     </div>
                                                 </div>
@@ -370,7 +370,7 @@ if ($borrarImg != '') {
                                                                     class="icon_plus_alt"></i> Agregar más campos</a>
                                                     </div>
                                                     <div class="dashboard_setting_btn">
-                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Modificar Datos
+                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
                                                         </button>
                                                     </div>
                                                 </div>
@@ -455,7 +455,7 @@ if ($borrarImg != '') {
                                                         </div>
                                                     </div><!--End row -->
                                                     <div class="dashboard_setting_btn">
-                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Modificar Datos
+                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
                                                         </button>
                                                     </div>
                                                 </div>
@@ -554,7 +554,7 @@ if ($borrarImg != '') {
                                                     </div>
                                                     <div class="clearfix"></div>
                                                     <div class="dashboard_setting_btn">
-                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Modificar Datos
+                                                        <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
                                                         </button>
                                                     </div>
                                                 </div>

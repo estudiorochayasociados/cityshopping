@@ -83,7 +83,7 @@
                     <div class="copyright-text">
                         <p>&copy; 2019
                             <a href="#"><?=TITULO?></a>. Todos los derechos reservados. Copyright by
-                            <a href="http://www.estudiorochayasoc.com">Estudio Rocha & Asociados</a>
+                            <a href="http://www.estudiorochayasoc.com" target="_blank">Estudio Rocha & Asociados</a>
                         </p>
                     </div>
 
@@ -146,4 +146,9 @@ END FOOTER AREA
     })
 </script>
 <script src="<?= URL ?>/assets/js/theia-sticky-sidebar.js"></script>
+<script src="<?= URL ?>/assets/js/bootstrap-notify.min.js"></script>
+<script src="<?= URL ?>/assets/js/rocha.js"></script>
 <?php include 'assets/inc/login.inc.php'; ?>
+
+<p class="container mt-100 mb-100 fs-12 text-center">
+Este desarrollo es un mero servicio de pedidos online, el cual una vez confirmado el pedido, el comercio o cliente cierran los términos y condiciones, precios y el stock disponible del producto. CityShopping es un catálogo digital donde sus datos e imágenes son a modo de ilustración. Este portal y el comercio desliga todo tipo de responsabilidad por las operaciones realizadas, en tanto y en cuanto ambas partes pueden descartar pedidos generados en la plataforma. Dichas operaciones quedaran sujetas a las normas contractuales previstas en el código civil de la Nación.</p>

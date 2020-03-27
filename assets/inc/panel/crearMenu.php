@@ -6,15 +6,22 @@ $categoriasArray = $categoria->list($filter, $order, "");
 
 $cod_usuario = $_SESSION['usuarios']['cod'];
 $empresa->set("cod_usuario", $cod_usuario);
-$empresaData = $empresa->view();
+$empresaData = $empresa->viewV2();
 $cod_empresa = $empresaData['cod'];
- ?>
-<?php
+
 if (isset($_POST["crear_menu"])):
     $categoria_post = $funcion->antihack_mysqli(isset($_POST["categoriaMenu"]) ? $_POST["categoriaMenu"] : '');
     $nombre = $funcion->antihack_mysqli(isset($_POST["nombreMenu"]) ? $_POST["nombreMenu"] : '');
-    $precio = $funcion->antihack_mysqli(isset($_POST["precioMenu"]) ? $_POST["precioMenu"] : '');
-    $precioDescuento = $funcion->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : '0');
+    $precio = $funcion->antihack_mysqli(isset($_POST["precioMenu"]) ? $_POST["precioMenu"] : 0);
+    $precioDescuento = $funcion->antihack_mysqli(isset($_POST["precioDescuento"]) ? $_POST["precioDescuento"] : 0);
+
+    $precio = str_replace(".", "", $precio);
+    $precio = str_replace(",", ".", $precio);
+    $precioDescuento = str_replace(".", "", $precioDescuento);
+    $precioDescuento = str_replace(",", ".", $precioDescuento);
+
+    is_numeric($precio) ?:  $precio = 0;
+    is_numeric($precioDescuento) ?: $precioDescuento = 0;
 
     $desarrollo = $funcion->antihack_mysqli(isset($_POST["desarrolloMenu"]) ? $_POST["desarrolloMenu"] : '');
     $stock = $funcion->antihack_mysqli(isset($_POST["stockMenu"]) ? $_POST["stockMenu"] : '');
@@ -42,7 +49,7 @@ if (isset($_POST["crear_menu"])):
     $producto->set("categoria", $categoria_post);
     $producto->set("titulo", $nombre);
     $producto->set("precio", $precio);
-    $producto->set("precioDescuento",$precioDescuento);
+    $producto->set("precioDescuento", $precioDescuento);
     $producto->set("desarrollo", $desarrollo);
     $producto->set("stock", $stock);
     $producto->set("variantes", $variantes);
@@ -126,7 +133,7 @@ endif;
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                    <label>Precio<sup>*</sup></label>
+                                                <label>Precio<sup>*</sup></label>
                                                 <div class="input-group mb-3" style="height: 50px">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
@@ -140,7 +147,7 @@ endif;
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">$</span>
                                                     </div>
-                                                    <input type="text" class="form-control" name="precioDescueto" style="height: 50px;">
+                                                    <input type="text" class="form-control" name="precioDescuento" style="height: 50px;">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -210,7 +217,7 @@ endif;
                                         </div>
                                         <label class="btn_full btn btn-primary">
                                             Seleccionar foto<i class="icon-camera"></i>
-                                            <input type="file" id="filesEmpresa" name="filesEmpresa[]"  multiple="multiple" class="form-control">
+                                            <input type="file" id="filesEmpresa" name="filesEmpresa[]" multiple="multiple" class="form-control">
                                         </label>
                                     </div>
                                 </div><!-- End row -->
@@ -224,13 +231,13 @@ endif;
                         </div><!-- End wrapper_indent -->
 
                     </form>
+                </div>
+                <!-- end /.col-md-8 -->
             </div>
-            <!-- end /.col-md-8 -->
+            <!-- end /.row -->
         </div>
-        <!-- end /.row -->
+        <!-- end /.container -->
     </div>
-    <!-- end /.container -->
-</div>
-<!--================================
-        END DASHBOARD AREA
-=================================-->
+    <!--================================
+            END DASHBOARD AREA
+    =================================-->

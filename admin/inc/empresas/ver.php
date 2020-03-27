@@ -26,12 +26,14 @@ $imagen = new Clases\Imagenes();
                         $usuarioData = $usuarios->view();
                         $email = $usuarioData["email"];
                         $password = $usuarioData["password"];
+                        $cod = $usuarioData["cod"];
                         echo "<tr>";
                         echo "<td>" . strtoupper($data[$i]["titulo"]) . "</td>";
                         echo "<td>";
                         echo '<form target="_blank" method="post" action="' . URLSITE . '/loginEmpresa.php" style="float: left;">';
                         echo '<input name="email" type="hidden" value="'.$email.'" />';
                         echo '<input name="password" type="hidden" value="'.$password.'" />';
+                        echo '<input name="cod" type="hidden" value="'.$cod.'" />';
                         echo '<button class="btn btn-info" type="submit" > <i class="fa fa-cog" ></i ></button >';
                         echo '</form>';
                         echo '<a class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar" href="' . URL . '/index.php?op=empresas&accion=ver&borrar=' . $data[$i]["cod"] . '">

@@ -39,12 +39,12 @@ $error = '';
                             <a href="<?= URL ?>/index">Inicio</a>
                         </li>
                         <li class="active">
-                            <a href="#">Compra N°: <?= $cod_pedido ?></a>
+                            <a href="#">Pedido N°: <?= $cod_pedido ?></a>
                         </li>
                     </ul>
                 </div>
-                <h1 class="page-title">Compra N°: <?= $cod_pedido ?></h1>
-                <h6 class="page-title" style="font-size: 18px;">Llená el siguiente formulario para poder finalizar tu compra</h6>
+                <h1 class="page-title">Pedido N°: <?= $cod_pedido ?></h1>
+                <h6 class="page-title" style="font-size: 18px;">Llená el siguiente formulario para poder finalizar tu pedido</h6>
             </div>
             <!-- end /.col-md-12 -->
         </div>
@@ -122,8 +122,8 @@ $error = '';
                             $error = "Error las contraseñas no coinciden.";
                         } else {
                             $usuarios->edit();
-//                            $usuarios->login();
-//                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                            $usuarios->login();
+                            $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                         }
                     }
                 } else {
@@ -132,8 +132,8 @@ $error = '';
                         $error = "Error las contraseñas no coinciden.";
                     } else {
                         $usuarios->add();
-//                        $usuarios->login();
-//                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                        $usuarios->login();
+                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                     }
                 }
                 break;
@@ -143,15 +143,15 @@ $error = '';
                 if ($email_data['status']) {
                     //si el email tiene invitado 1
                     if ($email_data['data']['invitado'] == 1) {
-//                        $usuarios->guestSession();
-//                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                        $usuarios->guestSession();
+                        $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                     } else {
-                        $error = "Ya existe un usuario registrado con este email.";
+                        $error = "Ya existe un usuario registrado con este email. <a data-toggle='modal' data-target='#login_2' href='#'>Inicie sesión aquí</a>  o ingrese otro email.";
                     }
                 } else {
                     //el email no existe
-//                    $usuarios->firstGuestSession();
-//                    $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
+                    $usuarios->firstGuestSession();
+                    $funciones->headerMove(URL . "/checkout/" . $cod_pedido);// . "/" . $tipo_pedido);
                 }
                 break;
         }
@@ -210,13 +210,8 @@ $error = '';
                            placeholder="Escribir dirección" name="direccion" required/>
                 </div>
                 <div class="col-md-12">
-                    <!--<div class="custom-checkbox2">
-                        <input type="checkbox" id="opt1" name="invitado" value="0" onchange="$('.password').slideToggle()">
-                        <label for="opt1">
-                            <span class="circle"></span>¿Deseas crear una cuenta de usuario y dejar tus datos grabados para la próxima compra?</label>
-                    </div>-->
                     <label class="col-md-12 col-xs-12 mt-10 mb-10 crear" style="font-size:16px">
-                        <input class="checks" type="checkbox" name="invitado" value="1" onchange="$('.password').slideToggle()"> ¿Deseas crear una cuenta de usuario y dejar tus datos grabados para la próxima compra?
+                        <input class="checks" type="checkbox" name="invitado" value="1" onchange="$('.password').slideToggle()"> ¿Deseas crear una cuenta de usuario y dejar tus datos grabados para el próximo pedido?
                     </label>
                 </div>
                 <div class="col-md-6 col-xs-6 password" style="display: none;">Contraseña:<br/>
@@ -245,7 +240,7 @@ $error = '';
                            placeholder="Escribir CUIT" name="doc"/>
                 </div>
                 <div class="col-md-12 col-xs-12 mb-50 mt-10">
-                    <input class="btn btn-success" type="submit" value="¡Finalizar la compra!"
+                    <input class="btn btn-success" type="submit" value="¡Finalizar el pedido!"
                            name="registrarmeBtn" style="width: 100%;"/>
                 </div>
             </div>

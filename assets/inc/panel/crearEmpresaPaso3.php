@@ -19,7 +19,7 @@ $contenido_data = $contenido->view();
 
                 $cod_usuario = $_SESSION['usuarios']['cod'];
                 $empresa->set("cod_usuario", $cod_usuario);
-                $empresaData = $empresa->view();
+                $empresaData = $empresa->viewByUserCod();
 
                 $empresa->set("id", $empresaData['id']);
                 $empresa->set("cod", $empresaData['cod']);

@@ -1,5 +1,5 @@
 <?php
-$pages = ["contenidos", "configuracion","usuarios","empresas","multimedia"];
+$pages = ["contenidos", "configuracion","usuarios","empresas","multimedia","marketing"];
 $subpages = ["banners","sliders","novedades"];
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-30">
@@ -113,6 +113,23 @@ $subpages = ["banners","sliders","novedades"];
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="<?=URL?>/index.php?op=empresas&accion=ver">
                             Ver Comercios
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?=URL?>/index.php?op=pedidos">
+                        Pedidos
+                    </a>
+                </li>
+                <li class="nav-item dropdown <?php if (!in_array('marketing', $pages)) {
+                    echo 'd-none';
+                } ?>">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        Marketing
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="<?= URL ?>/index.php?op=landing&accion=ver">
+                            Landing Page
                         </a>
                     </div>
                 </li>

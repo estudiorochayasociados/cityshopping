@@ -187,7 +187,7 @@ $template->themeInit();
 
                         <div class="tab-content">
                             <div class="tab-pane product-tab fade show active" id="product-details">
-                                <p><?= ucfirst($producto_data['desarrollo']); ?></p>
+                                <p><?= nl2br($producto_data['desarrollo']); ?></p>
 
                                 <div class="item_social_share">
                                     <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
@@ -214,7 +214,7 @@ $template->themeInit();
             <div class="col-lg-4">
                 <aside class="sidebar sidebar--single-product">
                     <?php
-                    if (!empty($producto_data['stock'])) {
+                    if (!empty($producto_data['stock']) && !empty($producto_data['precio'])) {
                         ?>
                         <div class="sidebar-card card-pricing">
                             <div class="price">
@@ -224,12 +224,12 @@ $template->themeInit();
                                     if (!empty($producto_data['precioDescuento'])) {
                                         $precio_ = $producto_data['precioDescuento'];
                                         ?>
-                                        <span id="prec">$<?= $producto_data['precioDescuento'] ?></span>
+                                        <span id="prec">$<?= number_format($producto_data['precioDescuento'],2,",",".") ?></span>
                                         <?php
                                     } else {
                                         $precio_ = $producto_data['precio'];
                                         ?>
-                                        <span id="prec">$<?= $producto_data['precio'] ?></span>
+                                        <span id="prec">$<?= number_format($producto_data['precio'],2,",",".") ?></span>
                                         <?php
                                     }
                                     ?>
@@ -237,9 +237,6 @@ $template->themeInit();
                             </div>
                             <?php
                             @$variantesMostrar = unserialize($producto_data['variantes']);
-                            ?>
-                            <!-- end /.purchase-button -->
-                            <?php
                             //Proceso de compra
                             if (isset($_POST["enviar_form"])) {
                                 if (!empty($carro)) {
@@ -251,136 +248,137 @@ $template->themeInit();
                                 $tipoEnvio = $funciones->antihack_mysqli(isset($_POST['tipoEnvio']) ? $_POST['tipoEnvio'] : '');
                                 $producto_ = explode("---", $precio);
                                 $envio_ = explode("---", $tipoEnvio);
+                                $precio_final = $producto_[0];
 
-                                switch ($producto_[2]) {
-                                    case "Normal":
-                                        $precio_final = $producto_[0];
-                                        break;
-                                    case "Descuento":
-                                        $precio_final = $producto_[0];
-                                        break;
-                                    case "Opt":
-                                        if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
-                                            $precio_final = $producto_data['precioDescuento'] + $producto_[0];
-                                        } else {
-                                            $precio_final = $producto_data['precio'] + $producto_[0];
-                                        }
-                                        break;
+                                if ($precio > 0) {
+                                    $carrito->set("id", $id);
+                                    $carrito->set("cantidad", $cantidad);
+                                    $carrito->set("titulo", $producto_[1]);
+                                    $carrito->set("precio", $precio_final);
+                                    $carrito->set("stock", $producto_data['stock']);
+                                    $carrito->add();
+
+                                    //Envio
+                                    $carrito->set("id", "Envio-Seleccion");
+                                    $carrito->set("cantidad", 1);
+                                    $carrito->set("titulo", $envio_[0]);
+                                    $carrito->set("precio", $envio_[1]);
+                                    $carrito->add();
+
+                                    //Metodo
+                                    $carrito->set("id", "Metodo-Pago");
+                                    $carrito->set("cantidad", 1);
+                                    $carrito->set("titulo", "Método de pago: Efectivo");
+                                    $carrito->set("precio", 0);
+                                    $carrito->add();
+
+                                    $funciones->headerMove(URL . '/carrito');
                                 }
-
-                                $carrito->set("id", $id);
-                                $carrito->set("cantidad", $cantidad);
-                                $carrito->set("titulo", $producto_[1]);
-                                $carrito->set("precio", $precio_final);
-                                $carrito->set("stock", $producto_data['stock']);
-                                $carrito->add();
-
-                                //Envio
-                                $carrito->set("id", "Envio-Seleccion");
-                                $carrito->set("cantidad", 1);
-                                $carrito->set("titulo", $envio_[0]);
-                                $carrito->set("precio", $envio_[1]);
-                                $carrito->add();
-
-                                //Metodo
-                                $carrito->set("id", "Metodo-Pago");
-                                $carrito->set("cantidad", 1);
-                                $carrito->set("titulo", "Método de pago: Efectivo");
-                                $carrito->set("precio", 0);
-                                $carrito->add();
-
-                                $funciones->headerMove(URL . '/carrito');
                             }
-                            //
-                            ?>
-
-
-                            <form method="post" id="comprar-form">
-                                <div class="sidebar-card card-pricing card--pricing2">
-                                    <ul class="pricing-options">
-                                        <?php
-                                        if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
-                                            ?>
-                                            <li>
-                                                <div class="custom-radio">
-                                                    <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?= $producto_data['titulo'] ?>---Descuento" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precioDescuento'] ?>');">
-                                                    <label for="opt1" data-price="<?= $producto_data['precioDescuento'] ?>">
-                                                        <span class="circle"></span>Producto con descuento</label>
-                                                </div>
-                                            </li>
+                            if ($precio_ > 0) {
+                                ?>
+                                <form method="post" id="comprar-form">
+                                    <div class="sidebar-card card-pricing card--pricing2">
+                                        <ul class="pricing-options">
                                             <?php
-                                        } else {
-                                            ?>
-                                            <li>
-                                                <div class="custom-radio">
-                                                    <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>---Normal" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precio'] ?>');">
-                                                    <label for="opt1" data-price="<?= $producto_data['precio'] ?>">
-                                                        <span class="circle"></span>Producto</label>
-                                                </div>
-                                            </li>
-                                            <?php
-                                        }
-                                        ?>
-                                        <?php
-                                        if (!empty($variantesMostrar)) {
-                                            $opt = 2;
-                                            foreach ($variantesMostrar as $key => $value) {
-                                                $valor = explode(",", $value);
+                                            if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
                                                 ?>
                                                 <li>
                                                     <div class="custom-radio">
-                                                        <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $producto_data['titulo'] . ' + ' . $valor[1] ?>---Opt" name="precio" onclick="$('#prec').text('$<?= $precio_ + $valor[0] ?>');">
-                                                        <label for="opt<?= $opt; ?>" data-price="<?= $valor[0]; ?>">
-                                                            <span class="circle"></span><?= ucfirst($valor[1]); ?></label>
+                                                        <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?= $producto_data['titulo'] ?>---Descuento" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precioDescuento'] ?>');">
+                                                        <label for="opt1" class="fs-13" data-price="<?= $producto_data['precioDescuento'] ?>">
+                                                            <span class="circle"></span><?= ucfirst($producto_data['titulo']); ?> con descuento
+                                                        </label>
                                                     </div>
-                                                    <p>
-                                                        <?= ucfirst($producto_data['titulo']) ?> + <?= ucfirst($valor[1]); ?>.
-                                                    </p>
                                                 </li>
                                                 <?php
-                                                $opt++;
-                                            }
-                                        }
-                                        ?>
-                                        <li>
-                                            <h6>Cantidad:</h6>
-                                            <input onkeydown="return (event.keyCode!=13);" max="<?= $producto_data['stock'] ?>" min="1" type="number" id="cantidad" name="cantidad" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5 noEnterSubmit" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
-                                        </li>
-                                        <li>
-                                            <h6>Envío:</h6>
-                                            <select name="tipoEnvio" class="form-control" required>
+                                            } else {
+                                                ?>
+                                                <li>
+                                                    <div class="custom-radio">
+                                                        <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>---Normal" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precio'] ?>');">
+                                                        <label for="opt1" class="fs-13" data-price="<?= $producto_data['precio'] ?>">
+                                                            <span class="circle"></span><?= ucfirst($producto_data['titulo']); ?>
+                                                        </label>
+                                                    </div>
+                                                </li>
                                                 <?php
-                                                if (!empty($enviosArray)) {
-                                                    foreach ($enviosArray as $env) {
-                                                        ?>
-                                                        <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
-                                                            <?php
-                                                            if ($env['precio'] == 0) {
-                                                                echo ucfirst($env['titulo']) . ' | Gratis';
-                                                            } else {
-                                                                echo ucfirst($env['titulo']) . ' | $' . $env['precio'];
-                                                            }
+                                            }
+                                            if (!empty($variantesMostrar)) {
+                                                $opt = 2;
+                                                foreach ($variantesMostrar as $key => $value) {
+                                                    $valor = explode(",", $value);
+                                                    if (empty($valor[1])) continue;
+                                                    ?>
+                                                    <li>
+                                                        <div class="custom-radio">
+                                                            <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $valor[1] ?>---Opt" name="precio" onclick="$('#prec').text('$<?= $valor[0] ?>');">
+                                                            <label for="opt<?= $opt; ?>" class="fs-13" data-price="<?= $valor[0]; ?>">
+                                                                <span class="circle"></span><?= ucfirst($valor[1]); ?>
+                                                            </label>
+                                                        </div>
+                                                        <p>
+                                                            <?= ucfirst($valor[1]); ?>.
+                                                        </p>
+                                                    </li>
+                                                    <?php
+                                                    $opt++;
+                                                }
+                                            }
+                                            ?>
+                                            <li>
+                                                <h6>Cantidad:</h6>
+                                                <input onkeydown="return (event.keyCode!=13);"
+                                                       max="<?= $producto_data['stock'] ?>"
+                                                       min="1"
+                                                       type="number"
+                                                       id="cantidad"
+                                                       name="cantidad"
+                                                       maxlength="12"
+                                                       value="1"
+                                                       title="Ingresar valores con respecto al stock"
+                                                       class="input-text qty mt-5 noEnterSubmit"
+                                                       oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')"
+                                                       oninput="this.setCustomValidity('')">
+                                            </li>
+                                            <li>
+                                                <h6>Envío:</h6>
+                                                <select name="tipoEnvio" class="form-control" required>
+                                                    <?php
+                                                    if (!empty($enviosArray)) {
+                                                        foreach ($enviosArray as $env) {
                                                             ?>
-                                                        </option>
+                                                            <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
+                                                                <?php
+                                                                if ($env['precio'] == 0) {
+                                                                    echo ucfirst($env['titulo']);
+                                                                } else {
+                                                                    echo ucfirst($env['titulo']) . ' | $' . $env['precio'];
+                                                                }
+                                                                ?>
+                                                            </option>
+                                                            <?php
+                                                        }
+                                                    } else {
+                                                        ?>
+                                                        <option value="Envío: Retiro en sucursal---0">Retiro en sucursal</option>
                                                         <?php
                                                     }
-                                                } else {
                                                     ?>
-                                                    <option value="Envío: Retiro en sucursal---0">Retiro en sucursal</option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </li>
-                                    </ul>
-                                    <!-- end /.pricing-options -->
-                                    <div class="purchase-button">
-                                        <input type="hidden" name="enviar_form">
-                                        <input type="button" name="enviarCarrito" id="btn-enviar" value="Comprar" class="btn btn--lg btn--round">
+                                                </select>
+                                            </li>
+                                        </ul>
+                                        <!-- end /.pricing-options -->
+                                        <div class="purchase-button">
+                                            <input type="hidden" name="enviar_form">
+                                            <input type="button" name="enviarCarrito" id="btn-enviar" value="PEDIDO" class="btn btn--lg btn--round">
+                                        </div>
+                                        <!-- end /.purchase-button -->
                                     </div>
-                                    <!-- end /.purchase-button -->
-                                </div>
-                            </form>
+                                </form>
+                                <?php
+                            }
+                            ?>
                         </div>
                         <?php
                     } else {
@@ -561,7 +559,6 @@ if (!empty($carro)) {
                 })
                     .then((value) => {
                         switch (value) {
-
                             case "confirmar":
                                 $('#comprar-form').submit();
                                 break;

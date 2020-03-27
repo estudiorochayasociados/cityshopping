@@ -3,7 +3,7 @@ require_once "Config/Autoload.php";
 Config\Autoload::runSitio();
 $template = new Clases\TemplateSite();
 $funcion = new Clases\PublicFunction();
-$template->set("title", TITULO. " | Carrito");
+$template->set("title", TITULO . " | Carrito");
 $template->set("description", "Carrito");
 $template->set("keywords", "Carrito");
 $template->set("body", "cart-page");
@@ -111,24 +111,27 @@ if ($countCarrito == 0) {
                                     </div>
                                     <div class="d-md-none text-left">
                                         <?= mb_strtoupper($carroItem["titulo"]); ?>
-                                        <p class="<?= $none ?>">Precio: <?= "$" . $carroItem["precio"]; ?></p>
+                                        <p class="<?= $none ?>">Precio: <?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
                                         <p class="<?= $none ?>">Cantidad: <?= $carroItem["cantidad"]; ?></p>
                                     </div>
                                 </td>
-                                <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . $carroItem["precio"]; ?></p></td>
+                                <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p></td>
                                 <td class="hidden-xs"><p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p></td>
 
-                                <td><p><?php
+                                <td>
+                                    <p><?php
                                         if ($carroItem["precio"] != 0) {
-                                            echo "$" . ($carroItem["precio"] * $carroItem["cantidad"]);
+                                            echo "$" . number_format(($carroItem["precio"] * $carroItem["cantidad"]), 2, ",", ".");
                                         } else {
-                                            if ($carroItem['id']=="Metodo-Pago"){
+                                            if ($carroItem['id'] == "Metodo-Pago") {
                                                 echo "";
-                                            }else{
-                                            echo "¡Gratis!";
+                                            } else {
+                                                echo "";
                                             }
                                         }
-                                        ?></p></td>
+                                        ?>
+                                    </p>
+                                </td>
                             </tr>
                             <?php
                             $i++;
@@ -146,13 +149,13 @@ if ($countCarrito == 0) {
                             <td class="hidden-xs"></td>
                             <td class="hidden-xs"></td>
 
-                            <td> $<?= $precio; ?></td>
+                            <td> $<?= number_format($precio,2,",","."); ?></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <a href="<?=URL.'/pagar'?>">
-                <button style="width: 100%;" class="btn btn-lg btn-success">Finalizar compra</button>
+                <a href="<?= URL . '/pagar' ?>">
+                    <button style="width: 100%;" class="btn btn-lg btn-success">Finalizar pedido</button>
                 </a>
             </div>
             <!-- end .row -->

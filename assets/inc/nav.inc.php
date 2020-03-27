@@ -7,6 +7,13 @@ $carro = $carrito->return();
 if (isset($_GET['logout'])) {
     $usuario->logout();
 }
+if (!empty($_SESSION['usuarios'])){
+    $usuario->set("cod",$_SESSION['usuarios']['cod']);
+    $usuarioData = $usuario->view();
+    if (empty($usuarioData)){
+        $usuario->logout();
+    }
+}
 ?>
 <!-- ================================
 START MENU AREA
@@ -72,12 +79,12 @@ START MENU AREA
                                                                             <?php
                                                                             if ($car['precio'] > 0) {
                                                                                 ?>
-                                                                                <p>$<?= $car['precio'] ?></p>
+                                                                                <p>$<?= number_format($car['precio'],2,",",".") ?></p>
                                                                                 <?php
                                                                             } else {
                                                                                 if ($car['id'] != 'Metodo-Pago') {
                                                                                     ?>
-                                                                                    <p>Gratis!</p>
+                                                                                    <p></p>
                                                                                     <?php
                                                                                 }
                                                                                 ?>
@@ -92,7 +99,7 @@ START MENU AREA
                                                         ?>
                                                         <div class="total">
                                                             <p>
-                                                                <span>Total :</span>$<?= $precio; ?></p>
+                                                                <span>Total :</span>$<?= number_format($precio,2,",","."); ?></p>
                                                         </div>
                                                         <div class="cart_action">
                                                             <a class="go_cart" href="<?= URL ?>/carrito?remover">Vaciar</a>

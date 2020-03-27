@@ -60,4 +60,20 @@ class autoload
             }
         );
     }
+
+    public static function runCurl()
+    {
+        session_start();
+        require '../../vendor/autoload.php';
+        define('URL', "https://".$_SERVER['HTTP_HOST']."/CityShopping");
+        define('LOGO', URL . "/assets/images/logo.png");
+        spl_autoload_register(function ($clase) {
+            $ruta = "../../" . str_replace("\\", "/", $clase) . ".php";
+            $pos = strpos($ruta, "Clases");
+            if ($pos !== false) {
+                include_once $ruta;
+            }
+        });
+    }
+
 }

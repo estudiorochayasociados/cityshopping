@@ -238,7 +238,7 @@ $template->themeInit();
                         <!-- start .single-product -->
                         <div class="product product--card">
                             <a href="<?= URL . '/producto/' . $funciones->normalizar_link($prod['titulo']) . '/' . $funciones->normalizar_link($prod['cod']); ?>">
-                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                 </div>
                             </a>
                             <!-- end /.product__thumbnail -->

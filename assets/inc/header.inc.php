@@ -15,6 +15,15 @@
 
 <!-- Favicon
 <link rel="icon" type="image/png" sizes="16x16" href="<?=URL?>/assets/images/favicon.png">-->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-127300251-27"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-127300251-27');
+</script>
 
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">

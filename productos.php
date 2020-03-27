@@ -60,6 +60,7 @@ if (!empty($categoria_get) || !empty($titulo) || !empty($empresa_get)) {
 } else {
     $filter = '';
 }
+$filter = ["precio>0"];
 if (!empty($categoria_get)) {
     $categoria->set("cod", $categoria_get);
     $categoria_data_filtro = $categoria->view();
@@ -277,12 +278,12 @@ $template->themeInit();
                                                 <?php
                                                 if (!empty($prod['precioDescuento'])) {
                                                     ?>
-                                                    <span>$<?= $prod['precioDescuento'] ?>
-                                                        <small class="tachado">$<?= $prod['precio'] ?></small></span>
+                                                    <span>$<?= number_format($prod['precioDescuento'],2,",",".") ?>
+                                                        <small class="tachado">$<?= number_format($prod['precio'],2,",",".") ?></small></span>
                                                     <?php
                                                 } else {
                                                     ?>
-                                                    <span>$<?= $prod['precio'] ?></span>
+                                                    <span>$<?= number_format($prod['precio'],2,",",".") ?></span>
                                                     <?php
                                                 }
                                                 ?>

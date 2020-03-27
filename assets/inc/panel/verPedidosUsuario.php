@@ -19,7 +19,7 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                     <div class="col-md-12">
                         <div class="dashboard_title_area">
                             <div class="dashboard__title">
-                                <h3>No realizaste una compra.</h3>
+                                <h3>No realizaste un pedido.</h3>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,6 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                             <?php $fecha = $fecha1 . $fecha[1]; ?>
                             <?php
                             $empresa->set("cod", $value["empresa"]);
-                            $empresa->set("cod_usuario",'');
                             $empresa_Data = $empresa->view();
                             ?>
                             <div class="card">
@@ -110,7 +109,7 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                     <tr>
-                                                        <td><b>TOTAL DE LA COMPRA</b></td>
+                                                        <td><b>TOTAL DEL PEDIDO</b></td>
                                                         <td class="hidden-xs"></td>
                                                         <td class="hidden-xs"></td>
                                                         <td><b>$<?= $precioTotal ?></b></td>

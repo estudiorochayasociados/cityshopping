@@ -3,9 +3,9 @@ require_once "Config/Autoload.php";
 Config\Autoload::runSitio();
 $template = new Clases\TemplateSite();
 $funciones = new Clases\PublicFunction();
-$template->set("title", TITULO . " | Compra finalizada");
-$template->set("description", "Compra finalizada");
-$template->set("keywords", "Compra finalizada");
+$template->set("title", TITULO . " | Pedido finalizado");
+$template->set("description", "Pedido finalizado");
+$template->set("keywords", "Pedido finalizado");
 $template->set("favicon", FAVICON);
 $template->themeInit();
 $pedidos = new Clases\Pedidos();
@@ -42,9 +42,9 @@ foreach ($carro as $carroItemEmail) {
         $cod_empresa = $productosData["cod_empresa"];
     }
     $carroTotal += $carroItemEmail["cantidad"] * $carroItemEmail["precio"];
-    $mensaje_carro .= '<tr><td>' . $carroItemEmail["titulo"] . '</td><td>' . $carroItemEmail["cantidad"] . '</td><td>' . $carroItemEmail["precio"] . '</td><td>' . $carroItemEmail["cantidad"] * $carroItemEmail["precio"] . '</td></tr>';
+    $mensaje_carro .= '<tr><td>' . $carroItemEmail["titulo"] . '</td><td>' . $carroItemEmail["cantidad"] . '</td><td>' . number_format($carroItemEmail["precio"], 2, ",", ".") . '</td><td>' . number_format($carroItemEmail["cantidad"] * $carroItemEmail["precio"], 2, ",", ".") . '</td></tr>';
 }
-$mensaje_carro .= '<tr><td></td><td></td><td></td><td>' . $carroTotal . '</td></tr>';
+$mensaje_carro .= '<tr><td></td><td></td><td></td><td>' . number_format($carroTotal, 2, ",", ".") . '</td></tr>';
 $mensaje_carro .= '</table>';
 
 //MENSAJE = DATOS USUARIO COMPRADOR
@@ -63,7 +63,7 @@ if (!empty($factura)) {
 }
 
 //USUARIO EMAIL
-$mensajeCompraUsuario = '¡Muchas gracias por tu nueva compra!<br/>En el transcurso de las 24 hs un operador se estará contactando con usted para pactar la entrega y/o pago del pedido. A continuación te dejamos el pedido que nos realizaste.<hr/> <h3>Pedido realizado:</h3>';
+$mensajeCompraUsuario = '¡Muchas gracias por tu nuevo pedido!<br/>En el transcurso de las 24 hs un operador se estará contactando con usted para pactar la entrega y/o pago del pedido. A continuación te dejamos el pedido que nos realizaste.<hr/> <h3>Pedido realizado:</h3>';
 $mensajeCompraUsuario .= $mensaje_carro;
 $mensajeCompraUsuario .= '<br/><hr/>';
 $mensajeCompraUsuario .= '<h3>MÉTODO DE PAGO ELEGIDO: EFECTIVO</h3>';
@@ -71,18 +71,33 @@ $mensajeCompraUsuario .= '<br/><hr/>';
 $mensajeCompraUsuario .= '<h3>Tus datos:</h3>';
 $mensajeCompraUsuario .= $datos_usuario;
 
-$correo->set("asunto", "Muchas gracias por tu nueva compra");
+$correo->set("asunto", "Muchas gracias por tu nuevo pedido");
 $correo->set("receptor", $_SESSION["usuarios"]["email"]);
 $correo->set("emisor", EMAIL);
 $correo->set("mensaje", $mensajeCompraUsuario);
-$correo->emailEnviar();
+
+$statusSend = $correo->emailEnviar();
+$statusEmail = isset($_SESSION["usuarios"]["email"]) && !empty($_SESSION["usuarios"]["email"]) ? true : false;
+
+if ($statusSend && $statusEmail) {
+    $fecha = new DateTime();
+    $file = fopen("./log-email.txt", "a+");
+    fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a usuario comprador " . $_SESSION["usuarios"]["email"] . " correctamente." . PHP_EOL);
+    fclose($file);
+}
+if (!$statusSend && $statusEmail) {
+    $fecha = new DateTime();
+    $file = fopen("./log-email.txt", "a+");
+    fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a usuario comprador g " . $_SESSION["usuarios"]["email"] . " fallido." . PHP_EOL);
+    fclose($file);
+}
 
 if (!empty($cod_empresa)) {
     $empresa->set("cod", $cod_empresa);
     $empresaData = $empresa->view();
     if (!empty($empresaData)) {
         //ADMIN EMAIL
-        $mensajeCompra = '¡Nueva compra desde la web!<br/>A continuación te dejamos el detalle del pedido.<hr/> <h3>Pedido realizado:</h3>';
+        $mensajeCompra = '¡Nuevo pedido desde la web!<br/>A continuación te dejamos el detalle del pedido.<hr/> <h3>Pedido realizado:</h3>';
         $mensajeCompra .= $mensaje_carro;
         $mensajeCompra .= '<br/><hr/>';
         $mensajeCompra .= '<h3>MÉTODO DE PAGO ELEGIDO: EFECTIVO</h3>';
@@ -90,11 +105,26 @@ if (!empty($cod_empresa)) {
         $mensajeCompra .= '<h3>Datos de usuario:</h3>';
         $mensajeCompra .= $datos_usuario;
 
-        $correo->set("asunto", "NUEVA COMPRA ONLINE");
+        $correo->set("asunto", "NUEVO PEDIDO ONLINE");
         $correo->set("receptor", $empresaData['email']);
         $correo->set("emisor", EMAIL);
         $correo->set("mensaje", $mensajeCompra);
-        $correo->emailEnviar();
+
+        $statusSend = $correo->emailEnviar();
+        $statusEmail = isset($empresaData['email']) && !empty($empresaData['email']) ? true : false;
+
+        if ($statusSend && $statusEmail) {
+            $fecha = new DateTime();
+            $file = fopen("./log-email.txt", "a+");
+            fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a la empresa " . $empresaData['email'] . " correctamente." . PHP_EOL);
+            fclose($file);
+        }
+        if (!$statusSend && $statusEmail) {
+            $fecha = new DateTime();
+            $file = fopen("./log-email.txt", "a+");
+            fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a la empresa " . $empresaData['email'] . " fallido." . PHP_EOL);
+            fclose($file);
+        }
     }
 }
 ?>
@@ -105,7 +135,7 @@ if (!empty($cod_empresa)) {
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-title">¡Compra finalizada!</h1>
+                    <h1 class="page-title">¡Pedido finalizado!</h1>
                 </div>
                 <!-- end /.col-md-12 -->
             </div>
@@ -161,19 +191,19 @@ if (!empty($cod_empresa)) {
                                         </div>
                                         <div class="d-md-none text-left">
                                             <?= mb_strtoupper($carroItem["titulo"]); ?>
-                                            <p class="<?= $none ?>">Precio: <?= "$" . $carroItem["precio"]; ?></p>
+                                            <p class="<?= $none ?>">Precio: <?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
                                             <p class="<?= $none ?>">Cantidad: <?= $carroItem["cantidad"]; ?></p>
                                         </div>
                                     </td>
-                                    <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . $carroItem["precio"]; ?></p></td>
+                                    <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p></td>
                                     <td class="hidden-xs"><p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p></td>
                                     <?php
                                     if ($carroItem["precio"] != 0) {
                                         ?>
-                                        <td><?= "$" . ($carroItem["precio"] * $carroItem["cantidad"]); ?></td>
+                                        <td><?= "$" . number_format($carroItem["precio"] * $carroItem["cantidad"], 2, ",", "."); ?></td>
                                         <?php
                                     } else {
-                                        echo "<td>¡Gratis!</td>";
+                                        echo "<td></td>";
                                     }
                                     ?>
                                 </tr>

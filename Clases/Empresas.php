@@ -84,8 +84,9 @@ class Empresas
         `fecha` = '{$this->fecha}',
         `tiempoEntrega` = '{$this->tiempoEntrega}',
         `delivery` = '{$this->delivery}'
-        WHERE `id`='{$this->id}'";
+        WHERE `id`={$this->id}";
         $query = $this->con->sql($sql);
+
         return $query;
     }
 
@@ -98,7 +99,15 @@ class Empresas
 
     public function view()
     {
-        $sql = "SELECT * FROM `empresas` WHERE id = '{$this->id}' ||  cod = '{$this->cod}' ||  cod_usuario = '{$this->cod_usuario}' ORDER BY id DESC";
+        $sql = "SELECT * FROM `empresas` WHERE cod = '{$this->cod}' ORDER BY id DESC";
+        $notas = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($notas);
+        return $row;
+    }
+
+    public function viewByUserCod()
+    {
+        $sql = "SELECT * FROM `empresas` WHERE cod_usuario = '{$this->cod_usuario}' ORDER BY id DESC";
         $notas = $this->con->sqlReturn($sql);
         $row = mysqli_fetch_assoc($notas);
         return $row;
@@ -150,5 +159,14 @@ class Empresas
         $total = mysqli_num_rows($contar);
         $totalPaginas = $total / $cantidad;
         return ceil($totalPaginas);
+    }
+
+    //Agregado 15/08/19
+    public function viewV2()
+    {
+        $sql = "SELECT * FROM `empresas` WHERE cod_usuario = '{$this->cod_usuario}' ORDER BY id DESC";
+        $notas = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($notas);
+        return $row;
     }
 }

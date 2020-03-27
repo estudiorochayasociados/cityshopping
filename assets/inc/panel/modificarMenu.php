@@ -25,7 +25,7 @@ $categoriasArray = $categoria->list($filter, $order, "");
 
 $cod_usuario = $_SESSION['usuarios']['cod'];
 $empresa->set("cod_usuario", $cod_usuario);
-$empresaData = $empresa->view();
+$empresaData = $empresa->viewv2();
 $cod_empresa = $empresaData['cod'];
 
 if (isset($_POST["modificar_menu"])):

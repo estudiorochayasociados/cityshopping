@@ -17,7 +17,7 @@ if ($estado != '' && $cod != '') {
 $cod_usuario = $_SESSION['usuarios']['cod'];
 
 $empresa->set("cod_usuario", $cod_usuario);
-$empresaData = $empresa->view();
+$empresaData = $empresa->viewV2();
 $cod_empresa = $empresaData['cod'];
 
 $filterPedidosAgrupados = array("empresa = '" . $cod_empresa . "' GROUP BY cod");
@@ -125,7 +125,7 @@ $pedidosArraySinAgrupar = $pedido->list($filterPedidosSinAgrupar, "", "");
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                     <tr>
-                                                        <td><b>TOTAL DE LA COMPRA</b></td>
+                                                        <td><b>TOTAL DEL PEDIDO</b></td>
                                                         <td class="hidden-xs"></td>
                                                         <td class="hidden-xs"></td>
                                                         <td><b>$<?= $precioTotal ?></b></td>

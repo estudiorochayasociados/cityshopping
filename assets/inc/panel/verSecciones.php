@@ -2,7 +2,7 @@
 $cod_usuario = $_SESSION['usuarios']['cod'];
 
 $empresa->set("cod_usuario", $cod_usuario);
-$empresaData = $empresa->view();
+$empresaData = $empresa->viewByUserCod();
 $cod_empresa = $empresaData['cod'];
 
 $filterSeccion = array("cod_empresa = '" . $cod_empresa . "'");

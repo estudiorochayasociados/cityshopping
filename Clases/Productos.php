@@ -146,4 +146,9 @@ class Productos
         return ceil($totalPaginas);
     }
 
+    public function editSingle($atributo, $valor)
+    {
+        $sql = "UPDATE `productos` SET `$atributo` = {$valor} WHERE `cod`='{$this->cod}' AND `cod_empresa`='{$this->cod_empresa}'";
+        return $this->con->sqlReturn($sql);
+    }
 }

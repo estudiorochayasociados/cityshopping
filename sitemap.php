@@ -7,7 +7,7 @@ $comercios = new Clases\Empresas();
 $contenidos = new Clases\Contenidos();
 $novedades = new Clases\Novedades();
 $categorias = new Clases\Categorias();
-$otras = array("panel", "panel?op=perfil", "panel?op=empresa", "panel?op=productos", "panel?op=nuevo","panel?op=compra","panel?op=venta","index", "productos","blogs","comercios","contacto");
+$otras = array("panel", "panel?op=perfil", "panel?op=empresa", "panel?op=productos", "panel?op=nuevo","panel?op=compra","panel?op=venta","index", "productos", "blogs","comercios","contacto");
 
 $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
@@ -19,9 +19,9 @@ foreach (($data = $novedades->list("")) as $novedad) {
 }
 
 foreach (($data = $productos->list("", "titulo desc", '')) as $producto) {
-    $cod = $producto["id"];
+    $cod = $producto["cod"];
     $titulo = $funciones->normalizar_link($producto["titulo"]);
-    $xml .= '<url><loc>' . URL . '/producto/' . $titulo . '/' . $cod . '</loc><lastmod>' . $producto["fecha"] . '</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>';
+    $xml .= '<url><loc>' . URL . '/productos/' . $titulo . '/' . $cod . '</loc><lastmod>' . date("Y-m-d") . '</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>';
 }
 
 foreach (($data = $comercios->list("", "titulo desc", '')) as $comercio) {
@@ -32,7 +32,7 @@ foreach (($data = $comercios->list("", "titulo desc", '')) as $comercio) {
 
 foreach (($data = $categorias->list("", "titulo desc", '')) as $categoria) {
     $cod = $categoria["cod"];
-    $xml .= '<url><loc>' . URL . '/comercios?ck=3&categoria=' . $cod .'</loc><lastmod>' . $categoria["fecha"] . '</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>';
+    $xml .= '<url><loc>' . URL . '/comercios?ck=3&amp;categoria=' . $cod .'</loc><lastmod>' . date("Y-m-d") . '</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>';
 }
 
 foreach (($data = $contenidos->list("")) as $contenido) {

@@ -25,7 +25,7 @@ if ($pagina > 0) {
     $pagina = $pagina - 1;
 }
 if (@count($filter) == 0) {
-    $filter = '';
+    $filter = $usuario->validarvendedor2();
 }
 if ($_GET) {
     if (@count($_GET) > 1) {
@@ -186,7 +186,7 @@ $template->themeInit();
                 if (!empty($empresa_data)) {
                     foreach ($empresa_data as $emp) {
                         $usuario->set("cod", $emp['cod_usuario']);
-                        if ($usuario->validarVendedor()) {
+
                             ?>
                             <!-- start .col-md-4 -->
                             <div class="col-lg-4 col-md-6">
@@ -212,7 +212,7 @@ $template->themeInit();
                             <!-- end /.col-md-4 -->
                             <?php
                         }
-                    }
+
                 } else {
                     ?>
                     <div class="col-md-12">

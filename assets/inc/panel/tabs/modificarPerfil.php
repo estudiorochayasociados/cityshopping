@@ -42,7 +42,7 @@ if (isset($_POST["modificarPerfil"])):
     $usuario->set("fecha", $usuarioData['fecha']);
 
     $usuario->edit();
-    //$funcion->headerMove(URL . '/panel');
+    $funcion->headerMove(URL . '/panel');
 endif;
 ?>
 <!--================================
@@ -178,7 +178,7 @@ endif;
                                             </div>
                                         </div>
                                         <div class="dashboard_setting_btn">
-                                            <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar Datos
+                                            <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Guardar Datos
                                             </button>
                                         </div>
                                     </div>
@@ -222,7 +222,7 @@ endif;
                                                type="password" placeholder="Ej. Azf45D3yU" required>
                                     </div>
                                     <div class="dashboard_setting_btn ">
-                                        <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Modificar contraseña
+                                        <button type="submit" name="modificarPerfil" class="btn btn--round btn--md">Guardar contraseña
                                     </div>
                                 </div>
                                 <!-- end /.information_wrapper -->

@@ -19,6 +19,10 @@ foreach ($categorias_banners as $categorias) {
         $banner->set("categoria", $categorias['cod']);
         $banner_data_largo = $banner->listForCategory('RAND()', 1);
     }
+    if ($categorias['titulo'] == 'POPUP') {
+        $banner->set("categoria", $categorias['cod']);
+        $banner_data_popup = $banner->listForCategory('', 1);
+    }
 }
 ////Sliders
 $categoria->set("area", "sliders");
@@ -127,24 +131,24 @@ $template->themeInit();
     <div class="container">
         <div class="mb-10 hidden-xs">
             <?php
-//
-//            foreach ($banner_data_largo as $ban) {
-//                $imagen->set("cod", $ban['cod']);
-//                $img = $imagen->view();
-//                $banner->set("id", $ban['id']);
-//                $value = $ban['vistas'] + 1;
-//                $banner->set("vistas", $value);
-//                $banner->increaseViews();
-//
-/*                <img src="<?= URL . '/' . $img['ruta'] ?>">*/
-//
-//            }
+            //
+            //            foreach ($banner_data_largo as $ban) {
+            //                $imagen->set("cod", $ban['cod']);
+            //                $img = $imagen->view();
+            //                $banner->set("id", $ban['id']);
+            //                $value = $ban['vistas'] + 1;
+            //                $banner->set("vistas", $value);
+            //                $banner->increaseViews();
+            //
+            /*                <img src="<?= URL . '/' . $img['ruta'] ?>">*/
+            //
+            //            }
 
             ?>
-            <img src="<?=URL?>/assets/GIF-CON-ICONOS.gif">
+            <img src="<?= URL ?>/assets/GIF-CON-ICONOS.gif">
         </div>
         <div class="mb-10 d-md-none">
-            <img src="<?=URL?>/assets/GIF-CON-ICONOS-MOVIL.gif">
+            <img src="<?= URL ?>/assets/GIF-CON-ICONOS-MOVIL.gif">
         </div>
         <!-- start row -->
         <div class="row">
@@ -247,7 +251,7 @@ $template->themeInit();
                 <img src="<?= URL . '/assets/GIF-CITY-SHOPPING.gif' ?>">
             </div>
             <div class="col-md-12 d-md-none">
-                <img src="<?= URL?>/assets/GIF-CITY-MOVIL.gif">
+                <img src="<?= URL ?>/assets/GIF-CITY-MOVIL.gif">
             </div>
         </div>
     </div>
@@ -313,8 +317,33 @@ if (!empty($_SESSION['usuarios'])) {
     =================================-->
     <?php
 }
-?>
-
-<?php
 $template->themeEnd();
+if (!empty($banner_data_popup)) {
+    $imagen->set("cod", $banner_data_popup[0]['cod']);
+    $img = $imagen->view();
+    ?>
+    <!-- Modal -->
+    <div id="modalPOP" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:8px">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <a href="<?=$banner_data_popup[0]['link']?>" target="_blank">
+                        <img src="<?=URL?>/<?=$img['ruta']?>">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#modalPOP').modal("show");
+        });
+    </script>
+    <?php
+}
 ?>

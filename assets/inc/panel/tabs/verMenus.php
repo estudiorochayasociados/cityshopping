@@ -40,105 +40,111 @@ if (isset($_GET["borrar"])) {
                     if (!empty($productoArray)) {
                         ?>
                         <div class="row">
-                            <?php
-                            foreach ($productoArray as $prod) {
-                                $imagenes->set("cod",$prod['cod']);
-                                $img=$imagenes->view();
-                                ?>
-                                <!-- start .col-md-4 -->
-                                <div class="col-lg-4 col-md-6">
-                                    <!-- start .single-product -->
-                                    <div class="product product--card product--card3">
-                                        <div class="product__thumbnail">
-                                                <div style=" height: 200px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/cover;">
+                            <div class="col-md-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <th class="hidden-xs hidden-sm">TÍTULO</th>
+                                    <th class="d-md-none">PRODUCTO</th>
+                                    <th class="hidden-xs hidden-sm">PRECIO</th>
+                                    <th class="hidden-xs hidden-sm">PRECIO DESCUENTO</th>
+                                    <th class="hidden-xs hidden-sm">STOCK</th>
+                                    <th></th>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    foreach ($productoArray as $producto_) {
+                                        $cod = $producto_["cod"];
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <input class="form-control" style='width:90%' onchange='editProduct("titulo-<?= $cod ?>","<?= URL ?>")' id='titulo-<?= $cod ?>' name='titulo' value='<?= $producto_["titulo"] ?>'/>
+                                                <div class="d-md-none">
+                                                    <div class="input-group mb-3 mt-3" style="width:90%">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fa fa-dollar"></i></span>
+                                                        </div>
+                                                        <input type="number" class="form-control" min="0" onchange='editProduct("precio-<?= $cod ?>-m","<?= URL ?>")' id='precio-<?= $cod ?>-m' name='precio' value='<?= $producto_["precio"] ?>'>
+                                                    </div>
+                                                    <div class="input-group mb-3 mt-3" style="width:90%">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fa fa-dollar"></i></span>
+                                                        </div>
+                                                        <input type="number" class="form-control" min="0" onchange='editProduct("precioDescuento-<?= $cod ?>-m","<?= URL ?>")' id='precioDescuento-<?= $cod ?>-m' name='precio_descuento' value='<?= $producto_["precioDescuento"] ?>'>
+                                                    </div>
+                                                    <div class="input-group mb-3 mt-3" style="width:90%">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fa fa-cubes"></i></span>
+                                                        </div>
+                                                        <input type="number" class="form-control" min="0" onchange='editProduct("stock-<?= $cod ?>-m","<?= URL ?>")' id='stock-<?= $cod ?>-m' name='stock' value='<?= $producto_["stock"] ?>'>
+                                                    </div>
                                                 </div>
-                                            <div class="prod_option">
-                                                <a href="#" id="drop2" class="dropdown-trigger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <span class="lnr lnr-cog setting-icon"></span>
-                                                </a>
-
-                                                <div class="options dropdown-menu" aria-labelledby="drop2">
-                                                    <ul>
-                                                        <li>
-                                                            <a href="<?= URL; ?>/panel?op=editar&cod=<?= $prod['cod'] ?>">
-                                                                <span class="lnr lnr-pencil"></span>Editar</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?= URL . '/producto/' . $funcion->normalizar_link($prod['titulo']) . '/' . $funcion->normalizar_link($prod['cod']); ?>">
-                                                                <span class="lnr lnr-eye"></span>Ver</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?= CANONICAL; ?>&borrar=<?= $prod['cod'] ?>" class="delete">
-                                                                <span class="lnr lnr-trash"></span>Borrar</a>
-                                                        </li>
-                                                    </ul>
+                                            </td>
+                                            <td class="hidden-xs hidden-sm">
+                                                <div class="input-group mb-3" style="width:90%">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-dollar"></i></span>
+                                                    </div>
+                                                    <input type="number" class="form-control" min="0" onchange='editProduct("precio-<?= $cod ?>","<?= URL ?>")' id='precio-<?= $cod ?>' name='precio' value='<?= $producto_["precio"] ?>'>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <!-- end /.product__thumbnail -->
-
-                                        <div class="product-desc">
-                                            <a class="product_title">
-                                                <h4> <?= ucfirst(substr(strip_tags($prod['titulo']), 0, 50)); ?></h4>
-                                            </a>
-                                            <ul class="titlebtm">
-                                                <li>
-                                                    <p>
-                                                        <a href="">
-
-                                                        </a>
-                                                    </p>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- end /.product-desc -->
-
-                                        <div class="product-purchase">
-                                        <div class="price_love">
-                                            <?php
-                                            if (!empty($prod['precioDescuento'])) {
-                                                ?>
-                                                <span>$<?= $prod['precioDescuento'] ?> <small class="tachado">$<?= $prod['precio'] ?></small></span>
-                                                <?php
-                                            } else {
-                                                ?>
-                                                <span>$<?= $prod['precio'] ?></span>
-                                                <?php
-                                            }
-                                            ?>
-                                        </div>
-                                            <div class="sell">
-                                                <p>
-                                                    <span class="lnr lnr-layers"></span>
-                                                    <span><?=$prod['stock'];?></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <!-- end /.product-purchase -->
-                                    </div>
-                                    <!-- end /.single-product -->
-                                </div>
-                                <!-- end /.col-md-4 -->
-                                <?php
-                            }
-                            ?>
+                                            </td>
+                                            <td class="hidden-xs hidden-sm">
+                                                <div class="input-group mb-3" style="width:90%">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-dollar"></i></span>
+                                                    </div>
+                                                    <input type="number" class="form-control" min="0" onchange='editProduct("precioDescuento-<?= $cod ?>","<?= URL ?>")' id='precioDescuento-<?= $cod ?>' name='precio_descuento' value='<?= $producto_["precioDescuento"] ?>'>
+                                                </div>
+                                            </td>
+                                            <td class="hidden-xs hidden-sm">
+                                                <div class="input-group mb-3" style="width:90%">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-cubes"></i></span>
+                                                    </div>
+                                                    <input type="number" class="form-control" min="0" onchange='editProduct("stock-<?= $cod ?>","<?= URL ?>")' id='stock-<?= $cod ?>' name='stock' value='<?= $producto_["stock"] ?>'>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div style="width: 90%">
+                                                    <?php if (!empty($producto_['variantes'])) { ?>
+                                                        <button style="color:white" class="btn btn-info variations-button fs-20 mt-5" data-toggle="tooltip" data-placement="top" onclick="openVariantions('<?= URL ?>','<?= $cod ?>')" title="Modificar variantes">
+                                                            <i class="fa fa-pencil" style="margin:5px"></i>
+                                                        </button>
+                                                    <?php } ?>
+                                                    <a style="" class="btn btn-info fs-20 mt-5" data-toggle="tooltip" data-placement="top" title="Modificar" href="<?= URL; ?>/panel?op=editar&cod=<?= $producto_['cod'] ?>">
+                                                        <i class="fa fa-gear" style="margin:5px"></i>
+                                                    </a>
+                                                    <a style="" class="btn btn-success fs-20 mt-5" data-toggle="tooltip" data-placement="top" title="Ver" href="<?= URL . '/producto/' . $funcion->normalizar_link($producto_['titulo']) . '/' . $funcion->normalizar_link($producto_['cod']); ?>">
+                                                        <i class="fa fa-eye" style="margin:5px"></i>
+                                                    </a>
+                                                    <a style="" class="btn btn-danger fs-20 mt-5" data-toggle="tooltip" data-placement="top" title="Eliminar" href="<?= CANONICAL; ?>&borrar=<?= $producto_['cod'] ?>">
+                                                        <i class="fa fa-trash" style="margin:5px"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="pagination-area">
                                     <nav class="navigation pagination" role="navigation">
                                         <div class="nav-links">
-                                    <?php if (($pagina + 1) > 1): ?>
-                                        <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= $pagina ?>"></a>
-                                    <?php endif; ?>
+                                            <?php if (($pagina + 1) > 1): ?>
+                                                <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= $pagina ?>"></a>
+                                            <?php endif; ?>
 
-                                    <?php for ($i = 1; $i <= $numeroPaginas; $i++): ?>
-                                        <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= $i ?>"><?= $i ?></a>
-                                    <?php endfor; ?>
+                                            <?php for ($i = 1; $i <= $numeroPaginas; $i++): ?>
+                                                <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= $i ?>"><?= $i ?></a>
+                                            <?php endfor; ?>
 
-                                    <?php if (($pagina + 2) <= $numeroPaginas): ?>
-                                        <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= ($pagina + 2) ?>"></a>
-                                    <?php endif; ?>
+                                            <?php if (($pagina + 2) <= $numeroPaginas): ?>
+                                                <a class="page-numbers" href="<?= $url ?><?= $anidador ?>pagina=<?= ($pagina + 2) ?>"></a>
+                                            <?php endif; ?>
                                         </div>
                                     </nav>
                                 </div>
@@ -169,6 +175,33 @@ if (isset($_GET["borrar"])) {
                 <?php } ?>
             </div>
             <!-- end /.container -->
+        </div>
+    </div>
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#variationsModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="variationsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:10px">
+                <h5 class="modal-title" style="margin-bottom: 0px" id="variationsModalTitle">Modal title</h5>
+                <!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                <!--                    <span aria-hidden="true">&times;</span>-->
+                <!--                </button>-->
+            </div>
+            <div class="modal-body">
+                <form id="variationsModalForm" class="row" onsubmit="event.preventDefault();updateVariations('<?=URL?>')">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-sm btn-success" form="variationsModalForm">Guardar cambios</button>
+            </div>
         </div>
     </div>
 </div>

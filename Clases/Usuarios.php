@@ -222,7 +222,17 @@ class Usuarios
             return false;
         }
     }
-
+function validarvendedor2()
+{
+    $sql = "SELECT * FROM usuarios INNER JOIN empresas ON usuarios.vendedor=empresas.email WHERE usuarios.vendedor = '1'";
+    $usuario = $this->con->sqlReturn($sql);
+    $row = mysqli_fetch_assoc($usuario);
+    if (!empty($row)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
     //Agregado 08/08/19
     public function validate2()

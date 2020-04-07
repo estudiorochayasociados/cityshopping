@@ -31,6 +31,8 @@ class Empresas
     public $cod_usuario;
     public $tiempoEntrega;
     public $delivery;
+    public $clientID;
+    public $clientSecret;
     private $con;
 
 
@@ -55,7 +57,7 @@ class Empresas
         $sql = "INSERT INTO `empresas`(`cod`, `titulo`, `telefono`, `email`, `provincia`, `ciudad`, `barrio`, `direccion`, `postal`, `coordenadas`, `desarrollo`, `redes`, `redes2`, `redes3`, `logo`, `portada`, `categoria`, `subcategoria`, `keywords`, `description`, `fecha`, `cod_usuario`, `tiempoEntrega`, `delivery`) VALUES ('{$this->cod}', '{$this->titulo}', '{$this->telefono}', '{$this->email}', '{$this->provincia}', '{$this->ciudad}', '{$this->barrio}', '{$this->direccion}', '{$this->postal}', '{$this->coordenadas}', '{$this->desarrollo}', '{$this->redes}', '{$this->redes2}', '{$this->redes3}','{$this->logo}','{$this->portada}', '{$this->categoria}', '{$this->subcategoria}', '{$this->keywords}', '{$this->description}', '{$this->fecha}', '{$this->cod_usuario}', '{$this->tiempoEntrega}', '{$this->delivery}')";
         $query = $this->con->sql($sql);
 
-//        return $query;
+        //        return $query;
     }
 
     public function edit()
@@ -83,10 +85,23 @@ class Empresas
         `description` = '{$this->description}',
         `fecha` = '{$this->fecha}',
         `tiempoEntrega` = '{$this->tiempoEntrega}',
-        `delivery` = '{$this->delivery}'
+        `delivery` = '{$this->delivery}',
+        `clientID` = '{$this->clientID}',
+        `clientSecret` = '{$this->clientSecret}'
         WHERE `id`={$this->id}";
         $query = $this->con->sql($sql);
 
+        return $query;
+    }
+
+
+    public function addMercadoPago()
+    {
+        $sql = "UPDATE `empresas` SET 
+        `clientID` = '{$this->clientID}',
+        `clientSecret` = '{$this->clientSecret}'
+        WHERE `cod`='{$this->cod}'";
+        $query = $this->con->sql($sql);
         return $query;
     }
 

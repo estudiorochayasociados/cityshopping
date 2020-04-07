@@ -12,12 +12,12 @@ $template->themeInit();
 $pedidos = new Clases\Pedidos();
 $carrito = new Clases\Carrito();
 $usuarios = new Clases\Usuarios();
+$empresas = new Clases\Empresas();
 $productos = new Clases\Productos();
 
 $factura = $funciones->antihack_mysqli(isset($_GET["fact"]) ? $_GET["fact"] : '');
 
 $cod_pedido = $_SESSION["cod_pedido"];
-//$tipo_pedido = isset($_GET["tipo_pedido"]) ? $_GET["tipo_pedido"] : '1';
 
 $pedidos->set("cod", $cod_pedido);
 $pedido = $pedidos->view();
@@ -27,8 +27,12 @@ $carro = $carrito->return();
 
 $timezone = -3;
 $fecha = gmdate("Y-m-j H:i:s", time() + 3600 * ($timezone + date("I")));
+
+$precio = 0;
+
 ?>
-    <body id="bd" class="cms-index-index2 header-style2 prd-detail sns-products-detail1 cms-simen-home-page-v2 default cmspage">
+
+<body id="bd" class="cms-index-index2 header-style2 prd-detail sns-products-detail1 cms-simen-home-page-v2 default cmspage">
     <div id="sns_wrapper">
     </div>
     <?php
@@ -40,18 +44,20 @@ $fecha = gmdate("Y-m-j H:i:s", time() + 3600 * ($timezone + date("I")));
     $cod_empresa = '';
 
     foreach ($carro as $carroItem) {
+        if ($carroItem["id"] == "Metodo-Pago") {
+            $mp = ($carroItem["titulo"] == "Método de pago: MercadoPago") ? true : false;
+        }
+
+        $precio += $carroItem["precio"];
 
         $productos->set("cod", $carroItem["id"]);
         $productosData = $productos->view();
+
         if (!empty($productosData)) {
             $cod_empresa = $productosData["cod_empresa"];
         }
 
-        if (empty($carroItem["opciones"])) {
-            $opciones = '';
-        } else {
-            $opciones = '|||' . serialize($carroItem["opciones"]);
-        }
+        $opciones = !empty($carroItem["opciones"]) ?  '|||' . serialize($carroItem["opciones"]) : '';
 
         $pedidos->set("cod", $cod_pedido);
         $pedidos->set("producto", $carroItem["titulo"] . $opciones);
@@ -65,59 +71,58 @@ $fecha = gmdate("Y-m-j H:i:s", time() + 3600 * ($timezone + date("I")));
         $pedidos->set("fecha", $fecha);
         $pedidos->add();
     }
-    if (!empty($factura)) {
-        $funciones->headerMove(URL . "/compra-finalizada.php?fact=1");
-    } else {
-        $funciones->headerMove(URL . "/compra-finalizada.php");
-    }
 
-    //switch ($pago["tipo"]) {
-    //    case 0:
-    //        $pedidos->set("cod", $cod_pedido);
-    //        $pedidos->set("estado", $pago["defecto"]);
-    //        $pedidos->cambiar_estado();
-    //        break;
-    //    case 1:
-    //        include("vendor/mercadopago/sdk/lib/mercadopago.php");
-    //        $mp = new MP ("7077260206047943", "ocqTWXCjVekoxQRf2cVkrZWX1m5QCHj9");
-    //        $preference_data = array(
-    //            "items" => array(
-    //                array(
-    //                    "id" => $cod_pedido,
-    //                    "title" => "COMPRA CÓDIGO N°:" . $cod_pedido,
-    //                    "quantity" => 1,
-    //                    "currency_id" => "ARS",
-    //                    "unit_price" => $precio
-    //                )
-    //            ),
-    //            "payer" => array(
-    //                "name" => $usuarioSesion["nombre"],
-    //                "surname" => $usuarioSesion["apellido"],
-    //                "email" => $usuarioSesion["email"]
-    //            ),
-    //            "back_urls" => array(
-    //                "success" => URL . "/compra-finalizada.php?estado=2",
-    //                "pending" => URL . "/compra-finalizada.php?estado=1",
-    //                "failure" => URL . "/compra-finalizada.php?estado=0"
-    //            ),
-    //            "external_reference" => $cod_pedido,
-    //            "auto_return" => "all",
-    //            //"client_id" => $usuarioSesion["cod"],
-    //            "payment_methods" => array(
-    //                "excluded_payment_methods" => array(),
-    //                "excluded_payment_types" => array(
-    //                    array("id" => "ticket"),
-    //                    array("id" => "atm")
-    //                )
-    //            )
-    //        );
-    //        $preference = $mp->create_preference($preference_data);
-    //        //$funciones->headerMove($preference["response"]["sandbox_init_point"]);
-    //        echo "<iframe src='" . $preference["response"]["sandbox_init_point"] . "' width='100%' height='700px' style='border:0;margin:0'></iframe>";
-    //        break;
-    //}
+    if ($mp) {
+        include("vendor/mercadopago/sdk/lib/mercadopago.php");
+        $empresas->set("cod", $cod_empresa);
+        $empresa = $empresas->view();
+        $mp = new MP($empresa["clientID"], $empresa["clientSecret"]);
+
+        $preference_data = array(
+            "items" => array(
+                array(
+                    "id" => $cod_pedido,
+                    "title" => "COMPRA CÓDIGO N°:" . $cod_pedido,
+                    "quantity" => 1,
+                    "currency_id" => "ARS",
+                    "unit_price" => $precio
+                )
+            ),
+            "payer" => array(
+                "name" => $usuarioSesion["nombre"],
+                "surname" => $usuarioSesion["apellido"],
+                "email" => $usuarioSesion["email"]
+            ),
+            "back_urls" => array(
+                "success" => URL . "/compra-finalizada.php",
+                "pending" => URL . "/compra-finalizada.php",
+                "failure" => URL . "/compra-finalizada.php"
+            ),
+            "external_reference" => $cod_pedido,
+            "auto_return" => "all",
+            "payment_methods" => array(
+                "excluded_payment_methods" => array(),
+                "excluded_payment_types" => array(
+                    array("id" => "ticket"),
+                    array("id" => "atm")
+                )
+            )
+        );
+
+        try {
+            $preference = $mp->create_preference($preference_data);
+        } catch (Exception $e) {
+            echo 'Error: ',  $e->getMessage(), "\n";
+            die();
+        }
+
+        // $funciones->headerMove($preference["response"]["init_point"]);
+        $funciones->headerMove($preference["response"]["sandbox_init_point"]);
+    } else {
+        (!empty($factura)) ? $funciones->headerMove(URL . "/compra-finalizada.php?fact=1") : $funciones->headerMove(URL . "/compra-finalizada.php");
+    }
     ?>
-    </body>
+</body>
 <?php
 $template->themeEnd();
 ?>

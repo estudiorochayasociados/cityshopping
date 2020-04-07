@@ -10,6 +10,8 @@ if (isset($_POST["modificarPerfil"])):
     $direccion = $funcion->antihack_mysqli(!empty($_POST["direccionPerfil"]) ? $_POST["direccionPerfil"] : $usuarioData['direccion']);
     $telefono = $funcion->antihack_mysqli(!empty($_POST["telefonoPerfil"]) ? $_POST["telefonoPerfil"] : $usuarioData['telefono']);
     $postal = $funcion->antihack_mysqli(!empty($_POST["postalPerfil"]) ? $_POST["postalPerfil"] : $usuarioData['postal']);
+    $clientID = $usuarioData['clientID'];
+    $clientSecret = $usuarioData['clientSecret'];
     $vendedor = $usuarioData['vendedor'];
     if (!empty($_POST["new_passwordPerfil"]) && !empty($_POST["new_password2Perfil"]) && !empty($_POST["old_passwordPerfil"])):
         $oldpassword = hash('sha256', $_POST["old_passwordPerfil"] . SALT);
@@ -38,6 +40,8 @@ if (isset($_POST["modificarPerfil"])):
     $usuario->set("telefono", $telefono);
     $usuario->set("postal", $postal);
     $usuario->set("password", $password);
+    $usuario->set("clientID", $clientID);
+    $usuario->set("clientSecret", $clientSecret);
     $usuario->set("vendedor", $vendedor);
     $usuario->set("fecha", $usuarioData['fecha']);
 

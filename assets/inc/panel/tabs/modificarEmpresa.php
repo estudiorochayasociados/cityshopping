@@ -12,11 +12,10 @@ if ($borrarImg != '') {
         <div class="container">
             <div class="">
                 <?php
-                if (!empty($existeEmpresa)):
-                    ?>
+                if (!empty($existeEmpresa)) :
+                ?>
                     <div>
-                        <?php if (isset($_POST["modificarEmpresa"])):
-
+                        <?php if (isset($_POST["modificarEmpresa"])) :
                             $titulo = $funcion->antihack_mysqli(!empty($_POST["tituloEmpresa"]) ? $_POST["tituloEmpresa"] : $empresaData['titulo']);
                             $desarrollo = $funcion->antihack_mysqli(!empty($_POST["desarrolloEmpresa"]) ? $_POST["desarrolloEmpresa"] : $empresaData['desarrollo']);
                             $telefono = $funcion->antihack_mysqli(!empty($_POST["telefonoEmpresa"]) ? $_POST["telefonoEmpresa"] : $empresaData['telefono']);
@@ -29,12 +28,11 @@ if ($borrarImg != '') {
                             $delivery = $funcion->antihack_mysqli(isset($_POST["deliveryEmpresa"]) ? $_POST["deliveryEmpresa"] : $empresaData['delivery']);
                             $tiempoEntrega = $funcion->antihack_mysqli(isset($_POST["tiempoEntregaEmpresa"]) ? $_POST["tiempoEntregaEmpresa"] : $empresaData['tiempoEntrega']);
 
-
                             $facebook = $funcion->antihack_mysqli(isset($_POST["facebook"]) ? $_POST["facebook"] : $empresaData['redes']);
                             $twitter = $funcion->antihack_mysqli(isset($_POST["twitter"]) ? $_POST["twitter"] : $empresaData['redes2']);
                             $instagram = $funcion->antihack_mysqli(isset($_POST["instagram"]) ? $_POST["instagram"] : $empresaData['redes3']);
 
-                            if ($direccion != $empresaData['direccion'] || $ciudad != $empresaData['ciudad'] || $provincia != $empresaData['provincia']):
+                            if ($direccion != $empresaData['direccion'] || $ciudad != $empresaData['ciudad'] || $provincia != $empresaData['provincia']) :
                                 $ubicacionEmpresa = $direccion . '+' . $ciudad . '+' . $provincia;
                                 $ubicacionEmpresa = str_replace("-", "+", $funcion->normalizar_link($ubicacionEmpresa));
 
@@ -42,7 +40,7 @@ if ($borrarImg != '') {
                                 $empresaLongitud = $jsonEmpresa->Response->View[0]->Result[0]->Location->DisplayPosition->Longitude;
                                 $empresaLatitud = $jsonEmpresa->Response->View[0]->Result[0]->Location->DisplayPosition->Latitude;
                                 $coordenadas = $empresaLatitud . ',' . $empresaLongitud;
-                            else:
+                            else :
                                 $coordenadas = $empresaData['coordenadas'];
                             endif;
 
@@ -105,7 +103,7 @@ if ($borrarImg != '') {
                                 $envio->add();
                             }
 
-                            if (!empty($_FILES["logoEmpresa"]["name"])):
+                            if (!empty($_FILES["logoEmpresa"]["name"])) :
                                 //logo
                                 $imgInicio = $_FILES["logoEmpresa"]["tmp_name"];
                                 $tucadena = $_FILES["logoEmpresa"]["name"];
@@ -113,7 +111,7 @@ if ($borrarImg != '') {
                                 $dom = (count($partes) - 1);
                                 $dominio = $partes[$dom];
                                 $prefijo = substr(md5(uniqid(rand())), 0, 10);
-                                if ($dominio != ''):
+                                if ($dominio != '') :
                                     $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
                                     move_uploaded_file($imgInicio, $destinoFinal);
                                     chmod($destinoFinal, 0777);
@@ -126,17 +124,17 @@ if ($borrarImg != '') {
                                     $zebra->enlarge_smaller_images = true;
                                     $zebra->preserve_time = true;
 
-                                    if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)):
+                                    if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) :
                                         unlink($destinoFinal);
                                     endif;
 
                                     $empresa->set("logo", str_replace("../", "", $destinoRecortado));
                                 endif;
                             //logo
-                            else:
+                            else :
                                 $empresa->set("logo", $empresaData['logo']);
                             endif;
-                            if (!empty($_FILES["portadaEmpresa"]["name"])):
+                            if (!empty($_FILES["portadaEmpresa"]["name"])) :
                                 //portada
 
                                 $imgInicio = $_FILES["portadaEmpresa"]["tmp_name"];
@@ -145,7 +143,7 @@ if ($borrarImg != '') {
                                 $dom = (count($partes) - 1);
                                 $dominio = $partes[$dom];
                                 $prefijo = substr(md5(uniqid(rand())), 0, 10);
-                                if ($dominio != ''):
+                                if ($dominio != '') :
                                     $destinoFinal = "assets/archivos/" . $prefijo . "." . $dominio;
                                     move_uploaded_file($imgInicio, $destinoFinal);
                                     chmod($destinoFinal, 0777);
@@ -158,17 +156,17 @@ if ($borrarImg != '') {
                                     $zebra->enlarge_smaller_images = true;
                                     $zebra->preserve_time = true;
 
-                                    if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)):
+                                    if ($zebra->resize(800, 700, ZEBRA_IMAGE_NOT_BOXED)) :
                                         unlink($destinoFinal);
                                     endif;
 
                                     $empresa->set("portada", str_replace("../", "", $destinoRecortado));
                                 endif;
                             //portada
-                            else:
+                            else :
                                 $empresa->set("portada", $empresaData['portada']);
                             endif;
-                            if (!empty($_FILES["filesEmpresa"]["name"])):
+                            if (!empty($_FILES["filesEmpresa"]["name"])) :
                                 //galeria
                                 $count = 0;
                                 foreach ($_FILES['filesEmpresa']['name'] as $f => $name) {
@@ -202,7 +200,7 @@ if ($borrarImg != '') {
 
                                     $count++;
                                 }
-                                //galeria
+                            //galeria
                             endif;
 
                             $empresa->edit();
@@ -234,34 +232,31 @@ if ($borrarImg != '') {
                                                     <div class="form-group">
                                                         <label>Nombre de la empresa</label>
                                                         <input class="text_field" value="<?php if (!empty($empresaData['titulo'])) {
-                                                            echo $empresaData['titulo'];
-                                                        } ?>" name="tituloEmpresa" id="tituloEmpresa" type="text"
-                                                               placeholder="Ej. Restaurante Argentino" required>
+                                                                                                echo $empresaData['titulo'];
+                                                                                            } ?>" name="tituloEmpresa" id="tituloEmpresa" type="text" placeholder="Ej. Restaurante Argentino" required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>Descripción de la empresa</label>
                                                         <textarea name="desarrolloEmpresa" required><?php if (!empty($empresaData['desarrollo'])) {
-                                                                echo $empresaData['desarrollo'];
-                                                            } ?></textarea>
+                                                                                                        echo $empresaData['desarrollo'];
+                                                                                                    } ?></textarea>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-6 col-xs-6">
                                                             <div class="form-group">
                                                                 <label>Teléfono</label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['telefono'])) {
-                                                                    echo $empresaData['telefono'];
-                                                                } ?>" id="telefonoEmpresa" name="telefonoEmpresa" class="text_field"
-                                                                       placeholder="Ej. 111 123456" required>
+                                                                                                echo $empresaData['telefono'];
+                                                                                            } ?>" id="telefonoEmpresa" name="telefonoEmpresa" class="text_field" placeholder="Ej. 111 123456" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-xs-6">
                                                             <div class="form-group">
                                                                 <label>Email</label>
                                                                 <input type="email" value="<?php if (!empty($empresaData['email'])) {
-                                                                    echo $empresaData['email'];
-                                                                } ?>" id="emailEmpresa" name="emailEmpresa" class="text_field"
-                                                                       placeholder="Ej. ventas@mirestaurante.com" required>
+                                                                                                echo $empresaData['email'];
+                                                                                            } ?>" id="emailEmpresa" name="emailEmpresa" class="text_field" placeholder="Ej. ventas@mirestaurante.com" required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -272,8 +267,8 @@ if ($borrarImg != '') {
                                                                     <small>(Opcional)</small>
                                                                 </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes'])) {
-                                                                    echo $empresaData['redes'];
-                                                                } ?>" name="facebook" class="text_field">
+                                                                                                echo $empresaData['redes'];
+                                                                                            } ?>" name="facebook" class="text_field">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
@@ -282,8 +277,8 @@ if ($borrarImg != '') {
                                                                     <small>(Opcional)</small>
                                                                 </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes2'])) {
-                                                                    echo $empresaData['redes2'];
-                                                                } ?>" name="twitter" class="text_field">
+                                                                                                echo $empresaData['redes2'];
+                                                                                            } ?>" name="twitter" class="text_field">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
@@ -292,8 +287,8 @@ if ($borrarImg != '') {
                                                                     <small>(Opcional)</small>
                                                                 </label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['redes2'])) {
-                                                                    echo $empresaData['redes3'];
-                                                                } ?>" name="instagram" class="text_field">
+                                                                                                echo $empresaData['redes3'];
+                                                                                            } ?>" name="instagram" class="text_field">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -332,12 +327,12 @@ if ($borrarImg != '') {
                                                                 <select name="deliveryEmpresa" class="form-control">
                                                                     <option selected disabled>Seleccionar</option>
                                                                     <option value="1" <?php if ($empresaData['delivery'] == 1) {
-                                                                        echo 'selected';
-                                                                    } ?>>Si
+                                                                                            echo 'selected';
+                                                                                        } ?>>Si
                                                                     </option>
                                                                     <option value="0" <?php if ($empresaData['delivery'] == 0) {
-                                                                        echo 'selected';
-                                                                    } ?>>No
+                                                                                            echo 'selected';
+                                                                                        } ?>>No
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -345,8 +340,7 @@ if ($borrarImg != '') {
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <h4>Tiempo de entrega</h4>
-                                                                <input type="text" value="<?= $empresaData['tiempoEntrega'] ?>" id="tiempoEntregaEmpresa" name="tiempoEntregaEmpresa" class="text_field"
-                                                                       placeholder="Ej. 35">
+                                                                <input type="text" value="<?= $empresaData['tiempoEntrega'] ?>" id="tiempoEntregaEmpresa" name="tiempoEntregaEmpresa" class="text_field" placeholder="Ej. 35">
                                                             </div>
                                                         </div>
                                                         <div class="clearfix"></div>
@@ -354,20 +348,17 @@ if ($borrarImg != '') {
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Descripción</label>
-                                                                    <input type="text" value="<?= $value['titulo'] ?>" id="enviosEmpresa1" name="enviosEmpresa1[]" class="text_field"
-                                                                           placeholder="Ej. Envío zona centro">
+                                                                    <input type="text" value="<?= $value['titulo'] ?>" id="enviosEmpresa1" name="enviosEmpresa1[]" class="text_field" placeholder="Ej. Envío zona centro">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Costo</label>
-                                                                    <input type="number" value="<?= $value['precio'] ?>" id="enviosEmpresa2" name="enviosEmpresa2[]" class="text_field"
-                                                                           placeholder="Ej. 50">
+                                                                    <input type="number" value="<?= $value['precio'] ?>" id="enviosEmpresa2" name="enviosEmpresa2[]" class="text_field" placeholder="Ej. 50">
                                                                 </div>
                                                             </div>
                                                         <?php } ?>
-                                                        <a class="MasCampos col-md-12" href="#" id="mascamposEnvios"><i
-                                                                    class="icon_plus_alt"></i> Agregar más campos</a>
+                                                        <a class="MasCampos col-md-12" href="#" id="mascamposEnvios"><i class="icon_plus_alt"></i> Agregar más campos</a>
                                                     </div>
                                                     <div class="dashboard_setting_btn">
                                                         <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
@@ -404,8 +395,8 @@ if ($borrarImg != '') {
                                                                 <select class="form-control" name="provinciaEmpresa" id="provinciaEmpresa">
                                                                     <option value="" selected disabled>Seleccionar provincia</option>
                                                                     <option value="Córdoba" <?php if ($empresaData['provincia'] == 'Córdoba') {
-                                                                        echo 'selected';
-                                                                    } ?>>Córdoba
+                                                                                                echo 'selected';
+                                                                                            } ?>>Córdoba
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -416,8 +407,8 @@ if ($borrarImg != '') {
                                                                 <select class="form-control" name="ciudadEmpresa" id="ciudadEmpresa">
                                                                     <option value="" selected disabled>Seleccionar ciudad</option>
                                                                     <option value="San Francisco" <?php if ($empresaData['ciudad'] == 'San Francisco') {
-                                                                        echo 'selected';
-                                                                    } ?>>San Francisco
+                                                                                                        echo 'selected';
+                                                                                                    } ?>>San Francisco
                                                                     </option>
                                                                 </select>
                                                             </div>
@@ -428,18 +419,16 @@ if ($borrarImg != '') {
                                                             <div class="form-group">
                                                                 <label>Barrio</label>
                                                                 <input type="text" style="text-transform:uppercase" value="<?php if (!empty($empresaData['barrio'])) {
-                                                                    echo $empresaData['barrio'];
-                                                                } ?>" id="barrioEmpresa" name="barrioEmpresa" class="text_field"
-                                                                       placeholder="Ej. Las Rosas">
+                                                                                                                                echo $empresaData['barrio'];
+                                                                                                                            } ?>" id="barrioEmpresa" name="barrioEmpresa" class="text_field" placeholder="Ej. Las Rosas">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <div class="form-group">
                                                                 <label>Dirección</label>
                                                                 <input type="text" style="text-transform:uppercase" value="<?php if (!empty($empresaData['direccion'])) {
-                                                                    echo $empresaData['direccion'];
-                                                                } ?>" id="direccionEmpresa" name="direccionEmpresa" class="text_field"
-                                                                       placeholder="Ej. Urquiza 555">
+                                                                                                                                echo $empresaData['direccion'];
+                                                                                                                            } ?>" id="direccionEmpresa" name="direccionEmpresa" class="text_field" placeholder="Ej. Urquiza 555">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -448,12 +437,12 @@ if ($borrarImg != '') {
                                                             <div class="form-group">
                                                                 <label>Código Postal</label>
                                                                 <input type="text" value="<?php if (!empty($empresaData['postal'])) {
-                                                                    echo $empresaData['postal'];
-                                                                } ?>" id="postalEmpresa" name="postalEmpresa" class="text_field"
-                                                                       placeholder="Ej. 2400">
+                                                                                                echo $empresaData['postal'];
+                                                                                            } ?>" id="postalEmpresa" name="postalEmpresa" class="text_field" placeholder="Ej. 2400">
                                                             </div>
                                                         </div>
-                                                    </div><!--End row -->
+                                                    </div>
+                                                    <!--End row -->
                                                     <div class="dashboard_setting_btn">
                                                         <button type="submit" name="modificarEmpresa" class="btn btn--round btn--md">Guardar Datos
                                                         </button>
@@ -484,52 +473,52 @@ if ($borrarImg != '') {
                                                     </p>
                                                     <div class="form-group">
                                                         <h3>Logo</h3>
-                                                        <label>Logo de tu empresa <small>(400x400 px)</small></label><br/>
+                                                        <label>Logo de tu empresa <small>(400x400 px)</small></label><br />
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <?php if ($empresaData['logo'] != '') { ?>
-                                                                    <img src="<?= URL; ?>/<?= $empresaData['logo']; ?>" width="100%"/>
+                                                                    <img src="<?= URL; ?>/<?= $empresaData['logo']; ?>" width="100%" />
                                                                 <?php } else { ?>
-                                                                    <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%"/>
+                                                                    <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%" />
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="clearfix"></div>
-                                                            <br/>
+                                                            <br />
                                                             <div class="col-md-12 mt-15">
-                                                                <input class="input-imagen" type="file" id="logoEmpresa" name="logoEmpresa"/>
+                                                                <input class="input-imagen" type="file" id="logoEmpresa" name="logoEmpresa" />
                                                             </div>
                                                             <br>
                                                         </div>
                                                     </div>
                                                     <div class="clearfix"></div>
-                                                    <hr/>
+                                                    <hr />
                                                     <div class="form-group">
                                                         <h3>Portada</h3>
-                                                        <label>Portada de tu empresa </label><br/>
+                                                        <label>Portada de tu empresa </label><br />
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <?php if ($empresaData['portada'] != '') { ?>
-                                                                    <img src="<?= URL; ?>/<?= $empresaData['portada']; ?>" width="100%"/>
+                                                                    <img src="<?= URL; ?>/<?= $empresaData['portada']; ?>" width="100%" />
                                                                 <?php } else { ?>
-                                                                    <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%"/>
+                                                                    <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%" />
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="clearfix"></div>
-                                                            <br/>
+                                                            <br />
                                                             <div class="col-md-12 mt-15">
-                                                                <input class="input-imagen" type="file" id="portadaEmpresa" name="portadaEmpresa"/>
+                                                                <input class="input-imagen" type="file" id="portadaEmpresa" name="portadaEmpresa" />
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="clearfix"></div>
-                                                    <hr/>
+                                                    <hr />
                                                     <div class="form-group">
                                                         <h3>Galería</h3>
-                                                        <label>Galería de fotos de tu empresa</label><br/>
+                                                        <label>Galería de fotos de tu empresa</label><br />
                                                         <div class="col-md-12">
                                                             <div class="row">
                                                                 <?php if (!empty($imagenesArrayEmpresa)) {
-                                                                    foreach ($imagenesArrayEmpresa as $key => $value): ?>
+                                                                    foreach ($imagenesArrayEmpresa as $key => $value) : ?>
                                                                         <?php
                                                                         echo "<div class='col-md-2 mb-20 mt-20'>";
                                                                         echo "<div style='height: 160px;background: url(" . URL . "/" . $value['ruta'] . ")center/contain no-repeat;'></div>";
@@ -540,15 +529,15 @@ if ($borrarImg != '') {
                                                                     <?php endforeach;
                                                                 } else { ?>
                                                                     <div class="col-md-2">
-                                                                        <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%"/>
+                                                                        <img src="<?= URL; ?>/assets/archivos/sin_imagen.jpg" width="100%" />
                                                                     </div>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
                                                         <div class="clearfix"></div>
-                                                        <br/>
+                                                        <br />
                                                         <div class="form-group mt-15">
-                                                            <input class="input-imagen" type="file" id="filesEmpresa" name="filesEmpresa[]" multiple="multiple"/>
+                                                            <input class="input-imagen" type="file" id="filesEmpresa" name="filesEmpresa[]" multiple="multiple" />
                                                         </div>
                                                         <hr>
                                                     </div>
@@ -569,8 +558,8 @@ if ($borrarImg != '') {
                         </div>
                     </div>
                 <?php
-                else:
-                    ?>
+                else :
+                ?>
                     <div class="dashboard_title_area">
                         <div class="dashboard__title">
                             <h3>¡Completá los datos de tu empresa y empezá a vender!</h3>

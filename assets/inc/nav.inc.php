@@ -169,6 +169,10 @@ START MENU AREA
                                                 <span class="lnr lnr-briefcase"></span>Compra</a>
                                         </li>
                                         <li>
+                                            <a href="<?= URL ?>/panel?op=mercadopago">
+                                                <span class="lnr lnr-smartphone"></span>Mercado Pago</a>
+                                        </li>
+                                        <li>
                                             <a href="<?= URL ?>/?logout=0">
                                                 <span class="lnr lnr-exit"></span>Salir</a>
                                         </li>

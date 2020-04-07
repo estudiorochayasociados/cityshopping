@@ -5,7 +5,7 @@ namespace Clases;
 class Usuarios
 {
 
-//Atributos
+    //Atributos
     public $id;
     public $cod;
     public $nombre;
@@ -51,7 +51,6 @@ class Usuarios
             $sql = "INSERT INTO `usuarios` (`cod`, `nombre`, `apellido`, `doc`, `email`, `password`, `postal`, `direccion`, `barrio`, `localidad`, `provincia`, `pais`, `telefono`, `celular`, `invitado`, `vendedor`, `plan`, `fecha`) VALUES ('{$this->cod}', '{$this->nombre}', '{$this->apellido}', '{$this->doc}', '{$this->email}', '{$this->password}', '{$this->postal}', '{$this->direccion}', '{$this->localidad}', '{$this->barrio}', '{$this->provincia}', '{$this->pais}', '{$this->telefono}', '{$this->celular}', '{$this->invitado}', '{$this->vendedor}', '{$this->plan}', '{$this->fecha}')";
             $this->con->sql($sql);
             $r = 1;
-
         } else {
             $r = 0;
         }
@@ -126,7 +125,6 @@ class Usuarios
             'plan' => $this->plan,
             'fecha' => $this->fecha
         );
-
     }
 
     public function delete()
@@ -222,17 +220,17 @@ class Usuarios
             return false;
         }
     }
-function validarvendedor2()
-{
-    $sql = "SELECT * FROM usuarios INNER JOIN empresas ON usuarios.vendedor=empresas.email WHERE usuarios.vendedor = '1'";
-    $usuario = $this->con->sqlReturn($sql);
-    $row = mysqli_fetch_assoc($usuario);
-    if (!empty($row)) {
-        return true;
-    } else {
-        return false;
+    function validarvendedor2()
+    {
+        $sql = "SELECT * FROM usuarios INNER JOIN empresas ON usuarios.vendedor=empresas.email WHERE usuarios.vendedor = '1'";
+        $usuario = $this->con->sqlReturn($sql);
+        $row = mysqli_fetch_assoc($usuario);
+        if (!empty($row)) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
 
     //Agregado 08/08/19
     public function validate2()
@@ -268,7 +266,8 @@ function validarvendedor2()
             'telefono' => $this->telefono,
             'invitado' => $this->invitado,
             'vendedor' => 0,
-            'fecha' => $this->fecha);
+            'fecha' => $this->fecha
+        );
 
         $sql = "INSERT INTO `usuarios` (`cod`, `nombre`, `apellido`, `doc`, `email`, `direccion`, `postal`, `localidad`, `provincia`, `pais`, `telefono`, `celular`, `vendedor`,`invitado`, `fecha`) 
                 VALUES ('{$this->cod}',
@@ -304,7 +303,8 @@ function validarvendedor2()
             'telefono' => $this->telefono,
             'invitado' => $this->invitado,
             'vendedor' => 0,
-            'fecha' => $this->fecha);
+            'fecha' => $this->fecha
+        );
 
         $sql = "UPDATE `usuarios` 
                 SET `nombre` = '{$this->nombre}',

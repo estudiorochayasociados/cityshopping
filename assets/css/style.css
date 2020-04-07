@@ -3018,7 +3018,7 @@ h6 {
   color: #000;
   font-size: 16px;
   font-weight: 500;
-  padding: 25px 0 25px 28px;
+  padding: 10px 20px;
 }
 
 .table tbody > tr {
@@ -8634,7 +8634,7 @@ span.counter {
 ****************************************/
 .search-area2, .breadcrumb-area {
   position: relative;
-  padding-top: 64px;
+  padding-top: 32px;
 }
 
 .search-area2:before, .breadcrumb-area:before {

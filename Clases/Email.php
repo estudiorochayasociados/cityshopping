@@ -1,4 +1,6 @@
-<?php namespace Clases;
+<?php
+
+namespace Clases;
 // These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -26,7 +28,7 @@ class Email
     public function emailEnviar()
     {
         $mail = new PHPMailer(true);
-        $mensaje = '<body style="background: #0f74a8;margin:0;padding:0"><div style="background: #fff;width:700px;margin:auto;padding:20px"><div><br/><img src="'.LOGO.'" width="200"/><br/><hr/></div>'.$this->mensaje.'<br/></div></body>';
+        $mensaje = '<body style="background: #0f74a8;margin:0;padding:0"><div style="background: #fff;width:700px;margin:auto;padding:20px"><div><br/><img src="' . LOGO . '" width="200"/><br/><hr/></div>' . $this->mensaje . '<br/></div></body>';
         try {
             //Server settings
             $mail->SMTPDebug = 0;                                 // Enable verbose debug output
@@ -57,5 +59,3 @@ class Email
         }
     }
 }
-
-?>

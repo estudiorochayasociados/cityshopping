@@ -45,9 +45,9 @@ if ($_SESSION['usuarios']['vendedor'] == 0) {
 } else {
     $displayTab = true;
 }
-
-switch ($op) {
-    //Seccion de crear empresa
+?>
+<?php switch ($op) {
+        //Seccion de crear empresa
     case "crear-empresa":
         $mensaje = "Crear empresa: Paso 1";
         break;
@@ -57,8 +57,8 @@ switch ($op) {
     case "crear-empresa-3":
         $mensaje = "Crear empresa: Paso 3";
         break;
-    //
-    case"perfil":
+        //
+    case "perfil":
         $mensaje = "Perfil usuario";
         break;
     case "empresa":
@@ -73,14 +73,16 @@ switch ($op) {
     case "editar":
         $mensaje = "Editar producto";
         break;
-    case "recibidos":
-        $mensaje = "Listado de pedidos recibidos";
+    case "venta":
+        $mensaje = "Listado de ventas";
         break;
-    case "realizados":
-        $mensaje = "Listado de pedidos realizados";
+    case "compra":
+        $mensaje = "Listado de compra";
         break;
-}
-?>
+    case "mercadopago":
+        $mensaje = "Mercado Pago";
+        break;
+} ?>
 <!--================================
     START BREADCRUMB AREA
 =================================-->
@@ -117,106 +119,111 @@ switch ($op) {
                 <div class="col-md-12">
                     <div class="hidden-xs">
                         <ul class="dashboard_menu">
-                            <li class="<?= $_GET['op'] == 'perfil' ? 'active' : '' ?>">
+                            <li class="<?= ($_GET['op'] == "perfil") ? "active" : '' ?>">
                                 <a href="<?= URL ?>/panel?op=perfil">
-                                    <span class="lnr lnr-home"></span>Perfil
-                                </a>
+                                    <span class="lnr lnr-home"></span>Perfil</a>
                             </li>
                             <?php
                             if ($displayTab) {
-                                ?>
-                                <li class="<?= $_GET['op'] == "empresa" ? 'active' : '' ?>">
+                            ?>
+                                <li class="<?= ($_GET['op'] == "empresa") ? "active" : '' ?>">
                                     <a href="<?= URL ?>/panel?op=empresa">
-                                        <span class="lnr lnr-cog"></span>Empresa
-                                    </a>
+                                        <span class="lnr lnr-cog"></span>Empresa</a>
                                 </li>
                                 <?php
                                 if (!empty($empresaData)) {
-                                    ?>
-                                    <li class="<?= $_GET['op'] == "productos" ?: '"active"' ?>">
+                                ?>
+                                    <li class="<?= ($_GET['op'] == "productos") ? "active" : '' ?>">
                                         <a href="<?= URL ?>/panel?op=productos">
-                                            <span class="lnr lnr-inbox"></span>Productos
-                                        </a>
+                                            <span class="lnr lnr-inbox"></span>Productos</a>
                                     </li>
-                                    <li class="<?= $_GET['op'] == "nuevo" ? "active" : '' ?>">
+                                    <li class="<?= ($_GET['op'] == "nuevo") ? "active" : '' ?>">
                                         <a href="<?= URL ?>/panel?op=nuevo">
-                                            <span class="lnr lnr-upload"></span>Nuevo producto
-                                        </a>
+                                            <span class="lnr lnr-upload"></span>Nuevo producto</a>
                                     </li>
-                                    <?php
+                                <?php
                                 }
+                                ?>
+                            <?php
                             }
                             ?>
-                            <li class="<?= $_GET['op'] == "realizados" ? "active" : '' ?>">
-                                <a href="<?= URL ?>/panel?op=realizados">
-                                    <span class="lnr lnr-briefcase"></span>Pedidos realizados
-                                </a>
+                            <li class="<?= ($_GET['op'] == "compra") ? "active" : '' ?>">
+                                <a href="<?= URL ?>/panel?op=compra">
+                                    <span class="lnr lnr-briefcase"></span>Compra</a>
                             </li>
-                            <?php if ($displayTab) { ?>
-                                <li class="<?= $_GET['op'] == "recibidos" ? "active" : '' ?>">
-                                    <a href="<?= URL ?>/panel?op=recibidos">
-                                        <span class="lnr lnr-tag"></span>Pedidos recibidos
-                                    </a>
+                            <?php
+                            if ($displayTab) {
+                            ?>
+                                <li class="<?= ($_GET['op'] == "venta") ? "active" : '' ?>">
+                                    <a href="<?= URL ?>/panel?op=venta">
+                                        <span class="lnr lnr-tag"></span>Venta</a>
                                 </li>
-                            <?php } ?>
+
+                                <li class="<?= ($_GET['op'] == "mercadopago") ? "active" : '' ?>">
+                                    <a href="<?= URL ?>/panel?op=mercadopago">
+                                        <span class="lnr lnr-smartphone"></span>Mercado Pago</a>
+                                </li>
+                            <?php
+                            }
+                            ?>
                         </ul>
                     </div>
                     <!-- end /.dashboard_menu -->
                     <div class="visible-xs" style="text-align: center;">
-                        <button class="btn btn btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <button class="btn btn btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ">
                             Menu
                         </button>
-                        <div class="collapse" id="collapseExample" style="text-align: left;">
+                        <div class=" collapse" id="collapseExample" style="text-align: left;">
                             <ul class="dashboard_menu">
-                                <li style="width: 100%;" class="<?= $_GET['op'] == "perfil" ? "active" : '' ?>">
+                                <li style="width: 100%;" class="<?= ($_GET['op'] == "perfil") ? "active" : '' ?>">
                                     <a href="<?= URL ?>/panel?op=perfil">
                                         <span class="lnr lnr-home"></span>Perfil</a>
                                 </li>
-                                <?php if ($displayTab) { ?>
-                                    <li style="width: 100%;" class="<?= $_GET['op'] == "empresa" ? "active" : '' ?>">
+                                <?php
+                                if ($displayTab) {
+                                ?>
+                                    <li style="width: 100%;" class="<?= ($_GET['op'] == "empresa") ? "active" : '' ?>">
                                         <a href="<?= URL ?>/panel?op=empresa">
-                                            <span class="lnr lnr-cog"></span>Empresa
-                                        </a>
+                                            <span class="lnr lnr-cog"></span>Empresa</a>
                                     </li>
-                                    <li style="width: 100%;" class="<?= $_GET['op'] == "productos" ? "active" : '' ?>">
+                                    <li style="width: 100%;" class="<?= ($_GET['op'] == "productos") ? "active" : '' ?>">
                                         <a href="<?= URL ?>/panel?op=productos">
-                                            <span class="lnr lnr-inbox"></span>Productos
-                                        </a>
+                                            <span class="lnr lnr-inbox"></span>Productos</a>
                                     </li>
-                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "nuevo") {
-                                        echo "active";
-                                    } ?>">
+                                    <li style="width: 100%;" class="<?= ($_GET['op'] == "nuevo") ? "active" : '' ?>">
                                         <a href="<?= URL ?>/panel?op=nuevo">
                                             <span class="lnr lnr-upload"></span>Nuevo producto</a>
                                     </li>
-                                <?php } ?>
-                                <li style="width: 100%;" class="<?php if ($_GET['op'] == "realizados") {
-                                    echo "active";
-                                } ?>">
-                                    <a href="<?= URL ?>/panel?op=realizados">
-                                        <span class="lnr lnr-briefcase"></span>Pedidos realizados</a>
+                                <?php
+                                }
+                                ?>
+                                <li style="width: 100%;" class="<?= ($_GET['op'] == "compra") ? "active" : '' ?>">
+                                    <a href="<?= URL ?>/panel?op=compra">
+                                        <span class="lnr lnr-briefcase"></span>Compra</a>
                                 </li>
-                                <?php if ($displayTab) { ?>
-                                    <li style="width: 100%;" class="<?php if ($_GET['op'] == "recibidos") {
-                                        echo "active";
-                                    } ?>">
-                                        <a href="<?= URL ?>/panel?op=recibidos">
-                                            <span class="lnr lnr-tag"></span>Pedidos recibidos</a>
+                                <?php
+                                if ($displayTab) {
+                                ?>
+                                    <li style="width: 100%;" class="<?= ($_GET['op'] == "venta") ? "active" : '' ?>">
+                                        <a href="<?= URL ?>/panel?op=venta">
+                                            <span class="lnr lnr-tag"></span>Venta</a>
                                     </li>
-                                <?php } ?>
+                                <?php
+                                }
+                                ?>
                             </ul>
-                        </div>
                     </div>
                 </div>
-                <!-- end /.col-md-12 -->
             </div>
-            <!-- end /.row -->
+            <!-- end /.col-md-12 -->
         </div>
-        <!-- end /.container -->
+        <!-- end /.row -->
+    </div>
+    <!-- end /.container -->
     </div>
     <!-- end /.dashboard_menu_area -->
     <?php switch ($op) {
-        //Seccion de crear empresa
+            //Seccion de crear empresa
         case "crear-empresa":
             include("assets/inc/panel/crearEmpresaPaso1.php");
             break;
@@ -226,7 +233,7 @@ switch ($op) {
         case "crear-empresa-3":
             include("assets/inc/panel/crearEmpresaPaso3.php");
             break;
-        //
+            //
         case "crearMenu":
             include("assets/inc/panel/crearMenu.php");
             break;
@@ -245,7 +252,7 @@ switch ($op) {
         case "logout":
             $usuario->logout();
             break;
-        case"perfil":
+        case "perfil":
             include("assets/inc/panel/tabs/modificarPerfil.php");
             break;
         case "empresa":
@@ -260,11 +267,14 @@ switch ($op) {
         case "editar":
             include("assets/inc/panel/modificarMenu.php");
             break;
-        case "realizados":
+        case "compra":
             include("assets/inc/panel/verPedidosUsuario.php");
             break;
-        case "recibidos":
+        case "venta":
             include("assets/inc/panel/verPedidosEmpresa.php");
+            break;
+        case "mercadopago":
+            include("assets/inc/panel/tabs/modificarMercadoPago.php");
             break;
     } ?>
 </section><!-- End container  -->
@@ -274,32 +284,33 @@ switch ($op) {
 <script src="<?= URL ?>/assets/js/tabs.js"></script>
 
 <script>
-    document.getElementById('link0').addEventListener('click', function () {
+    document.getElementById('link0').addEventListener('click', function() {
         document.getElementById('horariosEmpresa').style.display = 'block';
         document.getElementById('link0').style.display = 'none';
     }, false);
-    document.getElementById('link1').addEventListener('click', function () {
+    document.getElementById('link1').addEventListener('click', function() {
         document.getElementById('enviosEmpresa').style.display = 'block';
         document.getElementById('link1').style.display = 'none';
     }, false);
-    document.getElementById('link2').addEventListener('click', function () {
+    document.getElementById('link2').addEventListener('click', function() {
         document.getElementById('ubicacionEmpresa').style.display = 'block';
         document.getElementById('link2').style.display = 'none';
     }, false);
-    document.getElementById('link3').addEventListener('click', function () {
+    document.getElementById('link3').addEventListener('click', function() {
         document.getElementById('imagenesEmpresa').style.display = 'block';
         document.getElementById('link3').style.display = 'none';
     }, false);
 </script>
 
-<script>//Script para que el usuario genere nuevos campos
-    jQuery.fn.generaNuevosCampos = function (nombreCampo1, nombreCampo2) {
-        $(this).each(function () {
+<script>
+    //Script para que el usuario genere nuevos campos
+    jQuery.fn.generaNuevosCampos = function(nombreCampo1, nombreCampo2) {
+        $(this).each(function() {
             elem = $(this);
             elem.data("nombreCampo1", nombreCampo1);
             elem.data("nombreCampo2", nombreCampo2);
 
-            elem.click(function (e) {
+            elem.click(function(e) {
                 e.preventDefault();
                 elem = $(this);
                 nombreCampo1 = elem.data("nombreCampo1");
@@ -312,7 +323,7 @@ switch ($op) {
         return this;
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#mascamposEnvios").generaNuevosCampos("enviosEmpresa1[]", "enviosEmpresa2[]");
     });
 </script>
@@ -325,14 +336,15 @@ switch ($op) {
     });
 </script>
 
-<script>//Script para que el usuario genere nuevos campos """VarianteAdicional"""
-    jQuery.fn.generaNuevosCamposVarianteAdicional = function (nombreCampo1, nombreCampo2) {
-        $(this).each(function () {
+<script>
+    //Script para que el usuario genere nuevos campos """VarianteAdicional"""
+    jQuery.fn.generaNuevosCamposVarianteAdicional = function(nombreCampo1, nombreCampo2) {
+        $(this).each(function() {
             elem = $(this);
             elem.data("nombreCampo1", nombreCampo1);
             elem.data("nombreCampo2", nombreCampo2);
 
-            elem.click(function (e) {
+            elem.click(function(e) {
                 e.preventDefault();
                 elem = $(this);
                 nombreCampo1 = elem.data("nombreCampo1");
@@ -345,11 +357,11 @@ switch ($op) {
         return this;
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#mascamposVariante").generaNuevosCamposVarianteAdicional("variante1[]", "variante2[]");
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#mascamposAdicional").generaNuevosCamposVarianteAdicional("adicional1[]", "adicional2[]");
     });
 </script>

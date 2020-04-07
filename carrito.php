@@ -64,93 +64,96 @@ if ($countCarrito == 0) {
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Producto</th>
-                            <th class="hidden-xs" scope="col">Precio</th>
-                            <th class="hidden-xs" scope="col">Cantidad</th>
-                            <th scope="col">Total</th>
-                        </tr>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Producto</th>
+                                <th class="hidden-xs" scope="col">Precio</th>
+                                <th class="hidden-xs" scope="col">Cantidad</th>
+                                <th scope="col">Total</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        if (isset($_GET["remover"])) {
-                            $carrito->destroy();
-                            $funcion->headerMove(URL . "/index");
-                        }
-
-                        $i = 0;
-                        $precio = 0;
-                        foreach ($carro as $key => $carroItem) {
-
-                            $precio += ($carroItem["precio"] * $carroItem["cantidad"]);
-                            $opciones = @implode(" - ", $carroItem["opciones"]);
-                            if ($carroItem["id"] == "Envio-Seleccion" || $carroItem["id"] == "Metodo-Pago") {
-                                $clase = "text-bold";
-                                $none = "hidden";
-                            } else {
-                                $clase = '';
-                                $none = "";
+                            <?php
+                            if (isset($_GET["remover"])) {
+                                $carrito->destroy();
+                                $funcion->headerMove(URL . "/productos");
                             }
-                            $productos->set("cod", $carroItem['id']);
-                            $pro = $productos->view();
-                            $imagenes->set("cod", $pro['cod']);
-                            $img = $imagenes->view();
+
+                            $i = 0;
+                            $precio = 0;
+                            foreach ($carro as $key => $carroItem) {
+                                $precio += ($carroItem["precio"] * $carroItem["cantidad"]);
+                                $opciones = @implode(" - ", $carroItem["opciones"]);
+                                if ($carroItem["id"] == "Envio-Seleccion" || $carroItem["id"] == "Metodo-Pago") {
+                                    $clase = "text-bold";
+                                    $none = "hidden";
+                                } else {
+                                    $clase = '';
+                                    $none = "";
+                                }
+                                $productos->set("cod", $carroItem['id']);
+                                $pro = $productos->view();
+                                $imagenes->set("cod", $pro['cod']);
+                                $img = $imagenes->view();
+                            ?>
+                                <tr>
+                                    <td scope="row">
+                                        <a href="<?= URL ?>/carrito.php?remover=<?= $key ?>">
+                                            <span class="lnr lnr-cross"></span>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="media hidden-xs">
+                                            <div class="media-body">
+                                                <h6><?= mb_strtoupper($carroItem["titulo"]); ?></h6>
+                                            </div>
+                                        </div>
+                                        <div class="d-md-none text-left">
+                                            <?= mb_strtoupper($carroItem["titulo"]); ?>
+                                            <p class="<?= $none ?>">Precio: <?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
+                                            <p class="<?= $none ?>">Cantidad: <?= $carroItem["cantidad"]; ?></p>
+                                        </div>
+                                    </td>
+                                    <td class="hidden-xs">
+                                        <p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
+                                    </td>
+                                    <td class="hidden-xs">
+                                        <p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p>
+                                    </td>
+
+                                    <td>
+                                        <p><?php
+                                            if ($carroItem["precio"] != 0) {
+                                                echo "$" . number_format(($carroItem["precio"] * $carroItem["cantidad"]), 2, ",", ".");
+                                            } else {
+                                                if ($carroItem['id'] == "Metodo-Pago") {
+                                                    echo "";
+                                                } else {
+                                                    echo "";
+                                                }
+                                            }
+                                            ?>
+                                        </p>
+                                    </td>
+                                </tr>
+                            <?php
+                                $i++;
+                            }
                             ?>
                             <tr>
                                 <td scope="row">
-                                    <a href="<?= URL ?>/carrito.php?remover=<?= $key ?>">
-                                        <span class="lnr lnr-cross"></span>
-                                    </a>
                                 </td>
                                 <td>
                                     <div class="media hidden-xs">
-                                        <div class="media-body">
-                                            <h6><?= mb_strtoupper($carroItem["titulo"]); ?></h6>
-                                        </div>
                                     </div>
                                     <div class="d-md-none text-left">
-                                        <?= mb_strtoupper($carroItem["titulo"]); ?>
-                                        <p class="<?= $none ?>">Precio: <?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
-                                        <p class="<?= $none ?>">Cantidad: <?= $carroItem["cantidad"]; ?></p>
                                     </div>
                                 </td>
-                                <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p></td>
-                                <td class="hidden-xs"><p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p></td>
+                                <td class="hidden-xs"></td>
+                                <td class="hidden-xs"></td>
 
-                                <td>
-                                    <p><?php
-                                        if ($carroItem["precio"] != 0) {
-                                            echo "$" . number_format(($carroItem["precio"] * $carroItem["cantidad"]), 2, ",", ".");
-                                        } else {
-                                            if ($carroItem['id'] == "Metodo-Pago") {
-                                                echo "";
-                                            } else {
-                                                echo "";
-                                            }
-                                        }
-                                        ?>
-                                    </p>
-                                </td>
+                                <td> $<?= number_format($precio, 2, ",", "."); ?></td>
                             </tr>
-                            <?php
-                            $i++;
-                        }
-                        ?>
-                        <tr>
-                            <td scope="row">
-                            </td>
-                            <td>
-                                <div class="media hidden-xs">
-                                </div>
-                                <div class="d-md-none text-left">
-                                </div>
-                            </td>
-                            <td class="hidden-xs"></td>
-                            <td class="hidden-xs"></td>
-
-                            <td> $<?= number_format($precio,2,",","."); ?></td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>

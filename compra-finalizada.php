@@ -15,12 +15,23 @@ $correo = new Clases\Email();
 $producto = new Clases\Productos();
 $usuarios = new Clases\Usuarios();
 $empresa = new Clases\Empresas();
+
 $cod_pedido = $_SESSION["cod_pedido"];
 $pedidos->set("cod", $cod_pedido);
-$pedido_info = $pedidos->info();
-$estado = "PENDIENTE";
+$mp_estado = isset($_GET["collection_status"]) ? $funciones->MPStatus($_GET["collection_status"]) : '';
 
-$factura = $funciones->antihack_mysqli(isset($_GET["fact"]) ? $_GET["fact"] : '');
+if (is_array($mp_estado)) {
+    $estado = $mp_estado["estado"];
+    $pedidos->set("estado", $mp_estado["num"]);
+    $pedidos->cambiar_estado();
+    $metodoPago = "MERCADOPAGO";
+} else {
+    $estado = "PENDIENTE";
+    $metodoPago = "EFECTIVO";
+    $factura = $funciones->antihack_mysqli(isset($_GET["fact"]) ? $_GET["fact"] : '');
+}
+
+$pedido_info = $pedidos->info();
 
 if (count($_SESSION["carrito"]) == 0) {
     $funciones->headerMove(URL . "/index");
@@ -33,6 +44,7 @@ $carro = $carritos->return();
 $carroTotal = 0;
 
 $cod_empresa = '';
+
 //MENSAJE = ARMADO CARRITO
 $mensaje_carro = '<table border="1" style="text-align:left;width:100%;font-size:13px !important"><thead><th>Nombre producto</th><th>Cantidad</th><th>Precio</th><th>Total</th></thead>';
 foreach ($carro as $carroItemEmail) {
@@ -54,6 +66,7 @@ $datos_usuario .= "<b>Provincia:</b> " . $_SESSION["usuarios"]["provincia"] . "<
 $datos_usuario .= "<b>Localidad:</b> " . $_SESSION["usuarios"]["localidad"] . "<br/>";
 $datos_usuario .= "<b>Dirección:</b> " . $_SESSION["usuarios"]["direccion"] . "<br/>";
 $datos_usuario .= "<b>Teléfono:</b> " . $_SESSION["usuarios"]["telefono"] . "<br/>";
+
 if (!empty($factura)) {
     if (!empty($_SESSION['usuarios']['doc'])) {
         $datos_usuario .= "<b>SOLICITÓ FACTURA A CON EL CUIT:</b> " . $_SESSION["usuarios"]["doc"] . "<br/>";
@@ -66,7 +79,7 @@ if (!empty($factura)) {
 $mensajeCompraUsuario = '¡Muchas gracias por tu nuevo pedido!<br/>En el transcurso de las 24 hs un operador se estará contactando con usted para pactar la entrega y/o pago del pedido. A continuación te dejamos el pedido que nos realizaste.<hr/> <h3>Pedido realizado:</h3>';
 $mensajeCompraUsuario .= $mensaje_carro;
 $mensajeCompraUsuario .= '<br/><hr/>';
-$mensajeCompraUsuario .= '<h3>MÉTODO DE PAGO ELEGIDO: EFECTIVO</h3>';
+$mensajeCompraUsuario .= '<h3>MÉTODO DE PAGO ELEGIDO: ' . $metodoPago . '</h3>';
 $mensajeCompraUsuario .= '<br/><hr/>';
 $mensajeCompraUsuario .= '<h3>Tus datos:</h3>';
 $mensajeCompraUsuario .= $datos_usuario;
@@ -82,13 +95,13 @@ $statusEmail = isset($_SESSION["usuarios"]["email"]) && !empty($_SESSION["usuari
 if ($statusSend && $statusEmail) {
     $fecha = new DateTime();
     $file = fopen("./log-email.txt", "a+");
-    fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a usuario comprador " . $_SESSION["usuarios"]["email"] . " correctamente." . PHP_EOL);
+    fwrite($file, $fecha->format('d-m-Y') . " | " . $cod_pedido . " | Email enviado a usuario comprador " . $_SESSION["usuarios"]["email"] . " correctamente." . PHP_EOL);
     fclose($file);
 }
 if (!$statusSend && $statusEmail) {
     $fecha = new DateTime();
     $file = fopen("./log-email.txt", "a+");
-    fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a usuario comprador g " . $_SESSION["usuarios"]["email"] . " fallido." . PHP_EOL);
+    fwrite($file, $fecha->format('d-m-Y') . " | " . $cod_pedido . " | Email enviado a usuario comprador " . $_SESSION["usuarios"]["email"] . " fallido." . PHP_EOL);
     fclose($file);
 }
 
@@ -100,7 +113,7 @@ if (!empty($cod_empresa)) {
         $mensajeCompra = '¡Nuevo pedido desde la web!<br/>A continuación te dejamos el detalle del pedido.<hr/> <h3>Pedido realizado:</h3>';
         $mensajeCompra .= $mensaje_carro;
         $mensajeCompra .= '<br/><hr/>';
-        $mensajeCompra .= '<h3>MÉTODO DE PAGO ELEGIDO: EFECTIVO</h3>';
+        $mensajeCompra .= '<h3>MÉTODO DE PAGO ELEGIDO: ' . $metodoPago . '</h3>';
         $mensajeCompra .= '<br/><hr/>';
         $mensajeCompra .= '<h3>Datos de usuario:</h3>';
         $mensajeCompra .= $datos_usuario;
@@ -116,55 +129,55 @@ if (!empty($cod_empresa)) {
         if ($statusSend && $statusEmail) {
             $fecha = new DateTime();
             $file = fopen("./log-email.txt", "a+");
-            fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a la empresa " . $empresaData['email'] . " correctamente." . PHP_EOL);
+            fwrite($file, $fecha->format('d-m-Y') . " | " . $cod_pedido . " | Email enviado a la empresa " . $empresaData['email'] . " correctamente." . PHP_EOL);
             fclose($file);
         }
         if (!$statusSend && $statusEmail) {
             $fecha = new DateTime();
             $file = fopen("./log-email.txt", "a+");
-            fwrite($file, $fecha->format('d-m-Y') . " | " .$cod_pedido. " | Email enviado a la empresa " . $empresaData['email'] . " fallido." . PHP_EOL);
+            fwrite($file, $fecha->format('d-m-Y') . " | " . $cod_pedido . " | Email enviado a la empresa " . $empresaData['email'] . " fallido." . PHP_EOL);
             fclose($file);
         }
     }
 }
+
 ?>
-    <!--================================
+<!--================================
     START BREADCRUMB AREA
 =================================-->
-    <section class="breadcrumb-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="page-title">¡Pedido finalizado!</h1>
-                </div>
-                <!-- end /.col-md-12 -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="page-title">¡Pedido finalizado!</h1>
             </div>
-            <!-- end /.row -->
+            <!-- end /.col-md-12 -->
         </div>
-        <!-- end /.container -->
-    </section>
-    <!--================================
+        <!-- end /.row -->
+    </div>
+    <!-- end /.container -->
+</section>
+<!--================================
         END BREADCRUMB AREA
     =================================-->
-    <div id="sns_content" class="wrap layout-m">
-        <div class="container">
-            <div class="ps-404">
-                <div class="">
-                    <div class="well well-lg pt-50 pb-50">
-                        <h2>
-                            CÓDIGO: <span> <?= $cod_pedido ?></span></h2>
-                        <p>
-                            <b>Estado:</b> <?= $estado ?><br/>
-                            <b>Método de pago:</b> <?= "EFECTIVO"; ?>
-                        </p>
-                        <table class="table table-hover text-left">
-                            <thead>
+<div id="sns_content" class="wrap layout-m">
+    <div class="container">
+        <div class="ps-404">
+            <div class="">
+                <div class="well well-lg pt-50 pb-50 text-uppercase">
+                    <h2> CÓDIGO: <span> <?= $cod_pedido ?></span></h2>
+                    <p>
+                        <b>Estado:</b> <?= $estado ?><br />
+                        <b>Método de pago:</b> <?= $metodoPago ?>
+                    </p>
+                    <table class="table table-hover text-left">
+                        <thead>
                             <th><b>PRODUCTO</b></th>
                             <th class="hidden-xs"><b>PRECIO UNITARIO</b></th>
                             <th class="hidden-xs"><b>CANTIDAD</b></th>
                             <th><b>TOTAL</b></th>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
                             <?php
                             $precio = 0;
                             foreach ($carro as $carroItem) {
@@ -181,7 +194,7 @@ if (!empty($cod_empresa)) {
                                     $clase = '';
                                     $none = '';
                                 }
-                                ?>
+                            ?>
                                 <tr class="<?= $clase ?>">
                                     <td>
                                         <div class="media hidden-xs">
@@ -195,37 +208,44 @@ if (!empty($cod_empresa)) {
                                             <p class="<?= $none ?>">Cantidad: <?= $carroItem["cantidad"]; ?></p>
                                         </div>
                                     </td>
-                                    <td class="hidden-xs"><p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p></td>
-                                    <td class="hidden-xs"><p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p></td>
+                                    <td class="hidden-xs">
+                                        <p class="<?= $none ?>"><?= "$" . number_format($carroItem["precio"], 2, ",", "."); ?></p>
+                                    </td>
+                                    <td class="hidden-xs">
+                                        <p class="<?= $none ?>"><?= $carroItem["cantidad"]; ?></p>
+                                    </td>
                                     <?php
                                     if ($carroItem["precio"] != 0) {
-                                        ?>
+                                    ?>
                                         <td><?= "$" . number_format($carroItem["precio"] * $carroItem["cantidad"], 2, ",", "."); ?></td>
-                                        <?php
+                                    <?php
                                     } else {
                                         echo "<td></td>";
                                     }
                                     ?>
                                 </tr>
-                                <?php
+                            <?php
                             }
                             ?>
                             <tr>
-                                <td><h3>TOTAL</h3></td>
+                                <td>
+                                    <h3>TOTAL</h3>
+                                </td>
                                 <td class="hidden-xs"></td>
                                 <td class="hidden-xs"></td>
-                                <td><h3>$<?= number_format($precio, "2", ",", ".") ?></h3></td>
+                                <td>
+                                    <h3>$<?= number_format($precio, "2", ",", ".") ?></h3>
+                                </td>
                             </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <?php
-
 $carritos->destroy();
 unset($_SESSION["cod_pedido"]);
 if ($usuario_data["invitado"] == 1 || $_SESSION['usuarios']['invitado'] == 1) {

@@ -11,6 +11,7 @@ $producto = new Clases\Productos();
 $empresa = new Clases\Empresas();
 $carrito = new Clases\Carrito();
 $envio = new Clases\Envios();
+
 //Datos
 $cod = $funciones->antihack_mysqli(isset($_GET["cod"]) ? $_GET["cod"] : '');
 //Carrito
@@ -54,11 +55,11 @@ $template->themeInit();
 <!--================================
         START BREADCRUMB AREA
     =================================-->
-<section class="breadcrumb-area">
+<section class="breadcrumb-area pt-35 pb-35">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="breadcrumb">
+                <div class="breadcrumb mb-0 pb-0">
                     <ul>
                         <li>
                             <a href="<?= URL ?>/productos">Productos</a>
@@ -68,7 +69,7 @@ $template->themeInit();
                         </li>
                     </ul>
                 </div>
-                <h1 class="page-title"><?= ucfirst($producto_data['titulo']); ?></h1>
+                <h1 class="page-title mt-0 pt-0"><?= ucfirst($producto_data['titulo']); ?></h1>
             </div>
             <!-- end /.col-md-12 -->
         </div>
@@ -92,16 +93,16 @@ $template->themeInit();
 
                     <?php
                     if (!empty($imagen_data)) {
-                        ?>
+                    ?>
                         <div id="carouselE" class="carousel slide hidden-xs" data-ride="carousel">
                             <ol class="carousel-indicators">
                                 <?php
                                 for ($i = 0; $i < @count($imagen_data); $i++) {
-                                    ?>
+                                ?>
                                     <li data-target="#carouselE" data-slide-to="<?= $i; ?>" class="<?php if ($i == 0) {
-                                        echo 'active';
-                                    } ?>"></li>
-                                    <?php
+                                                                                                        echo 'active';
+                                                                                                    } ?>"></li>
+                                <?php
                                 }
                                 ?>
                             </ol>
@@ -109,20 +110,19 @@ $template->themeInit();
                                 <?php
                                 $activo = 0;
                                 foreach ($imagen_data as $img) {
-                                    ?>
+                                ?>
                                     <div class="carousel-item hidden-xs <?php if ($activo == 0) {
-                                        echo 'active';
-                                        $activo++;
-                                    } ?>"
-                                         style=" height: 550px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
+                                                                            echo 'active';
+                                                                            $activo++;
+                                                                        } ?>" style=" height: 550px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                     </div>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </div>
                             <?php
                             if (@count($imagen_data) > 1) {
-                                ?>
+                            ?>
                                 <a class="carousel-control-prev" href="#carouselE" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Anterior</span>
@@ -131,7 +131,7 @@ $template->themeInit();
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="sr-only">Siguiente</span>
                                 </a>
-                                <?php
+                            <?php
                             }
                             ?>
                         </div>
@@ -140,11 +140,11 @@ $template->themeInit();
                             <ol class="carousel-indicators">
                                 <?php
                                 for ($i = 0; $i < @count($imagen_data); $i++) {
-                                    ?>
+                                ?>
                                     <li data-target="#carouselEm" data-slide-to="<?= $i; ?>" class="<?php if ($i == 0) {
-                                        echo 'active';
-                                    } ?>"></li>
-                                    <?php
+                                                                                                        echo 'active';
+                                                                                                    } ?>"></li>
+                                <?php
                                 }
                                 ?>
                             </ol>
@@ -152,14 +152,13 @@ $template->themeInit();
                                 <?php
                                 $activo = 0;
                                 foreach ($imagen_data as $img) {
-                                    ?>
+                                ?>
                                     <div class="carousel-item hidden-xs <?php if ($activo == 0) {
-                                        echo 'active';
-                                        $activo++;
-                                    } ?>"
-                                         style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
+                                                                            echo 'active';
+                                                                            $activo++;
+                                                                        } ?>" style=" height: 250px; background: url(<?= URL . '/' . $img['ruta'] ?>) no-repeat center center/contain;">
                                     </div>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </div>
@@ -172,7 +171,7 @@ $template->themeInit();
                                 <span class="sr-only">Siguiente</span>
                             </a>
                         </div>
-                        <?php
+                    <?php
                     }
                     ?>
                     <div class="tab tab2">
@@ -215,22 +214,22 @@ $template->themeInit();
                 <aside class="sidebar sidebar--single-product">
                     <?php
                     if (!empty($producto_data['stock']) && !empty($producto_data['precio'])) {
-                        ?>
-                        <div class="sidebar-card card-pricing">
-                            <div class="price">
+                    ?>
+                        <div class="sidebar-card card-pricing pr-5 pl-5">
+                            <div class="price mb-0 pb-10 pt-10">
                                 <h1>
                                     <?php
                                     $precio_;
                                     if (!empty($producto_data['precioDescuento'])) {
                                         $precio_ = $producto_data['precioDescuento'];
-                                        ?>
-                                        <span id="prec">$<?= number_format($producto_data['precioDescuento'],2,",",".") ?></span>
-                                        <?php
+                                    ?>
+                                        <span id="prec">$<?= number_format($producto_data['precioDescuento'], 2, ",", ".") ?></span>
+                                    <?php
                                     } else {
                                         $precio_ = $producto_data['precio'];
-                                        ?>
-                                        <span id="prec">$<?= number_format($producto_data['precio'],2,",",".") ?></span>
-                                        <?php
+                                    ?>
+                                        <span id="prec">$<?= number_format($producto_data['precio'], 2, ",", ".") ?></span>
+                                    <?php
                                     }
                                     ?>
                                 </h1>
@@ -246,6 +245,7 @@ $template->themeInit();
                                 $cantidad = $funciones->antihack_mysqli(isset($_POST['cantidad']) ? $_POST['cantidad'] : '');
                                 $precio = $funciones->antihack_mysqli(isset($_POST['precio']) ? $_POST['precio'] : '');
                                 $tipoEnvio = $funciones->antihack_mysqli(isset($_POST['tipoEnvio']) ? $_POST['tipoEnvio'] : '');
+                                $tipoPago = $funciones->antihack_mysqli(isset($_POST['tipoPago']) ? $_POST['tipoPago'] : '');
                                 $producto_ = explode("---", $precio);
                                 $envio_ = explode("---", $tipoEnvio);
                                 $precio_final = $producto_[0];
@@ -268,7 +268,7 @@ $template->themeInit();
                                     //Metodo
                                     $carrito->set("id", "Metodo-Pago");
                                     $carrito->set("cantidad", 1);
-                                    $carrito->set("titulo", "Método de pago: Efectivo");
+                                    $carrito->set("titulo", "Método de pago: " . $tipoPago);
                                     $carrito->set("precio", 0);
                                     $carrito->add();
 
@@ -276,13 +276,13 @@ $template->themeInit();
                                 }
                             }
                             if ($precio_ > 0) {
-                                ?>
+                            ?>
                                 <form method="post" id="comprar-form">
                                     <div class="sidebar-card card-pricing card--pricing2">
-                                        <ul class="pricing-options">
+                                        <ul class="pricing-options text-center">
                                             <?php
                                             if (!empty($producto_data['precioDescuento']) && $producto_data['precioDescuento'] > 0) {
-                                                ?>
+                                            ?>
                                                 <li>
                                                     <div class="custom-radio">
                                                         <input type="radio" id="opt1" value="<?= $producto_data['precioDescuento'] ?>---<?= $producto_data['titulo'] ?>---Descuento" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precioDescuento'] ?>');">
@@ -291,9 +291,9 @@ $template->themeInit();
                                                         </label>
                                                     </div>
                                                 </li>
-                                                <?php
+                                            <?php
                                             } else {
-                                                ?>
+                                            ?>
                                                 <li>
                                                     <div class="custom-radio">
                                                         <input type="radio" id="opt1" value="<?= $producto_data['precio'] ?>---<?= $producto_data['titulo'] ?>---Normal" name="precio" checked onclick="$('#prec').text('$<?= $producto_data['precio'] ?>');">
@@ -309,7 +309,7 @@ $template->themeInit();
                                                 foreach ($variantesMostrar as $key => $value) {
                                                     $valor = explode(",", $value);
                                                     if (empty($valor[1])) continue;
-                                                    ?>
+                                                ?>
                                                     <li>
                                                         <div class="custom-radio">
                                                             <input type="radio" id="opt<?= $opt; ?>" class="" value="<?= $valor[0] ?>---<?= $valor[1] ?>---Opt" name="precio" onclick="$('#prec').text('$<?= $valor[0] ?>');">
@@ -321,33 +321,22 @@ $template->themeInit();
                                                             <?= ucfirst($valor[1]); ?>.
                                                         </p>
                                                     </li>
-                                                    <?php
+                                            <?php
                                                     $opt++;
                                                 }
                                             }
                                             ?>
                                             <li>
-                                                <h6>Cantidad:</h6>
-                                                <input onkeydown="return (event.keyCode!=13);"
-                                                       max="<?= $producto_data['stock'] ?>"
-                                                       min="1"
-                                                       type="number"
-                                                       id="cantidad"
-                                                       name="cantidad"
-                                                       maxlength="12"
-                                                       value="1"
-                                                       title="Ingresar valores con respecto al stock"
-                                                       class="input-text qty mt-5 noEnterSubmit"
-                                                       oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')"
-                                                       oninput="this.setCustomValidity('')">
+                                                <h6 class="text-uppercase fs-14 bold">Cantidad:</h6>
+                                                <input onkeydown="return (event.keyCode!=13);" max="<?= $producto_data['stock'] ?>" min="1" type="number" id="cantidad" name="cantidad" maxlength="12" value="1" title="Ingresar valores con respecto al stock" class="input-text qty mt-5 noEnterSubmit" oninvalid="this.setCustomValidity('Stock disponible: <?= $producto_data['stock'] ?>')" oninput="this.setCustomValidity('')">
                                             </li>
                                             <li>
-                                                <h6>Envío:</h6>
+                                                <h6 class="text-uppercase fs-14 bold">Envío:</h6>
                                                 <select name="tipoEnvio" class="form-control" required>
                                                     <?php
                                                     if (!empty($enviosArray)) {
                                                         foreach ($enviosArray as $env) {
-                                                            ?>
+                                                    ?>
                                                             <option value="<?= 'Envío: ' . $env['titulo'] ?>---<?= $env['precio'] ?>">
                                                                 <?php
                                                                 if ($env['precio'] == 0) {
@@ -357,32 +346,47 @@ $template->themeInit();
                                                                 }
                                                                 ?>
                                                             </option>
-                                                            <?php
+                                                        <?php
                                                         }
                                                     } else {
                                                         ?>
                                                         <option value="Envío: Retiro en sucursal---0">Retiro en sucursal</option>
-                                                        <?php
+                                                    <?php
                                                     }
                                                     ?>
                                                 </select>
                                             </li>
+                                            <li>
+                                                <h6 class="text-uppercase fs-14 bold">Método de Pago:</h6>
+                                                <select name="tipoPago" class="form-control" required>
+                                                    <option value="Efectivo" selected>Efectivo</option>
+                                                    <?php if (!empty($empresa_data["clientID"]) && !empty($empresa_data["clientSecret"])) { ?>
+                                                        <option value="MercadoPago">Mercado Pago</option>
+                                                    <?php } ?>
+                                                </select>
+                                            </li>
                                         </ul>
                                         <!-- end /.pricing-options -->
-                                        <div class="purchase-button">
+                                        <div class="purchase-button text-center">
                                             <input type="hidden" name="enviar_form">
-                                            <input type="button" name="enviarCarrito" id="btn-enviar" value="PEDIDO" class="btn btn--lg btn--round">
+                                            <input type="button" name="enviarCarrito" id="btn-enviar" value="COMPRAR" class="btn btn-primary">
+
+                                            <?php if (!empty($empresa_data["clientID"]) && !empty($empresa_data["clientSecret"])) { ?>
+                                                <img src="https://imgmp.mlstatic.com/org-img/banners/ar/medios/online/125X125.jpg" title="Mercado Pago - Medios de pago" alt="Mercado Pago - Medios de pago" class="mt-20" style="margin:auto" />
+                                            <?php } ?>
                                         </div>
+
+
                                         <!-- end /.purchase-button -->
                                     </div>
                                 </form>
-                                <?php
+                            <?php
                             }
                             ?>
                         </div>
-                        <?php
+                    <?php
                     } else {
-                        ?>
+                    ?>
                         <div class="author-card sidebar-card ">
 
                             <div class="author-infos">
@@ -394,7 +398,7 @@ $template->themeInit();
                             </div>
                             <!-- end /.author-infos -->
                         </div>
-                        <?php
+                    <?php
                     }
                     ?>
                     <!-- end /.sidebar--card -->
@@ -440,7 +444,7 @@ $template->themeInit();
 ==============================================-->
 <?php
 if (!empty($productos_relacionados)) {
-    ?>
+?>
     <section class="more_product_area section--padding">
         <div class="container">
             <div class="row">
@@ -461,7 +465,7 @@ if (!empty($productos_relacionados)) {
                     //
                     $imagen->set("cod", $prod_rel['cod']);
                     $img = $imagen->view();
-                    ?>
+                ?>
                     <!-- start .col-lg-4 col-md-6 -->
                     <div class="col-lg-4 col-md-6">
                         <!-- start .single-product -->
@@ -491,14 +495,14 @@ if (!empty($productos_relacionados)) {
                                 <div class="price_love">
                                     <?php
                                     if (!empty($prod_rel['precioDescuento'])) {
-                                        ?>
+                                    ?>
                                         <span>$<?= $prod_rel['precioDescuento'] ?>
                                             <small class="tachado">$<?= $prod_rel['precio'] ?></small></span>
-                                        <?php
+                                    <?php
                                     } else {
-                                        ?>
+                                    ?>
                                         <span>$<?= $prod_rel['precio'] ?></span>
-                                        <?php
+                                    <?php
                                     }
                                     ?>
                                     <p>
@@ -514,7 +518,7 @@ if (!empty($productos_relacionados)) {
                         </div>
                     </div>
                     <!-- end /.col-lg-4 col-md-6 -->
-                    <?php
+                <?php
                 }
                 ?>
 
@@ -523,7 +527,7 @@ if (!empty($productos_relacionados)) {
         </div>
         <!-- end /.container -->
     </section>
-    <?php
+<?php
 }
 ?>
 <!--============================================
@@ -532,9 +536,9 @@ if (!empty($productos_relacionados)) {
 <?php
 $template->themeEnd();
 if (!empty($carro)) {
-    ?>
+?>
     <script>
-        $('#btn-enviar').click(function () {
+        $('#btn-enviar').click(function() {
             if ($('#cantidad').val() > $('#cantidad').attr('max') || $('#cantidad').val() < $('#cantidad').attr('min')) {
                 swal("El stock ingresado no es correcto", {
                     icon: "warning",
@@ -548,15 +552,15 @@ if (!empty($carro)) {
                 });
             } else {
                 swal("Usted ya posee un carrito, desea sobreescribir el otro carrito por este nuevo?", {
-                    icon: "warning",
-                    buttons: {
-                        cancel: "No",
-                        catch: {
-                            text: "Si",
-                            value: "confirmar",
+                        icon: "warning",
+                        buttons: {
+                            cancel: "No",
+                            catch: {
+                                text: "Si",
+                                value: "confirmar",
+                            },
                         },
-                    },
-                })
+                    })
                     .then((value) => {
                         switch (value) {
                             case "confirmar":
@@ -569,11 +573,11 @@ if (!empty($carro)) {
             }
         });
     </script>
-    <?php
+<?php
 } else {
-    ?>
+?>
     <script>
-        $('#btn-enviar').click(function () {
+        $('#btn-enviar').click(function() {
             if ($('#cantidad').val() > $('#cantidad').attr('max') || $('#cantidad').val() < $('#cantidad').attr('min')) {
                 swal("El stock ingresado no es correcto", {
                     icon: "warning",
@@ -590,7 +594,7 @@ if (!empty($carro)) {
             }
         });
     </script>
-    <?php
+<?php
 }
 
 ?>

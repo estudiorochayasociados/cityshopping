@@ -36,7 +36,6 @@ foreach ($categorias_sliders as $categorias) {
         $slider->set("categoria", $categorias['cod']);
         $slider_data_principal_mobile = $slider->listForCategory('', '');
     }
-
 }
 ////Productos
 $productos_data = $producto->list('', '', 6);
@@ -59,19 +58,19 @@ $template->themeInit();
             foreach ($slider_data_principal as $sli => $key) {
                 $imagen->set("cod", $key['cod']);
                 $img = $imagen->view();
-                ?>
+            ?>
                 <div class="carousel-item <?php if ($sli == 0) {
-                    echo "active";
-                } ?>">
+                                                echo "active";
+                                            } ?>">
                     <img class="d-block" src="<?= URL . '/' . $img['ruta']; ?>" alt="<?= $sli['titulo']; ?>">
                 </div>
-                <?php
+            <?php
             }
             ?>
         </div>
         <?php
         if (@count($slider_data_principal) > 1) {
-            ?>
+        ?>
             <a class="carousel-control-prev" href="#carouselE1" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
@@ -80,7 +79,7 @@ $template->themeInit();
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
-            <?php
+        <?php
         }
         ?>
     </div>
@@ -92,19 +91,19 @@ $template->themeInit();
             foreach ($slider_data_principal_mobile as $sli => $key) {
                 $imagen->set("cod", $key['cod']);
                 $img = $imagen->view();
-                ?>
+            ?>
                 <div class="carousel-item <?php if ($sli == 0) {
-                    echo "active";
-                } ?>">
+                                                echo "active";
+                                            } ?>">
                     <img class="d-block" src="<?= URL . '/' . $img['ruta']; ?>" alt="<?= $sli['titulo']; ?>">
                 </div>
-                <?php
+            <?php
             }
             ?>
         </div>
         <?php
         if (@count($slider_data_principal_mobile) > 1) {
-            ?>
+        ?>
             <a class="carousel-control-prev" href="#carouselEM" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="sr-only">Previous</span>
@@ -113,7 +112,7 @@ $template->themeInit();
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="sr-only">Next</span>
             </a>
-            <?php
+        <?php
         }
         ?>
     </div>
@@ -153,10 +152,10 @@ $template->themeInit();
         <!-- start row -->
         <div class="row">
             <!-- start col-md-12 -->
-            <div class="col-md-12">
-                <div class="product-title-area">
-                    <div class="product__title">
-                        <h2>Últimos productos</h2>
+            <div class="col-md-12 text-center bold">
+                <div class="product-title-area mb-10 ">
+                    <div class="product__title text-center bold">
+                        <h2>ÚLTIMOS PRODUCTOS</h2>
                     </div>
                 </div>
             </div>
@@ -174,7 +173,7 @@ $template->themeInit();
                 //
                 $imagen->set("cod", $prod['cod']);
                 $img = $imagen->view();
-                ?>
+            ?>
                 <!-- start .col-md-4 -->
                 <div class="col-lg-4 col-md-6">
                     <!-- start .single-product -->
@@ -208,14 +207,14 @@ $template->themeInit();
                             <div class="price_love">
                                 <?php
                                 if (!empty($prod['precioDescuento'])) {
-                                    ?>
+                                ?>
                                     <span>$<?= $prod['precioDescuento'] ?>
                                         <small class="tachado">$<?= $prod['precio'] ?></small></span>
-                                    <?php
+                                <?php
                                 } else {
-                                    ?>
+                                ?>
                                     <span>$<?= $prod['precio'] ?></span>
-                                    <?php
+                                <?php
                                 }
                                 ?>
                             </div>
@@ -231,7 +230,7 @@ $template->themeInit();
                     <!-- end /.single-product -->
                 </div>
                 <!-- end /.col-md-4 -->
-                <?php
+            <?php
             }
             ?>
         </div>
@@ -260,7 +259,7 @@ $template->themeInit();
 <?php
 if (!empty($_SESSION['usuarios'])) {
     if ($_SESSION['usuarios']['vendedor'] != 1) {
-        ?>
+?>
         <!--================================
     START CALL TO ACTION AREA
 =================================-->
@@ -273,9 +272,9 @@ if (!empty($_SESSION['usuarios'])) {
                     <div class="col-md-12">
                         <div class="call-to-wrap">
                             <h1 class="text--white">¿Te gustaría ser vendedor?</h1>
-                            <?php if (empty($_SESSION["usuarios"])): ?>
+                            <?php if (empty($_SESSION["usuarios"])) : ?>
                                 <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                             <?php endif; ?>
                         </div>
@@ -286,7 +285,7 @@ if (!empty($_SESSION['usuarios'])) {
         <!--================================
             END CALL TO ACTION AREA
         =================================-->
-        <?php
+    <?php
     }
 } else {
     ?>
@@ -302,9 +301,9 @@ if (!empty($_SESSION['usuarios'])) {
                 <div class="col-md-12">
                     <div class="call-to-wrap">
                         <h1 class="text--white">¿Te gustaría ser vendedor?</h1>
-                        <?php if (empty($_SESSION["usuarios"])): ?>
+                        <?php if (empty($_SESSION["usuarios"])) : ?>
                             <a href="#" data-toggle="modal" data-target="#register" onclick="Cambb()" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
-                        <?php else: ?>
+                        <?php else : ?>
                             <a href="#" data-toggle="modal" data-target="#vendedor" class="btn btn--lg btn--round btn--white callto-action-btn">Registrate</a>
                         <?php endif; ?>
                     </div>
@@ -315,13 +314,13 @@ if (!empty($_SESSION['usuarios'])) {
     <!--================================
         END CALL TO ACTION AREA
     =================================-->
-    <?php
+<?php
 }
 $template->themeEnd();
 if (!empty($banner_data_popup)) {
     $imagen->set("cod", $banner_data_popup[0]['cod']);
     $img = $imagen->view();
-    ?>
+?>
     <!-- Modal -->
     <div id="modalPOP" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -332,18 +331,18 @@ if (!empty($banner_data_popup)) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <a href="<?=$banner_data_popup[0]['link']?>" target="_blank">
-                        <img src="<?=URL?>/<?=$img['ruta']?>">
+                    <a href="<?= $banner_data_popup[0]['link'] ?>" target="_blank">
+                        <img src="<?= URL ?>/<?= $img['ruta'] ?>">
                     </a>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#modalPOP').modal("show");
         });
     </script>
-    <?php
+<?php
 }
 ?>
